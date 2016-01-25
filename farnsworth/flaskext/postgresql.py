@@ -66,6 +66,7 @@ class PostgreSQL(object):
         """
         ctx = _request_ctx_stack.top
         ctx.database = self.connect()
+        ctx.database.autocommit = True
 
     # pylint:disable=unused-argument,no-self-use
     def teardown_request(self, exception):
