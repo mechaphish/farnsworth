@@ -51,11 +51,6 @@ def tests_post():
     if isinstance(tests, dict):
         tests = [tests]
 
-    for test in tests:
-        # test['data'] = test['data'].decode('base64')
-        print(cursor.mogrify("""INSERT INTO tests (ctn_id, job_id, type, data)
-                          VALUES (%(ctn_id)s, %(job_id)s, %(type)s, %(data)s)""", test))
-
     cursor.executemany("""INSERT INTO tests (ctn_id, job_id, type, data)
                           VALUES (%(ctn_id)s, %(job_id)s, %(type)s, %(data)s)""",
                        tuple(tests))
