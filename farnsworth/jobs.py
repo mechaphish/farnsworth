@@ -9,7 +9,8 @@ __version__ = "0.0.0"
 
 
 from . import app, postgres
-from utils import jsonify
+from flask import request
+from utils import jsonify, filter_query
 
 
 @app.route("/jobs")
@@ -38,9 +39,14 @@ def jobs_status():
     """
     cursor = postgres.cursor()
 
-    cursor.execute("""SELECT id, worker, priority, created_at, started_at,
-                             completed_at, ctn_id, limit_cpu, limit_memory,
-                             produced_output
-                      FROM jobs""")
+    filterable_cols = ['id', 'worker', 'priority',
+                       'started_at', 'completed_at']
+
+    query = """SELECT id, worker, priority, created_at, started_at,
+                      completed_at, ctn_id, limit_cpu, limit_memory,
+                      produced_output
+                 FROM jobs"""
+
+    cursor.execute(*filter_query(query, filterable_cols, request.args))
 
     return cursor.fetchall()
