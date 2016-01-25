@@ -14,13 +14,13 @@ create extension ltree;
 drop table if exists base;
 create table base (
     id bigserial primary key,
-    created_on timestamp not null default current_timestamp
+    created_at timestamp not null default current_timestamp
 );
 
 -- Tables that can be updated should inherit from this table.
 drop table if exists updateable;
 create table updateable (
-    updated_on timestamp not null default current_timestamp
+    updated_at timestamp not null default current_timestamp
 ) inherits (base);
 
 ---------------------------------------------------------------------
