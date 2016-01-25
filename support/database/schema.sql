@@ -29,7 +29,7 @@ create table updateable (
 drop table if exists teams;
 create table teams (
     name varchar(256) not null,
-    unique (id)
+    unique (id)         -- Unique is required for references
 ) inherits (base);
 
 -- Challenge Tree Nodes
@@ -39,8 +39,7 @@ create table challenge_tree_nodes (
     parent_id bigint null,
     parent_path ltree null,
     data bytea,
-    -- Unique is required to properly work with ltree
-    unique (id)
+    unique (id)         -- Unique is required for references
 ) inherits (base);
 
 -- We have to create the self-references here because of inheritance.
@@ -58,7 +57,7 @@ create table jobs (
     completed_at timestamp null,
     ctn_id bigint not null references challenge_tree_nodes (id),
     produced_output boolean null,
-    unique (id)
+    unique (id)         -- Unique is required for references
 ) inherits (updateable);
 
 -- Tests
@@ -71,14 +70,14 @@ create table tests (
     job_id bigint not null references jobs (id),
     type test_type not null,
     data bytea,
-    unique (id)
+    unique (id)         -- Unique is required for references
 ) inherits (updateable);
 
 -- Rounds
 drop table if exists rounds;
 create table rounds (
     ends_at timestamp null,
-    unique (id)
+    unique (id)         -- Unique is required for references
 ) inherits (updateable);
 
 -- Scores
