@@ -50,3 +50,43 @@ def filter_query(query, filters, arguments):
         return "{} WHERE {}".format(query, filter_stmt), filter_values
     else:
         return query, []
+
+
+def update_query(table, updates, where):
+    # We need to build the updates statement
+    _updates = {}
+    for k, v in updates.items():
+        _updates["{} = %s".format(k)] = v
+    _updates["updated_at = %s"] = datetime.datetime.now()
+
+    # We cannot use a dict comprehension here with keys() and values() after
+    # because their order is not guaranteed to be the same.
+    update_stmts, update_values = [], []
+    for stmt, value in _updates.items():
+        if value is not None:
+            update_stmts.append(stmt)
+            update_values.append(value)
+    update_stmt = ", ".join(update_stmts)
+
+    # We have to do the same for the where clause
+    _where = {}
+    for k, v in where.items():
+        _where["{} = %s".format(k)] = v
+
+    # We cannot use a dict comprehension here with keys() and values() after
+    # because their order is not guaranteed to be the same.
+    where_stmts, where_values = [], []
+    for stmt, value in _where.items():
+        if value is not None:
+            where_stmts.append(stmt)
+            where_values.append(value)
+    where_stmt = " AND ".join(where_stmts)
+
+    # Return the created query
+    update_query = "UPDATE {} SET {} WHERE {}"
+
+    if update_stmt:
+        return update_query.format(table, update_stmt, where_stmt), \
+            tuple(update_values + where_values)
+    else:
+        return "", []
