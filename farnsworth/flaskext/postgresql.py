@@ -99,4 +99,7 @@ class PostgreSQL(object):
         """
         ctx = _request_ctx_stack.top
         if ctx is not None:
-            return ctx.database.cursor(cursor_factory=psycopg2.extras.RealDictCursor, **kwargs)
+            if dictionary:
+                return ctx.database.cursor(cursor_factory=psycopg2.extras.RealDictCursor, **kwargs)
+            else:
+                return ctx.database.cursor(**kwargs)
