@@ -9,6 +9,7 @@ from __future__ import absolute_import
 __author__ = "Kevin Borgolte <kevin@borgolte.me>"
 
 import psycopg2
+import psycopg2.extras
 
 from flask import _request_ctx_stack
 
@@ -98,4 +99,4 @@ class PostgreSQL(object):
         """
         ctx = _request_ctx_stack.top
         if ctx is not None:
-            return ctx.database.cursor(dictionary=dictionary, **kwargs)
+            return ctx.database.cursor(cursor_factory=psycopg2.extras.DictCursor, **kwargs)
