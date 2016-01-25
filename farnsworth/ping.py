@@ -22,7 +22,7 @@ from utils import jsonify
 
 @app.route("/ping")
 @jsonify
-def general_ping():
+def ping():
     """The ``/ping`` endpoint can be used to check if the API is reachable
     and if it is alive.
 
