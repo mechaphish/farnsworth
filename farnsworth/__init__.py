@@ -48,7 +48,7 @@ postgres = PostgreSQL(app)
 # that are specific to a subset of the functionality
 #from . import cbs
 #from . import cts
-#from . import jobs
+from . import jobs
 #from . import pcaps
 #from . import performances
 from . import ping
