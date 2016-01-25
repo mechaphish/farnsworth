@@ -55,7 +55,7 @@ from . import ping
 #from . import scores
 #from . import status
 #from . import teams
-#from . import tests
+from . import tests
 
 if __name__ == "__main__":
     app.run()
