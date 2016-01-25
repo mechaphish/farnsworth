@@ -32,7 +32,7 @@ def tests_get():
     """
     cursor = postgres.cursor()
 
-    filterable_cols = ['id', 'ctn_id', 'job_id']
+    filterable_cols = ['id', 'ctn_id', 'job_id', 'type']
 
     cursor.execute(*filter_query("""SELECT id, ctn_id, job_id, type,
                                            encode(data, 'base64') as data
