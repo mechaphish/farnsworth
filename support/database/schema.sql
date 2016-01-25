@@ -53,6 +53,9 @@ alter table challenge_tree_nodes add
 drop table if exists jobs;
 create table jobs (
     priority int not null default 0,
+    worker varchar(256) not null,
+    limit_cpu int null default 4,
+    limit_memory int null default 8192,  -- In MB
     started_at timestamp null,
     completed_at timestamp null,
     ctn_id bigint not null references challenge_tree_nodes (id),
