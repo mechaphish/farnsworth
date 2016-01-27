@@ -19,6 +19,7 @@ __authors__ = "Kevin Borgolte"
 __version__ = "0.0.0"
 
 from flask import Flask
+from .config import set_config_from_env
 from .flaskext.postgresql import PostgreSQL
 
 # Python 3 compatibility
@@ -34,11 +35,11 @@ else:
 # pylint:enable=invalid-name
 
 
-# Initialize Flask and MySQL wrapper
+# Initialize Flask
 #
 # pylint:disable=invalid-name
 app = Flask(__name__)
-app.config.from_envvar("FARNSWORTH_DB_SETTINGS")
+set_config_from_env(app, '.env')
 
 postgres = PostgreSQL(app)
 # pylint:enable=invalid-name

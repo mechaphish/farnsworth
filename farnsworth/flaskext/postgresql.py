@@ -18,8 +18,8 @@ class PostgreSQL(object):
     """Flask object that wraps requests to provide PostgreSQL functionality
     transparently.
 
-    Note: POSTGRES_DATABASE_UNIX_SOCKET takes preference over TCP parameters.
-          Set it to None to use POSTGRES_DATABASE_HOST and PORT.
+    Note: POSTGRES_SERVICE_UNIX_SOCKET takes preference over TCP parameters.
+          Set it to None to use POSTGRES_SERVICE_HOST and PORT.
     """
 
     def __init__(self, app=None):
@@ -30,12 +30,12 @@ class PostgreSQL(object):
         self.app = app
         if self.app is not None:
             self.app = app
-            self.app.config.setdefault('POSTGRES_DATABASE_UNIX_SOCKET', None)
-            self.app.config.setdefault('POSTGRES_DATABASE_HOST', None)
-            self.app.config.setdefault('POSTGRES_DATABASE_PORT', 5432)
+            self.app.config.setdefault('POSTGRES_SERVICE_UNIX_SOCKET', None)
+            self.app.config.setdefault('POSTGRES_SERVICE_HOST', None)
+            self.app.config.setdefault('POSTGRES_SERVICE_PORT', 5432)
             self.app.config.setdefault('POSTGRES_DATABASE_USER', None)
             self.app.config.setdefault('POSTGRES_DATABASE_PASSWORD', None)
-            self.app.config.setdefault('POSTGRES_DATABASE_DB', None)
+            self.app.config.setdefault('POSTGRES_DATABASE_NAME', None)
             self.app.teardown_request(self.teardown_request)
             self.app.before_request(self.before_request)
 
@@ -46,19 +46,19 @@ class PostgreSQL(object):
         :return: PostgreSQL database connector.
         """
         kwargs = {}
-        if self.app.config['POSTGRES_DATABASE_UNIX_SOCKET']:
-            kwargs['unix_socket'] = self.app.config['POSTGRES_DATABASE_UNIX_SOCKET']
+        if self.app.config['POSTGRES_SERVICE_UNIX_SOCKET']:
+            kwargs['unix_socket'] = self.app.config['POSTGRES_SERVICE_UNIX_SOCKET']
         else:
-            if self.app.config['POSTGRES_DATABASE_HOST']:
-                kwargs['host'] = self.app.config['POSTGRES_DATABASE_HOST']
-            if self.app.config['POSTGRES_DATABASE_PORT']:
-                kwargs['port'] = self.app.config['POSTGRES_DATABASE_PORT']
+            if self.app.config['POSTGRES_SERVICE_HOST']:
+                kwargs['host'] = self.app.config['POSTGRES_SERVICE_HOST']
+            if self.app.config['POSTGRES_SERVICE_PORT']:
+                kwargs['port'] = self.app.config['POSTGRES_SERVICE_PORT']
         if self.app.config['POSTGRES_DATABASE_USER']:
             kwargs['user'] = self.app.config['POSTGRES_DATABASE_USER']
         if self.app.config['POSTGRES_DATABASE_PASSWORD']:
             kwargs['password'] = self.app.config['POSTGRES_DATABASE_PASSWORD']
-        if self.app.config['POSTGRES_DATABASE_DB']:
-            kwargs['dbname'] = self.app.config['POSTGRES_DATABASE_DB']
+        if self.app.config['POSTGRES_DATABASE_NAME']:
+            kwargs['dbname'] = self.app.config['POSTGRES_DATABASE_NAME']
         return psycopg2.connect(**kwargs)    # pylint:disable=star-args
 
     def before_request(self):
