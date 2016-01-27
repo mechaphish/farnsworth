@@ -15,7 +15,7 @@ The database API follows some basic design guidelines:
 - Every endpoint that updates the state of the database is a PUT request.
 """
 
-__authors__ = "Kevin Borgolte"
+__authors__ = "Kevin Borgolte, Francesco Disperati"
 __version__ = "0.0.0"
 
 from flask import Flask
