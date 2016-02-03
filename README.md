@@ -14,6 +14,7 @@ The PostgreSQL Dockerfiles are stored in support/.
 ## Development
 
     pip install -r requirements.txt
+    psql -U DBUSER < support/database/schema.sql
     mv .env.development .env
     python develop.py
 
