@@ -31,8 +31,7 @@ create table challenge_tree_nodes (
     parent_id bigint null,
     parent_path ltree null,
     name varchar(256) not null,
-    blob bytea,
-    unique (name)
+    blob bytea
 );
 
 -- We have to create the self-references here because of inheritance.
