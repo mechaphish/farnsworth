@@ -17,6 +17,8 @@ import json
 def _json_serialize(obj):
     if isinstance(obj, datetime.datetime):
         return obj.isoformat()
+    elif isinstance(obj, buffer):
+        return str(obj)
 
 
 def jsonify(func):
