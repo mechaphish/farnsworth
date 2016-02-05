@@ -35,7 +35,7 @@ postgres = PostgreSQL(app)
 
 # The following files contain subset of the routes
 # that are specific to a subset of the functionality
-#from . import cbs
+from . import cbns
 #from . import cts
 from . import jobs
 #from . import pcaps

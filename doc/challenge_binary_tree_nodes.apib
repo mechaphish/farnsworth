@@ -1,18 +1,18 @@
 <!-- -*- mode: markdown -*- -->
-# Group Challenge Binaries
+# Group Challenge Binary Nodes
 
 Challenge Binaries (CBs) are organized as a tree structure.
 
 The root of the tree is the original un-patched binary provided by CGC API,
 and every new version is stored as a child of the originating node.
 
-Nodes are called Challenge Tree Node or simply CTN.
+Nodes are called Challenge Binary Node or simply CBN.
 
-## Challenge Binary Tree Node [/ctns/{ctn_id}]
+## Challenge Binary Node [/cbns/{cbn_id}]
 
 + Parameters
 
-    + ctn_id: `1` (number) - The id of the Post.
+    + cbn_id: `1` (number) - The id of the Post.
 
 + Model (application/json)
 
@@ -24,7 +24,7 @@ Nodes are called Challenge Tree Node or simply CTN.
 
     + Headers
 
-            Location: /ctns/2
+            Location: /cbns/2
 
     + Body
 
@@ -38,24 +38,24 @@ Nodes are called Challenge Tree Node or simply CTN.
                 "created_at": "2015-08-05T08:40:51.620Z"
             }
 
-### View a CTN [GET]
+### View a CBN [GET]
 
-Retrieve a single CTN.
+Retrieve a single CBN.
 
 + Response 200 (application/json)
 
-    [Challenge Binary Tree Node][]
+    [Challenge Binary Node][]
 
-## Challenge Binary Tree Nodes Collection [/ctns{?name,root_id}]
+## Challenge Binary Nodes Collection [/cbns{?name,root_id}]
 
-### List CTNs [GET]
+### List CBNs [GET]
 
-List all CTNs, optionally filtered by parameters.
+List all CBNs, optionally filtered by parameters.
 
 + Parameters
 
     + name: `xxx` (string) - Name of the binary.
-    + root_id: `1` (number) - Id of root CTN.
+    + root_id: `1` (number) - Id of root CBN.
 
 + Response 200 (application/json)
 
@@ -73,9 +73,9 @@ List all CTNs, optionally filtered by parameters.
             ]
 
 
-### Create a CTN [POST]
+### Create a CBN [POST]
 
-Create a new CTN.
+Create a new CBN.
 
 + Request (application/json)
 
@@ -93,7 +93,7 @@ Create a new CTN.
 
 + Response 201 (application/json)
 
-    [Challenge Binary Tree Node][]
+    [Challenge Binary Node][]
 
 + Response 422 (application/json)
 
