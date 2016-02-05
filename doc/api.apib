@@ -1,0 +1,26 @@
+FORMAT: 1A
+HOST: http://FARNSWORTH_SERVICE_HOST
+
+# Farnsworth API
+
+Farnsworth is the central knowledge database for the Shellphish CRS.
+It is a HTTP REST interface that sits between the actual PostgreSQL database and
+the other components. It allows all other components to report on the state of
+the game or query the state of the game.
+
+
+## Base concepts
+
+The database API follows some basic design guidelines:
+
+* Every endpoint that only retrieves data but does not add or modify anything is a GET request.
+* Every endpoint that adds to the state of the database is a POST request.
+* Every endpoint that updates the state of the database is a PUT request.
+* Requests and responses body are in JSON format.
+* REST URLs have name of the resource pluralized (eg. `/jobs`).
+* JSON body keys are in snake case format (eg. `ctn_id`, not `ctnID`).
+
+
+<!-- include(status.apib) -->
+<!-- include(challenge_binary_tree_nodes.apib) -->
+<!-- include(jobs.apib) -->

@@ -1,0 +1,106 @@
+<!-- -*- mode: markdown -*- -->
+# Group Challenge Binaries
+
+Challenge Binaries (CBs) are organized as a tree structure.
+
+The root of the tree is the original un-patched binary provided by CGC API,
+and every new version is stored as a child of the originating node.
+
+Nodes are called Challenge Tree Node or simply CTN.
+
+## Challenge Binary Tree Node [/ctns/{ctn_id}]
+
++ Parameters
+
+    + ctn_id: `1` (number) - The id of the Post.
+
++ Model (application/json)
+
+    + `name` - Name of the binary.
+    + `root_id` - Id of root node.
+    + `parent_id` - Id of parent node.
+    + `parent_path` - Array containing the id of the ancestors, if present.
+    + `blob` - Binary data base64 encoded.
+
+    + Headers
+
+            Location: /ctns/2
+
+    + Body
+
+            {
+                "id": 2,
+                "name": "cgc_b234ac2",
+                "blob": "Q2lhbyBzb25vIHVuIGJpbmFyaW8hCg==",
+                "root_id": 1,
+                "parent_id": 1,
+                "parent_path": [1, 2],
+                "created_at": "2015-08-05T08:40:51.620Z"
+            }
+
+### View a CTN [GET]
+
+Retrieve a single CTN.
+
++ Response 200 (application/json)
+
+    [Challenge Binary Tree Node][]
+
+## Challenge Binary Tree Nodes Collection [/ctns{?name,root_id}]
+
+### List CTNs [GET]
+
+List all CTNs, optionally filtered by parameters.
+
++ Parameters
+
+    + name: `xxx` (string) - Name of the binary.
+    + root_id: `1` (number) - Id of root CTN.
+
++ Response 200 (application/json)
+
+    + Body
+
+            [
+                {
+                    "id": 1,
+                    ...
+                },
+                {
+                    "id": 2,
+                    ...
+                },
+            ]
+
+
+### Create a CTN [POST]
+
+Create a new CTN.
+
++ Request (application/json)
+
+    + `name` Name of the binary.
+    + `parent_id` id of the direct parent binary. If `undefined` node will be a root node.
+    + `blob` Binary data base64 encoded
+
+    + Body
+
+            {
+                "name": "cgc_b234ac2",
+                "parent_id": 1,
+                "blob": "Q2lhbyBzb25vIHVuIGJpbmFyaW8hCg=="
+            }
+
++ Response 201 (application/json)
+
+    [Challenge Binary Tree Node][]
+
++ Response 422 (application/json)
+
+    There were errors creating the resource.
+
+    + Body
+
+            {
+                "errors": [...]
+            }

@@ -1,0 +1,123 @@
+<!-- -*- mode: markdown -*- -->
+# Group Jobs
+
+A Job contains the specifics for a worker execution and its status.
+
+## Job [/jobs/{job_id}]
+
++ Parameters
+
+    + job_id: `1` (number) - The id of the job.
+
++ Model (application/json)
+
+    + `priority` (number) - Priority of the job. Higher value = higher priority.
+    + `worker` (string) - Identifier of the worker.
+    + `limit_cpu` (number) - Maximum number of # of CPU cores to use.
+    + `limit_memory` (number) - Maximum amount of memory (in GB) to use.
+    + `started_at` (timestamp) - Worker run start.
+    + `completed_at` (timestamp) - Worker run end.
+    + `ctn_id` (number) - Id of CTN used by job.
+    + `produced_output` (boolean) - `true` if job successfully produced output,
+      `false` did not produce any output, `undefined` if job has not completed yet.
+    + `blob` (string) - Serialized job arguments base64 encoded.
+
+    + Headers
+
+            Location: /jobs/1
+    + Body
+
+            {
+                "id": 1,
+                "created_at": "2015-08-05T08:40:51.620Z",
+                "updated_at": "2015-08-05T08:40:51.620Z",
+                "priority": 0,
+                "worker": "afl",
+                "limit_cpu": 2,
+                "limit_memory": 1,
+                "started_at": "2015-08-05T08:40:51.620Z",
+                "completed_at": "2015-08-05T08:40:51.620Z",
+                "ctn_id": 2,
+                "produced_output": false,
+                "blob": "Q2lhbyBzb25vIHVuIGJpbmFyaW8hCg=="
+            }
+
+### View a Job [GET]
+
+Retrieve a single Job.
+
++ Response 200
+
+    [Job][]
+
+### Update a Job [PUT]
+
+Update a single job by setting status.
+
++ Parameters
+
+    + job_id: `1` (number) - The id of the job.
+
++ Request (application/json)
+
+    [Job][]
+
++ Response 200 (application/json)
+
+    [Job][]
+
+
+## Jobs Collection [/jobs]
+
+### List Jobs [GET]
+
+Retrieve all jobs.
+
++ Response 200 (application/json)
+
+    + Body
+
+            [
+                {
+                    "id": 1,
+                    ...
+                },
+                {
+                    "id": 2,
+                    ...
+                },
+            ]
+
+### Create a Job [POST]
+
+Create a new job.
+
++ Request (application/json)
+
+    + `priority` (number) - Priority of the job. Higher value = higher priority.
+    + `worker` (string) - Identifier of the worker.
+    + `limit_cpu` (number) - Maximum number of # of CPU cores to use.
+    + `limit_memory` (number) - Maximum amount of memory (in GB) to use.
+    + `ctn_id` (number) - Id of CTN used by job.
+    + `blob` (string) - Serialized job arguments base64 encoded.
+
+    + Body
+
+            {
+                "id": 1,
+                "created_at": "2015-08-05T08:40:51.620Z",
+                "updated_at": "2015-08-05T08:40:51.620Z",
+                "priority": 0,
+                "worker": "afl",
+                "limit_cpu": 2,
+                "limit_memory": 1,
+                "started_at": "2015-08-05T08:40:51.620Z",
+                "completed_at": "2015-08-05T08:40:51.620Z",
+                "ctn_id": 2,
+                "produced_output": false,
+                "blob": "Q2lhbyBzb25vIHVuIGJpbmFyaW8hCg=="
+            }
+
++ Response 201
+
+    [Job][]

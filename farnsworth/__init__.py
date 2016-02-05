@@ -3,18 +3,6 @@
 
 import sys
 
-"""Farnsworth is the central knowledge database for the Shellphish CRS.
-
-It is a HTTP REST interface that sits between the actual PostgreSQL database, the meister, and the
-actual workers.  It allows all other components to report on the state of the game or query the
-state of the game.
-
-The database API follows some basic design guidelines:
-- Every endpoint that only retrieves data but does not add or modify anything is a GET request.
-- Every endpoint that adds to the state of the database is a POST request.
-- Every endpoint that updates the state of the database is a PUT request.
-"""
-
 __authors__ = "Kevin Borgolte, Francesco Disperati"
 __version__ = "0.0.0"
 

@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Tests Endpoint
-"""
-
 __authors__ = "Kevin Borgolte"
 __version__ = "0.0.0"
 
@@ -16,20 +13,6 @@ from utils import jsonify, filter_query, update_query
 @app.route("/tests")
 @jsonify
 def tests_get():
-    """The ``/tests`` endpoint can be used to check if the API is reachable
-    and if it is alive.
-
-    The JSON response looks like::
-
-        [{"id": <numerical id>,
-          "ctn_id": <id of the challenge tree node>,
-          "job_id": <id of the job that created the test, optional>,
-          "type": <type of the job>,
-          "data": <test data, base64-encoded>
-         }, ...]
-
-    :return: a list of dictionaries as above
-    """
     cursor = postgres.cursor()
 
     filterable_cols = ['id', 'ctn_id', 'job_id', 'type']
