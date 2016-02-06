@@ -15,9 +15,9 @@ from utils import jsonify, filter_query, update_query
 def tests_get():
     cursor = postgres.cursor()
 
-    filterable_cols = ['id', 'ctn_id', 'job_id', 'type']
+    filterable_cols = ['id', 'cbn_id', 'job_id', 'type']
 
-    cursor.execute(*filter_query("""SELECT id, ctn_id, job_id, type,
+    cursor.execute(*filter_query("""SELECT id, cbn_id, job_id, type,
                                            encode(data, 'base64') as data
                                       FROM tests""",
                                  filterable_cols, request.args))
@@ -34,8 +34,8 @@ def tests_post():
     if isinstance(tests, dict):
         tests = [tests]
 
-    cursor.executemany("""INSERT INTO tests (ctn_id, job_id, type, data)
-                          VALUES (%(ctn_id)s, %(job_id)s, %(type)s, %(data)s)""",
+    cursor.executemany("""INSERT INTO tests (cbn_id, job_id, type, data)
+                          VALUES (%(cbn_id)s, %(job_id)s, %(type)s, %(data)s)""",
                        tuple(tests))
 
     return {"status": "added"}  # FIXME should check if added

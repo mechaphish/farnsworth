@@ -17,7 +17,7 @@ A Job contains the specifics for a worker execution and its status.
     + `limit_memory` (number) - Maximum amount of memory (in GB) to use.
     + `started_at` (timestamp) - Worker run start.
     + `completed_at` (timestamp) - Worker run end.
-    + `ctn_id` (number) - Id of CTN used by job.
+    + `cbn_id` (number) - Id of CBN used by job.
     + `produced_output` (boolean) - `true` if job successfully produced output,
       `false` did not produce any output, `undefined` if job has not completed yet.
     + `blob` (string) - Serialized job arguments base64 encoded.
@@ -37,7 +37,7 @@ A Job contains the specifics for a worker execution and its status.
                 "limit_memory": 1,
                 "started_at": "2015-08-05T08:40:51.620Z",
                 "completed_at": "2015-08-05T08:40:51.620Z",
-                "ctn_id": 2,
+                "cbn_id": 2,
                 "produced_output": false,
                 "blob": "Q2lhbyBzb25vIHVuIGJpbmFyaW8hCg=="
             }
@@ -98,7 +98,7 @@ Create a new job.
     + `worker` (string) - Identifier of the worker.
     + `limit_cpu` (number) - Maximum number of # of CPU cores to use.
     + `limit_memory` (number) - Maximum amount of memory (in GB) to use.
-    + `ctn_id` (number) - Id of CTN used by job.
+    + `cbn_id` (number) - Id of CBN used by job.
     + `blob` (string) - Serialized job arguments base64 encoded.
 
     + Body
@@ -113,7 +113,7 @@ Create a new job.
                 "limit_memory": 1,
                 "started_at": "2015-08-05T08:40:51.620Z",
                 "completed_at": "2015-08-05T08:40:51.620Z",
-                "ctn_id": 2,
+                "cbn_id": 2,
                 "produced_output": false,
                 "blob": "Q2lhbyBzb25vIHVuIGJpbmFyaW8hCg=="
             }

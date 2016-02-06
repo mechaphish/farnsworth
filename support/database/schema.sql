@@ -53,7 +53,7 @@ create table jobs (
     limit_memory int null default 8192,  -- In MB
     started_at timestamp null,
     completed_at timestamp null,
-    ctn_id bigint not null references challenge_binary_nodes (id),
+    cbn_id bigint not null references challenge_binary_nodes (id),
     produced_output boolean null,
     blob bytea
 );
@@ -67,7 +67,7 @@ create table tests (
     id bigserial primary key,
     created_at timestamp not null default current_timestamp,
     updated_at timestamp not null default current_timestamp,
-    ctn_id bigint not null references challenge_binary_nodes (id),
+    cbn_id bigint not null references challenge_binary_nodes (id),
     job_id bigint not null references jobs (id),
     type test_type not null,
     blob bytea
@@ -100,7 +100,7 @@ create table bitmaps (
     id bigserial primary key,
     created_at timestamp not null default current_timestamp,
     updated_at timestamp not null default current_timestamp,
-    ctn_id bigint not null references challenge_binary_nodes (id),
+    cbn_id bigint not null references challenge_binary_nodes (id),
     blob bytea
 );
 
@@ -113,7 +113,7 @@ create table pcaps (
     id bigserial primary key,
     created_at timestamp not null default current_timestamp,
     updated_at timestamp not null default current_timestamp,
-    ctn_id bigint not null references challenge_binary_nodes (id),
+    cbn_id bigint not null references challenge_binary_nodes (id),
     team_id bigint not null references teams (id),
     round_id bigint not null references rounds (id),
     type pcap_type not null default 'unknown'
