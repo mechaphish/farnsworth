@@ -20,7 +20,7 @@ A Job contains the specifics for a worker execution and its status.
     + `cbn_id` (number) - Id of CBN used by job.
     + `produced_output` (boolean) - `true` if job successfully produced output,
       `false` did not produce any output, `undefined` if job has not completed yet.
-    + `blob` (string) - Serialized job arguments base64 encoded.
+    + `payload` (string) - Serialized job arguments base64 encoded.
 
     + Headers
 
@@ -99,7 +99,7 @@ Create a new job.
     + `limit_cpu` (number) - Maximum number of # of CPU cores to use.
     + `limit_memory` (number) - Maximum amount of memory (in GB) to use.
     + `cbn_id` (number) - Id of CBN used by job.
-    + `blob` (string) - Serialized job arguments base64 encoded.
+    + `payload` (string) - Serialized job arguments base64 encoded.
 
     + Body
 
@@ -115,7 +115,7 @@ Create a new job.
                 "completed_at": "2015-08-05T08:40:51.620Z",
                 "cbn_id": 2,
                 "produced_output": false,
-                "blob": "Q2lhbyBzb25vIHVuIGJpbmFyaW8hCg=="
+                "payload": "Q2lhbyBzb25vIHVuIGJpbmFyaW8hCg=="
             }
 
 + Response 201
