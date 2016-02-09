@@ -1,0 +1,77 @@
+<!-- -*- mode: markdown -*- -->
+# Group Tests
+
+Tests contains normal test cases, crashes and exploits.
+
+## Test [/tests/{test_id}]
+
++ Parameters
+
+    + test_id: `1` (number) - The id of the Test.
+
++ Model (application/json)
+
+    + `id` - Id of the Test.
+    + `cbn_id` - Id of associated Challenge Binary Node.
+    + `job_id` - Id of genereting job.
+    + `type` - Type of test. Can be `unkwown`, `test`, `crash`, `exploit1` or `exploit2`.
+    + `blob` - Binary data base64 encoded.
+
+    + Headers
+
+            Location: /tests/2
+
+    + Body
+
+            {
+                "id": 1,
+                "blob": "Q2lhbyBzb25vIHVuIGJpbmFyaW8hCg==",
+                "cbn_id": 1,
+                "job_id": 1,
+                "type": "crash",
+                "created_at": "2015-08-05T08:40:51.620Z",
+                "updated_at": "2015-08-05T08:40:51.620Z"
+            }
+
+### Get Test [GET]
+
+Retrieve a single Test.
+
++ Response 200 (application/json)
+
+    [Test][]
+
+### Update Test [PUT]
+
+FIXME
+
+
+## Tests Collection [/tests{?with_descendants,cbn_id}]
+
+### List Tests [GET]
+
+List all Tests, optionally filtered by parameters.
+
++ Parameters
+
+    + with_descendants: `True` (boolean) - If specificied, include also tests from CBN descending the specified CBN.
+    + cbn_id: `1` (number) - Id of CBN.
+
++ Response 200 (application/json)
+
+    + Body
+
+            [
+                {
+                    "id": 1,
+                    ...
+                },
+                {
+                    "id": 2,
+                    ...
+                },
+            ]
+
+### Create Test [POST]
+
+FIXME
