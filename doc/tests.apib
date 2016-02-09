@@ -1,7 +1,27 @@
 <!-- -*- mode: markdown -*- -->
+# Data Structures
+
+## TestData
++ type: crash (required)
+
+    Type of test. Can be `unkwown`, `test`, `crash`, `exploit1` or `exploit2`.
+
++ cbn_id: 1 (required, number) - Id of associated Challenge Binary Node
++ job_id: 1 (required, number) - Id of generating Job
++ blob: `Q2lhbyBzb25vIHVuIGJpbmFyaW8hCg==` - Binary data base64 encoded
+
+## TestDataComplete (TestData)
++ id: 1 (required, number) - Id of the Test
++ created_at: `2015-08-05T08:40:51.620Z`
++ updated_at: `2015-08-05T08:40:51.620Z`
+
+## TestList (array)
++ (TestDataComplete)
+
+
 # Group Tests
 
-Tests contains normal test cases, crashes and exploits.
+Tests contains test cases, crashes and exploits.
 
 ## Test [/tests/{test_id}]
 
@@ -9,48 +29,62 @@ Tests contains normal test cases, crashes and exploits.
 
     + test_id: `1` (number) - The id of the Test.
 
-+ Model (application/json)
-
-    + `id` - Id of the Test.
-    + `cbn_id` - Id of associated Challenge Binary Node.
-    + `job_id` - Id of genereting job.
-    + `type` - Type of test. Can be `unkwown`, `test`, `crash`, `exploit1` or `exploit2`.
-    + `blob` - Binary data base64 encoded.
-
-    + Headers
-
-            Location: /tests/2
-
-    + Body
-
-            {
-                "id": 1,
-                "blob": "Q2lhbyBzb25vIHVuIGJpbmFyaW8hCg==",
-                "cbn_id": 1,
-                "job_id": 1,
-                "type": "crash",
-                "created_at": "2015-08-05T08:40:51.620Z",
-                "updated_at": "2015-08-05T08:40:51.620Z"
-            }
-
 ### Get Test [GET]
 
 Retrieve a single Test.
 
 + Response 200 (application/json)
 
-    [Test][]
+    + Headers
+
+            Location: /tests/2
+
+    + Attributes (TestDataComplete)
+
++ Response 404 (application/json)
+
+    + Body
+
+            {
+                "errors": ["Test not found"]
+            }
 
 ### Update Test [PUT]
 
-FIXME
+Update a single Test by setting attributes.
+
++ Request (application/json)
+
+    + Attributes (TestData)
+
++ Response 200
+
+    + Attributes (TestDataComplete)
+
++ Response 404 (application/json)
+
+    + Body
+
+            {
+                "errors": ["Test not found"]
+            }
+
++ Response 422
+
+    There were errors updating the resource.
+
+    + Body
+
+            {
+                "errors": [...]
+            }
 
 
 ## Tests Collection [/tests{?with_descendants,cbn_id}]
 
 ### List Tests [GET]
 
-List all Tests, optionally filtered by parameters.
+List all tests, optionally filtered by parameters.
 
 + Parameters
 
@@ -59,19 +93,26 @@ List all Tests, optionally filtered by parameters.
 
 + Response 200 (application/json)
 
-    + Body
-
-            [
-                {
-                    "id": 1,
-                    ...
-                },
-                {
-                    "id": 2,
-                    ...
-                },
-            ]
+    + Attributes (TestList)
 
 ### Create Test [POST]
 
-FIXME
+Create a new test.
+
++ Request (application/json)
+
+    + Attributes (TestData)
+
++ Response 201 (application/json)
+
+    + Attributes (TestDataComplete)
+
++ Response 422
+
+    There were errors creating the resource.
+
+    + Body
+
+            {
+                "errors": [...]
+            }

@@ -1,4 +1,25 @@
 <!-- -*- mode: markdown -*- -->
+# Data Structures
+
+## CBNData
++ id: 2 (required, number) - Id of the CBN
++ name: cgc_b234ac2 (required, string) - Name of the binary
++ root_id: 1 (number) - Id of root node, if present
++ parent_id: 1 (number) - Id of parent node, if present
++ parent_path: 1, 2 (array[number]) - Ids of the ancestors, if present
++ blob: `Q2lhbyBzb25vIHVuIGJpbmFyaW8hCg==` - Binary data base64 encoded
++ created_at: `2015-08-05T08:40:51.620Z`
++ updated_at: `2015-08-05T08:40:51.620Z`
+
+## CBNDataRequest
++ name: cgc_b234ac2 (required, string) - Name of the binary
++ parent_id: 1 (number) - Id of parent node. If `undefined` node will be a root node
++ blob: `Q2lhbyBzb25vIHVuIGJpbmFyaW8hCg==` - Binary data base64 encoded
+
+## CBNDataList (array)
++ (CBNData)
+
+
 # Group Challenge Binary Nodes
 
 Challenge Binaries (CBs) are organized as a tree structure.
@@ -14,39 +35,27 @@ Nodes are called Challenge Binary Node or simply CBN.
 
     + cbn_id: `1` (number) - The id of the Challenge Binary Node.
 
-+ Model (application/json)
-
-    + `name` - Name of the binary.
-    + `root_id` - Id of root node.
-    + `parent_id` - Id of parent node.
-    + `parent_path` - Array containing the id of the ancestors, if present.
-    + `blob` - Binary data base64 encoded.
-
-    + Headers
-
-            Location: /cbns/2
-
-    + Body
-
-            {
-                "id": 2,
-                "name": "cgc_b234ac2",
-                "blob": "Q2lhbyBzb25vIHVuIGJpbmFyaW8hCg==",
-                "root_id": 1,
-                "parent_id": 1,
-                "parent_path": [1, 2],
-                "created_at": "2015-08-05T08:40:51.620Z"
-            }
-
 ### Get CBN [GET]
 
 Retrieve a single CBN.
 
 + Response 200 (application/json)
 
-    [Challenge Binary Node][]
+    + Headers
 
-## Challenge Binary Nodes Collection [/cbns{?name,root_id}]
+            Location: /cbns/2
+
+    + Attributes (CBNData)
+
++ Response 404 (application/json)
+
+    + Body
+
+            {
+                "errors": ["Challenge Binary Node not found"]
+            }
+
+## Challenge Binary Nodes Collection [/cbns{?name,parent_id}]
 
 ### List CBNs [GET]
 
@@ -55,23 +64,11 @@ List all CBNs, optionally filtered by parameters.
 + Parameters
 
     + name: `xxx` (string) - Name of the binary.
-    + root_id: `1` (number) - Id of root CBN.
+    + parent_id: `1` (number) - Id of parent CBN.
 
 + Response 200 (application/json)
 
-    + Body
-
-            [
-                {
-                    "id": 1,
-                    ...
-                },
-                {
-                    "id": 2,
-                    ...
-                },
-            ]
-
+    + Attributes (CBNDataList)
 
 ### Create CBN [POST]
 
@@ -79,21 +76,11 @@ Create a new CBN.
 
 + Request (application/json)
 
-    + `name` Name of the binary.
-    + `parent_id` id of the direct parent binary. If `undefined` node will be a root node.
-    + `blob` Binary data base64 encoded
-
-    + Body
-
-            {
-                "name": "cgc_b234ac2",
-                "parent_id": 1,
-                "blob": "Q2lhbyBzb25vIHVuIGJpbmFyaW8hCg=="
-            }
+    + Attributes (CBNDataRequest)
 
 + Response 201 (application/json)
 
-    [Challenge Binary Node][]
+    + Attributes (CBNData)
 
 + Response 422 (application/json)
 

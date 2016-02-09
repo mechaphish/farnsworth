@@ -1,4 +1,32 @@
 <!-- -*- mode: markdown -*- -->
+# Data Structures
+
+## JobData
++ priority: 0 (number) - Priority of the job. Higher value = higher priority
++ worker: afl (required, string) - Type of worker
++ limit_cpu: 4 (required, number) - Maximum number of # of CPU cores to use
++ limit_memory: 1 (required, number) - Maximum amount of memory (in GB) to use
++ started_at: `2015-08-05T08:40:51.620Z` - Worker run start
++ completed_at: `2015-08-05T08:40:51.620Z` - Worker run end
++ cbn_id: 2 (required, number) - Id of CBN used by job
++ produced_output: true (boolean)
+
+    `true` if job successfully produced output,
+    `false` did not produce any output, `undefined` if job has not completed yet
+
++ payload: `Q2lhbyBzb25vIHVuIGJpbmFyaW8hCg==` (string)
+
+    Serialized job arguments base64 encoded
+
+## JobDataComplete (JobData)
++ id: 1 (required, number) - Id of the Job
++ created_at: `2015-08-05T08:40:51.620Z`
++ updated_at: `2015-08-05T08:40:51.620Z`
+
+## JobList (array)
++ (JobDataComplete)
+
+
 # Group Jobs
 
 A Job contains the specifics for a worker execution and its status.
@@ -9,63 +37,55 @@ A Job contains the specifics for a worker execution and its status.
 
     + job_id: `1` (number) - The id of the job.
 
-+ Model (application/json)
-
-    + `priority` (number) - Priority of the job. Higher value = higher priority.
-    + `worker` (string) - Identifier of the worker.
-    + `limit_cpu` (number) - Maximum number of # of CPU cores to use.
-    + `limit_memory` (number) - Maximum amount of memory (in GB) to use.
-    + `started_at` (timestamp) - Worker run start.
-    + `completed_at` (timestamp) - Worker run end.
-    + `cbn_id` (number) - Id of CBN used by job.
-    + `produced_output` (boolean) - `true` if job successfully produced output,
-      `false` did not produce any output, `undefined` if job has not completed yet.
-    + `payload` (string) - Serialized job arguments base64 encoded.
-
-    + Headers
-
-            Location: /jobs/1
-    + Body
-
-            {
-                "id": 1,
-                "created_at": "2015-08-05T08:40:51.620Z",
-                "updated_at": "2015-08-05T08:40:51.620Z",
-                "priority": 0,
-                "worker": "afl",
-                "limit_cpu": 2,
-                "limit_memory": 1,
-                "started_at": "2015-08-05T08:40:51.620Z",
-                "completed_at": "2015-08-05T08:40:51.620Z",
-                "cbn_id": 2,
-                "produced_output": false,
-                "payload": "Q2lhbyBzb25vIHVuIGJpbmFyaW8hCg=="
-            }
-
 ### Get Job [GET]
 
 Retrieve a single Job.
 
 + Response 200
 
-    [Job][]
+    + Headers
+
+            Location: /jobs/1
+
+    + Attributes (JobDataComplete)
+
++ Response 404 (application/json)
+
+    + Body
+
+            {
+                "errors": ["Test not found"]
+            }
 
 ### Update Job [PUT]
 
 Update a single job by setting status.
 
-+ Parameters
-
-    + job_id: `1` (number) - The id of the job.
-
 + Request (application/json)
 
-    [Job][]
+    + Attributes (JobData)
 
-+ Response 200 (application/json)
++ Response 200
 
-    [Job][]
+    + Attributes (JobDataComplete)
 
++ Response 404 (application/json)
+
+    + Body
+
+            {
+                "errors": ["Job not found"]
+            }
+
++ Response 422
+
+    There were errors updating the resource.
+
+    + Body
+
+            {
+                "errors": [...]
+            }
 
 ## Jobs Collection [/jobs]
 
@@ -75,18 +95,7 @@ Retrieve all jobs.
 
 + Response 200 (application/json)
 
-    + Body
-
-            [
-                {
-                    "id": 1,
-                    ...
-                },
-                {
-                    "id": 2,
-                    ...
-                },
-            ]
+    + Attributes (JobList)
 
 ### Create Job [POST]
 
@@ -94,30 +103,18 @@ Create a new job.
 
 + Request (application/json)
 
-    + `priority` (number) - Priority of the job. Higher value = higher priority.
-    + `worker` (string) - Identifier of the worker.
-    + `limit_cpu` (number) - Maximum number of # of CPU cores to use.
-    + `limit_memory` (number) - Maximum amount of memory (in GB) to use.
-    + `cbn_id` (number) - Id of CBN used by job.
-    + `payload` (string) - Serialized job arguments base64 encoded.
+    + Attributes (JobData)
+
++ Response 201 (application/json)
+
+    + Attributes (JobDataComplete)
+
++ Response 422
+
+    There were errors creating the resource.
 
     + Body
 
             {
-                "id": 1,
-                "created_at": "2015-08-05T08:40:51.620Z",
-                "updated_at": "2015-08-05T08:40:51.620Z",
-                "priority": 0,
-                "worker": "afl",
-                "limit_cpu": 2,
-                "limit_memory": 1,
-                "started_at": "2015-08-05T08:40:51.620Z",
-                "completed_at": "2015-08-05T08:40:51.620Z",
-                "cbn_id": 2,
-                "produced_output": false,
-                "payload": "Q2lhbyBzb25vIHVuIGJpbmFyaW8hCg=="
+                "errors": [...]
             }
-
-+ Response 201
-
-    [Job][]
