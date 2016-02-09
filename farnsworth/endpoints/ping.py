@@ -5,7 +5,7 @@ __authors__ = "Kevin Borgolte"
 __version__ = "0.0.0"
 
 
-from . import app
+from .. import app
 from utils import jsonify
 
 

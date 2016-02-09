@@ -35,16 +35,15 @@ postgres = PostgreSQL(app)
 
 # The following files contain subset of the routes
 # that are specific to a subset of the functionality
-from . import cbns
-#from . import cts
-from . import jobs
+from .endpoints import cbns
+from .endpoints import jobs
 #from . import pcaps
 #from . import performances
-from . import ping
+from .endpoints import ping
 #from . import scores
 #from . import status
 #from . import teams
-from . import tests
+from .endpoints import tests
 
 if __name__ == "__main__":
     app.run()
