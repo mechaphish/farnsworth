@@ -44,6 +44,7 @@ from .endpoints import ping
 #from . import status
 #from . import teams
 from .endpoints import tests
+from .endpoints import bitmaps
 
 if __name__ == "__main__":
     app.run()
