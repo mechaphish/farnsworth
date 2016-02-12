@@ -48,13 +48,13 @@ def get_test(test_id):
 @app.route("/tests", methods=["POST"])
 @jsonify
 def create_test():
-    cursor = postgres.cursor(dictionary=False)
+    cursor = postgres.cursor()
 
     test = request.get_json()
-    cursor.execute("""INSERT INTO tests (cbn_id, job_id, type, data)
-                      VALUES (%(cbn_id)s, %(job_id)s, %(type)s, %(data)s)
-                      RETURNING *""",
-                   tuple(tests))
+    cursor.execute("""INSERT INTO tests (cbn_id, job_id, type, blob)
+                      VALUES (%(cbn_id)s, %(job_id)s, %(type)s, decode(%(blob)s, 'base64'))
+                      RETURNING id, cbn_id, job_id, type, encode(blob, 'base64') as blob, created_at, updated_at""",
+                   test)
 
     if cursor.rowcount == 0:
         return {"errors": []}
@@ -65,7 +65,7 @@ def create_test():
 @app.route("/tests/<int:test_id>", methods=["PUT"])
 @jsonify
 def update_test(test_id):
-    cursor = postgres.cursor(dictionary=False)
+    cursor = postgres.cursor()
 
     test = request.get_json()
     cursor.execute(*update_query('tests', updates, where))
