@@ -28,8 +28,13 @@ def jsonify(func):
     """
     @functools.wraps(func)
     def wrapper(**kwds):     # pylint: disable=missing-docstring
-        return Response(json.dumps(func(**kwds), default=_json_serialize),
-                        mimetype='application/json')
+        data = func(**kwds)
+        status = 200
+        if isinstance(data, tuple):
+            status = data[1]
+            data = data[0]
+        return Response(json.dumps(data, default=_json_serialize),
+                        mimetype='application/json', status=status)
     return wrapper
 
 

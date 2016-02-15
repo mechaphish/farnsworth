@@ -22,6 +22,6 @@ def create_bitmap():
                    (d['cbn_id'], d['blob']))
 
     if cursor.rowcount == 0:
-        return {"errors": []}
+        return {"errors": []}, 422
     else:
-        return cursor.fetchone()
+        return cursor.fetchone(), 201

@@ -42,7 +42,11 @@ def list_tests():
 def get_test(test_id):
     cursor = postgres.cursor()
     cursor.execute("""SELECT * FROM tests WHERE id = %s""", [test_id])
-    return cursor.fetchone()
+    resource = cursor.fetchone()
+    if resource:
+        return resource
+    else:
+        return {'errors': ['not found']}, 404
 
 
 @app.route("/tests", methods=["POST"])
@@ -57,9 +61,9 @@ def create_test():
                    test)
 
     if cursor.rowcount == 0:
-        return {"errors": []}
+        return {"errors": []}, 422
     else:
-        return cursor.fetchone()
+        return cursor.fetchone(), 201
 
 
 @app.route("/tests/<int:test_id>", methods=["PUT"])
@@ -71,6 +75,6 @@ def update_test(test_id):
     cursor.execute(*update_query('tests', updates, where))
 
     if cursor.rowcount == 0:
-        return {"errors": []}
+        return {"errors": []}, 422
     else:
         return cursor.fetchone()

@@ -23,9 +23,9 @@ def create_challenge_binary_node():
                     d['name'], d['blob']))
 
     if cursor.rowcount == 0:
-        return {"errors": []}
+        return {"errors": []}, 422
     else:
-        return cursor.fetchone()
+        return cursor.fetchone(), 201
 
 
 @app.route("/cbns", methods=['GET'])
@@ -45,4 +45,8 @@ def get_challenge_binary_node(cbn_id):
     cursor.execute(
         """SELECT * FROM challenge_binary_nodes WHERE id = %s""", [cbn_id]
     )
-    return cursor.fetchone()
+    resource = cursor.fetchone()
+    if resource:
+        return resource
+    else:
+        return {'errors': ['not found']}, 404

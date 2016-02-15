@@ -35,7 +35,11 @@ def list_jobs():
 def get_job(job_id):
     cursor = postgres.cursor()
     cursor.execute("""SELECT * FROM jobs WHERE id = %s""", [job_id])
-    return cursor.fetchone()
+    result = cursor.fetchone()
+    if result:
+        return result
+    else:
+        return {'errors': ['not found']}, 404
 
 
 @app.route("/jobs", methods=['POST'])
@@ -51,9 +55,9 @@ def create_job():
                     d['cbn_id'], psycopg2.Binary(str(d['payload']))))
 
     if cursor.rowcount == 0:
-        return {"errors": []}
+        return {"errors": []}, 422
     else:
-        return cursor.fetchone()
+        return cursor.fetchone(), 201
 
 
 @app.route("/jobs/<int:job_id>", methods=["PUT"])
@@ -71,6 +75,6 @@ def update_job(job_id):
     cursor.execute("""SELECT * FROM jobs WHERE id = %s""", [job_id])
 
     if cursor.rowcount == 0:
-        return {"errors": []}
+        return {"errors": []}, 422
     else:
         return cursor.fetchone()
