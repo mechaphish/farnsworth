@@ -4,18 +4,18 @@ Farnsworth is the knowledge base of the Shellphish CRS. It provides a
 JSON-based REST API and uses PostgreSQL as the data store.
 
 
-## Documentation
+## API Documentation
 
 API specs follows [API Blueprint](https://apiblueprint.org/) format.
 
 To compile HTML browseable use Aglio:
 
     npm install -g aglio
-    aglio -i doc/api.apib -o doc/index.html
+    make build-api-docs
 
 Livereload is also available:
 
-    aglio -i doc/api.apib -o doc/index.html --server
+    make
     open http://127.0.0.1:3000/
 
 ## Requirements
