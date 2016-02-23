@@ -1,0 +1,17 @@
+# tests:
+#   script:
+#     - angr-test sync hard
+#     - angr-test ...
+#   tags: [angr]
+
+lint:
+  script: "lint.py"
+  tags: ["cgc-linter"]
+
+docs:
+  script: "generate_docs"
+  tags: ["cgc-linter"]
+
+api_docs:
+  script: "make publish-api-docs"
+  tags: ["cgc-linter"]
