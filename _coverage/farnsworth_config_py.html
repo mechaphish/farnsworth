@@ -86,14 +86,14 @@
             </td>
             <td class="text">
 <p id="t1" class="stm run hide_run"><span class="key">from</span> <span class="nam">peewee</span> <span class="key">import</span> <span class="op">*</span><span class="strut">&nbsp;</span></p>
-<p id="t2" class="stm run hide_run"><span class="key">from</span> <span class="nam">os</span> <span class="key">import</span> <span class="nam">environ</span> <span class="key">as</span> <span class="nam">ENV</span><span class="strut">&nbsp;</span></p>
+<p id="t2" class="stm run hide_run"><span class="key">import</span> <span class="nam">os</span><span class="strut">&nbsp;</span></p>
 <p id="t3" class="pln"><span class="strut">&nbsp;</span></p>
 <p id="t4" class="stm run hide_run"><span class="nam">db</span> <span class="op">=</span> <span class="nam">PostgresqlDatabase</span><span class="op">(</span><span class="strut">&nbsp;</span></p>
-<p id="t5" class="pln">&nbsp; &nbsp; <span class="nam">ENV</span><span class="op">[</span><span class="str">&#39;POSTGRES_DATABASE_NAME&#39;</span><span class="op">]</span><span class="op">,</span><span class="strut">&nbsp;</span></p>
-<p id="t6" class="pln">&nbsp; &nbsp; <span class="nam">user</span><span class="op">=</span><span class="nam">ENV</span><span class="op">[</span><span class="str">&#39;POSTGRES_DATABASE_USER&#39;</span><span class="op">]</span><span class="op">,</span><span class="strut">&nbsp;</span></p>
-<p id="t7" class="pln">&nbsp; &nbsp; <span class="nam">password</span><span class="op">=</span><span class="nam">ENV</span><span class="op">[</span><span class="str">&#39;POSTGRES_DATABASE_PASSWORD&#39;</span><span class="op">]</span><span class="op">,</span><span class="strut">&nbsp;</span></p>
-<p id="t8" class="pln">&nbsp; &nbsp; <span class="nam">host</span><span class="op">=</span><span class="nam">ENV</span><span class="op">[</span><span class="str">&#39;POSTGRES_SERVICE_HOST&#39;</span><span class="op">]</span><span class="op">,</span><span class="strut">&nbsp;</span></p>
-<p id="t9" class="pln">&nbsp; &nbsp; <span class="nam">port</span><span class="op">=</span><span class="nam">ENV</span><span class="op">[</span><span class="str">&#39;POSTGRES_SERVICE_PORT&#39;</span><span class="op">]</span><span class="op">,</span><span class="strut">&nbsp;</span></p>
+<p id="t5" class="pln">&nbsp; &nbsp; <span class="nam">os</span><span class="op">.</span><span class="nam">environ</span><span class="op">[</span><span class="str">&#39;POSTGRES_DATABASE_NAME&#39;</span><span class="op">]</span><span class="op">,</span><span class="strut">&nbsp;</span></p>
+<p id="t6" class="pln">&nbsp; &nbsp; <span class="nam">user</span><span class="op">=</span><span class="nam">os</span><span class="op">.</span><span class="nam">environ</span><span class="op">[</span><span class="str">&#39;POSTGRES_DATABASE_USER&#39;</span><span class="op">]</span><span class="op">,</span><span class="strut">&nbsp;</span></p>
+<p id="t7" class="pln">&nbsp; &nbsp; <span class="nam">password</span><span class="op">=</span><span class="nam">os</span><span class="op">.</span><span class="nam">environ</span><span class="op">[</span><span class="str">&#39;POSTGRES_DATABASE_PASSWORD&#39;</span><span class="op">]</span><span class="op">,</span><span class="strut">&nbsp;</span></p>
+<p id="t8" class="pln">&nbsp; &nbsp; <span class="nam">host</span><span class="op">=</span><span class="nam">os</span><span class="op">.</span><span class="nam">environ</span><span class="op">[</span><span class="str">&#39;POSTGRES_SERVICE_HOST&#39;</span><span class="op">]</span><span class="op">,</span><span class="strut">&nbsp;</span></p>
+<p id="t9" class="pln">&nbsp; &nbsp; <span class="nam">port</span><span class="op">=</span><span class="nam">os</span><span class="op">.</span><span class="nam">environ</span><span class="op">[</span><span class="str">&#39;POSTGRES_SERVICE_PORT&#39;</span><span class="op">]</span><span class="op">,</span><span class="strut">&nbsp;</span></p>
 <p id="t10" class="pln"><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t11" class="pln"><span class="strut">&nbsp;</span></p>
 <p id="t12" class="pln"><span class="com"># import logging</span><span class="strut">&nbsp;</span></p>
@@ -110,7 +110,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.org">coverage.py v4.0.3</a>,
-            created at 2016-02-29 12:41
+            created at 2016-02-29 14:24
         </p>
     </div>
 </div>

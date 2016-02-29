@@ -84,7 +84,7 @@
 <p id="t4" class="stm run hide_run"><span class="key">from</span> <span class="op">.</span><span class="nam">challenge_binary_node</span> <span class="key">import</span> <span class="nam">ChallengeBinaryNode</span><span class="strut">&nbsp;</span></p>
 <p id="t5" class="pln"><span class="strut">&nbsp;</span></p>
 <p id="t6" class="stm run hide_run"><span class="key">class</span> <span class="nam">Bitmap</span><span class="op">(</span><span class="nam">BaseModel</span><span class="op">)</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
-<p id="t7" class="stm run hide_run">&nbsp; &nbsp; <span class="nam">cbn</span> <span class="op">=</span> <span class="nam">ForeignKeyField</span><span class="op">(</span><span class="nam">db_column</span><span class="op">=</span><span class="str">&#39;cbn_id&#39;</span><span class="op">,</span> <span class="nam">rel_model</span><span class="op">=</span><span class="nam">ChallengeBinaryNode</span><span class="op">,</span> <span class="nam">to_field</span><span class="op">=</span><span class="str">&#39;id&#39;</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
+<p id="t7" class="stm run hide_run">&nbsp; &nbsp; <span class="nam">cbn</span> <span class="op">=</span> <span class="nam">ForeignKeyField</span><span class="op">(</span><span class="nam">db_column</span><span class="op">=</span><span class="str">&#39;cbn_id&#39;</span><span class="op">,</span> <span class="nam">rel_model</span><span class="op">=</span><span class="nam">ChallengeBinaryNode</span><span class="op">,</span> <span class="nam">to_field</span><span class="op">=</span><span class="str">&#39;id&#39;</span><span class="op">,</span> <span class="nam">related_name</span><span class="op">=</span><span class="str">&#39;bitmap&#39;</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t8" class="stm run hide_run">&nbsp; &nbsp; <span class="nam">blob</span> <span class="op">=</span> <span class="nam">BlobField</span><span class="op">(</span><span class="nam">null</span><span class="op">=</span><span class="nam">True</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
                 
             </td>
@@ -96,7 +96,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.org">coverage.py v4.0.3</a>,
-            created at 2016-02-29 12:41
+            created at 2016-02-29 14:24
         </p>
     </div>
 </div>
