@@ -30,10 +30,16 @@ class DrillerJob(Job):
         from .test import Test
         return Test.get(id=self.payload)
 
+    class Meta: #pylint:disable=no-init
+        db_table = 'jobs'
+
 class AFLJob(Job):
     '''
     This represents a job for AFL. It requires no extra input.
     '''
+
+    class Meta: #pylint:disable=no-init
+        db_table = 'jobs'
 
 class RexJob(Job):
     '''
@@ -46,3 +52,7 @@ class RexJob(Job):
     def input_crash(self):
         from .crash import Crash
         return Crash.get(id=self.payload)
+
+    class Meta: #pylint:disable=no-init
+        db_table = 'jobs'
+
