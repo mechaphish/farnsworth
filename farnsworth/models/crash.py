@@ -11,5 +11,6 @@ class Crash(BaseModel):
     exploited = BooleanField(null=True)
     explorable = BooleanField(null=True)
     explored = BooleanField(null=True)
-    job = ForeignKeyField(db_column='job_id', rel_model=Job, to_field='id', related_name='cbn')
+    job = ForeignKeyField(db_column='job_id', rel_model=Job, to_field='id', related_name='crashes')
     triaged = BooleanField()
+
