@@ -13,4 +13,4 @@ class ChallengeBinaryNode(BaseModel):
 
     @property
     def path(self):
-        os.path.join(__file__, '../../../cbs', os.environ['CGC_EVENT'], self.cs_id, self.name)
+        return os.path.join(os.path.dirname(__file__), '../../../cbs', os.environ['CGC_EVENT'], self.cs_id, self.name)
