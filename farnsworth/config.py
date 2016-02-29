@@ -1,8 +1,5 @@
 from peewee import *
 import os
-import dotenv
-
-dotenv.load_dotenv(os.path.join(os.path.dirname(__file__), '../.env'))
 
 db = PostgresqlDatabase(
     os.environ['POSTGRES_DATABASE_NAME'],
