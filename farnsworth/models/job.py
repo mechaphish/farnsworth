@@ -26,6 +26,8 @@ class DrillerJob(Job):
     `payload` field.
     '''
 
+    worker = CharField(default='driller')
+
     @property
     def input_test(self):
         from .test import Test
@@ -39,6 +41,8 @@ class AFLJob(Job):
     This represents a job for AFL. It requires no extra input.
     '''
 
+    worker = CharField(default='afl')
+
     class Meta: #pylint:disable=no-init
         db_table = 'jobs'
 
@@ -48,6 +52,8 @@ class RexJob(Job):
     as an input. Here, we receive the testcase as a string in the
     `payload` field.
     '''
+
+    worker = CharField(default='rex')
 
     @property
     def input_crash(self):
