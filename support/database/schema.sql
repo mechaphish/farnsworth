@@ -66,7 +66,7 @@ create table tests (
     updated_at timestamp not null default current_timestamp,
     cbn_id bigint not null references challenge_binary_nodes (id),
     job_id bigint not null references jobs (id),
-    drilled boolean null,
+    drilled boolean not null default false,
     blob bytea
 );
 
@@ -78,7 +78,7 @@ create table crashes (
     updated_at timestamp not null default current_timestamp,
     cbn_id bigint not null references challenge_binary_nodes (id),
     job_id bigint not null references jobs (id),
-    triaged boolean null,
+    triaged boolean not null default false,
     explorable boolean null,
     explored boolean null,
     exploitable boolean null,
