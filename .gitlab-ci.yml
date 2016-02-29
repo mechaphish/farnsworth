@@ -1,8 +1,20 @@
-# tests:
-#   script:
-#     - angr-test sync hard
-#     - angr-test ...
-#   tags: [angr]
+services:
+  - postgres:9.5
+
+variables:
+  POSTGRES_DATABASE_USER: "postgres"
+  POSTGRES_DATABASE_PASSWORD: ""
+  POSTGRES_DATABASE_NAME: "farnsworth"
+  POSTGRES_SERVICE_HOST: "postgres"
+  POSTGRES_SERVICE_PORT: "5432"
+
+before_script:
+  - pip install -r requirements.txt
+  - psql -U $POSTGRES_DATABASE_USER -h $POSTGRES_SERVICE_HOST < support/database/schema.sql
+
+tests:
+  script: "nosetests tests"
+  tags: ["angr"]
 
 lint:
   script: "lint.py"
