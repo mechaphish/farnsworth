@@ -45,6 +45,7 @@ from .endpoints import ping
 #from . import teams
 from .endpoints import tests
 from .endpoints import bitmaps
+from .endpoints import exploits
 
 if __name__ == "__main__":
     app.run()

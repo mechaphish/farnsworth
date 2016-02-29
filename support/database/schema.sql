@@ -86,6 +86,21 @@ create table crashes (
     blob bytea
 );
 
+-- Exploits
+drop type if exists pov_type;
+create type pov_type as enum('type1', 'type2');
+
+drop table if exists exploits;
+create table exploits (
+    id bigserial primary key,
+    created_at timestamp not null default current_timestamp,
+    updated_at timestamp not null default current_timestamp,
+    cbn_id bigint not null references challenge_binary_nodes (id),
+    job_id bigint not null references jobs (id),
+    pov_type pov_type not null,
+    payload bytea
+);
+
 -- Rounds
 drop table if exists rounds;
 create table rounds (
