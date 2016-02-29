@@ -59,9 +59,6 @@ create table jobs (
 );
 
 -- Tests
-drop type if exists test_type;
-create type test_type as enum('unknown', 'test', 'crash', 'exploit1', 'exploit2');
-
 drop table if exists tests;
 create table tests (
     id bigserial primary key,
@@ -69,7 +66,23 @@ create table tests (
     updated_at timestamp not null default current_timestamp,
     cbn_id bigint not null references challenge_binary_nodes (id),
     job_id bigint not null references jobs (id),
-    type test_type not null,
+    drilled boolean null,
+    blob bytea
+);
+
+-- Crashes
+drop table if exists crashes;
+create table crashes (
+    id bigserial primary key,
+    created_at timestamp not null default current_timestamp,
+    updated_at timestamp not null default current_timestamp,
+    cbn_id bigint not null references challenge_binary_nodes (id),
+    job_id bigint not null references jobs (id),
+    triaged boolean null,
+    explorable boolean null,
+    explored boolean null,
+    exploitable boolean null,
+    exploited boolean null,
     blob bytea
 );
 
