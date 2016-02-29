@@ -11,6 +11,9 @@ It provides a collection of models to access the PostgreSQL data store.
 
 ## Usage
 
+Set your db connection params in the env (see .env.development).
+Then:
+
 ```
 from farnsworth import *
 
