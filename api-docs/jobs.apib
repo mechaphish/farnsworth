@@ -87,11 +87,16 @@ Update a single job by setting status.
                 "errors": [...]
             }
 
-## Jobs Collection [/jobs]
+## Jobs Collection [/jobs{?started,worker}]
 
 ### List Jobs [GET]
 
-Retrieve all jobs.
+Retrieve all jobs, optionally filtered by parameters.
+
++ Parameters
+
+    + started: `true` (boolean) - Started or not started jobs.
+    + worker: `afl` (string) - Type of worker.
 
 + Response 200 (application/json)
 

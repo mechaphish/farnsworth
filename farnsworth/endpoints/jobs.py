@@ -25,8 +25,13 @@ def list_jobs():
                       payload, produced_output
                  FROM jobs"""
 
-    cursor.execute(*filter_query(query, filterable_cols, request.args))
+    if request.args.get('started') is not None:
+        if request.args.get('started').lower() == 'false':
+            query = "{} WHERE {}".format(query, "started_at IS NULL")
+        else:
+            query = "{} WHERE {}".format(query, "started_at IS NOT NULL")
 
+    cursor.execute(query)
     return cursor.fetchall()
 
 
