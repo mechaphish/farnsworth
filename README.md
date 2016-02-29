@@ -1,34 +1,15 @@
 # Farnsworth
 
-Farnsworth is the knowledge base of the Shellphish CRS. It provides a
-JSON-based REST API and uses PostgreSQL as the data store.
+Farnsworth is the knowledge base of the Shellphish CRS.
+It provides a collection of models to access the PostgreSQL data store.
 
-
-## API Documentation
-
-API specs follows [API Blueprint](https://apiblueprint.org/) format.
-
-To compile HTML browseable use Aglio:
-
-    npm install -g aglio
-    make build-api-docs
-
-Livereload is also available:
-
-    make
-    open http://127.0.0.1:3000/
 
 ## Requirements
 
-* Postgresql
+* Postgresql>=9.5
 
 
 ## Development
 
     pip install -r requirements.txt
     psql -U DBUSER < support/database/schema.sql
-    mv .env.development .env
-    python develop.py
-
-Configurations are managed with environment variables.
-Take a look at .env for possible options.

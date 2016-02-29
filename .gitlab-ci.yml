@@ -11,7 +11,3 @@ lint:
 docs:
   script: "generate_docs"
   tags: ["cgc-linter"]
-
-api_docs:
-  script: "make publish-api-docs"
-  tags: ["cgc-linter"]

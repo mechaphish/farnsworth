@@ -4,5 +4,4 @@
 /.coverage
 /cover
 /.env
-/api-docs/*.html
 /docs

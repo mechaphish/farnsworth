@@ -1,9 +1,15 @@
-from dotenv import load_dotenv
-import os
+from peewee import *
+from os import environ as ENV
 
-def set_config_from_env(app, path):
-    app.config.setdefault('LISTEN', '0.0.0.0')
-    if os.path.isfile(path):
-        load_dotenv(path)
-    for k in os.environ:
-        app.config[k] = os.environ[k]
+db = PostgresqlDatabase(
+    ENV['POSTGRES_DATABASE_NAME'],
+    user=ENV['POSTGRES_DATABASE_USER'],
+    password=ENV['POSTGRES_DATABASE_PASSWORD'],
+    host=ENV['POSTGRES_SERVICE_HOST'],
+    port=ENV['POSTGRES_SERVICE_PORT'],
+)
+
+# import logging
+# logger = logging.getLogger('peewee')
+# logger.setLevel(logging.DEBUG)
+# logger.addHandler(logging.StreamHandler())
