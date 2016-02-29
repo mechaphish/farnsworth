@@ -14,3 +14,5 @@ class Crash(BaseModel):
     job = ForeignKeyField(db_column='job_id', rel_model=Job, to_field='id', related_name='crashes')
     triaged = BooleanField()
 
+    class Meta: #pylint:disable=no-init
+        db_table = 'crashes'
