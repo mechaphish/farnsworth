@@ -9,6 +9,15 @@ It provides a collection of models to access the PostgreSQL data store.
 * Postgresql>=9.5
 
 
+## Usage
+
+```
+from farnsworth import *
+
+job = Job.get(1)
+```
+
+
 ## Development
 
     pip install -r requirements.txt
