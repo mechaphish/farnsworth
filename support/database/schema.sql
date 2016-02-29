@@ -51,6 +51,7 @@ create table jobs (
     worker varchar(256) not null,
     limit_cpu int null default 4,
     limit_memory int null default 8192,  -- In MB
+    limit_time int null,  -- In Seconds
     started_at timestamp null,
     completed_at timestamp null,
     cbn_id bigint not null references challenge_binary_nodes (id),

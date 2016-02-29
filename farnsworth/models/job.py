@@ -8,6 +8,7 @@ class Job(BaseModel):
     completed_at = DateTimeField(null=True)
     limit_cpu = IntegerField(null=True)
     limit_memory = IntegerField(null=True)
+    limit_time = IntegerField(null=True)
     payload = BlobField(null=True)
     priority = IntegerField()
     produced_output = BooleanField(null=True)
