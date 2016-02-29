@@ -1,12 +1,15 @@
 from peewee import *
-from os import environ as ENV
+import os
+import dotenv
+
+dotenv.load_dotenv(os.path.join(os.path.dirname(__file__), '../.env'))
 
 db = PostgresqlDatabase(
-    ENV['POSTGRES_DATABASE_NAME'],
-    user=ENV['POSTGRES_DATABASE_USER'],
-    password=ENV['POSTGRES_DATABASE_PASSWORD'],
-    host=ENV['POSTGRES_SERVICE_HOST'],
-    port=ENV['POSTGRES_SERVICE_PORT'],
+    os.environ['POSTGRES_DATABASE_NAME'],
+    user=os.environ['POSTGRES_DATABASE_USER'],
+    password=os.environ['POSTGRES_DATABASE_PASSWORD'],
+    host=os.environ['POSTGRES_SERVICE_HOST'],
+    port=os.environ['POSTGRES_SERVICE_PORT'],
 )
 
 # import logging
