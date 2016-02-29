@@ -31,6 +31,7 @@ create table challenge_binary_nodes (
     parent_id bigint null,
     parent_path ltree null,
     name varchar(256) not null,
+    cs_id varchar(256) not null,
     blob bytea
 );
 
