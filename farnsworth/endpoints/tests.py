@@ -15,11 +15,11 @@ from utils import jsonify, filter_query, update_query
 def list_tests():
     cursor = postgres.cursor()
 
-    filterable_cols = ['id', 'cbn_id', 'job_id', 'type']
+    filterable_cols = ['id', 'cbn_id', 'job_id', 'drilled']
     query = ""
 
     if 'with_descendants' in request.args:
-        query = """SELECT t.id, t.cbn_id, t.job_id, t.type,
+        query = """SELECT t.id, t.cbn_id, t.job_id, t.drilled,
                           t.created_at, t.updated_at,
                           encode(t.blob, 'base64') as blob
                    FROM tests AS t, challenge_binary_nodes AS cbns
@@ -28,7 +28,7 @@ def list_tests():
         path_query = '*.%s.*' % request.args['cbn_id']
         cursor.execute(query, [path_query])
     else:
-        query = """SELECT id, cbn_id, job_id, type,
+        query = """SELECT id, cbn_id, job_id, drilled,
                           created_at, updated_at,
                           encode(blob, 'base64') as blob
                           FROM tests"""
@@ -55,9 +55,9 @@ def create_test():
     cursor = postgres.cursor()
 
     test = request.get_json()
-    cursor.execute("""INSERT INTO tests (cbn_id, job_id, type, blob)
-                      VALUES (%(cbn_id)s, %(job_id)s, %(type)s, decode(%(blob)s, 'base64'))
-                      RETURNING id, cbn_id, job_id, type, encode(blob, 'base64') as blob, created_at, updated_at""",
+    cursor.execute("""INSERT INTO tests (cbn_id, job_id, drilled, blob)
+                      VALUES (%(cbn_id)s, %(job_id)s, %(drilled)s, decode(%(blob)s, 'base64'))
+                      RETURNING id, cbn_id, job_id, drilled, encode(blob, 'base64') as blob, created_at, updated_at""",
                    test)
 
     if cursor.rowcount == 0:
