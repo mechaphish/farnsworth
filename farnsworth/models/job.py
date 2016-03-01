@@ -1,4 +1,5 @@
 from peewee import * #pylint:disable=wildcard-import,unused-wildcard-import
+from playhouse.fields import PickledField
 
 from .base import BaseModel
 from .challenge_binary_node import ChallengeBinaryNode
@@ -9,7 +10,7 @@ class Job(BaseModel):
     limit_cpu = IntegerField(null=True)
     limit_memory = IntegerField(null=True)
     limit_time = IntegerField(null=True)
-    payload = BlobField(null=True)
+    payload = PickledField(null=True)
     priority = IntegerField()
     produced_output = BooleanField(null=True)
     started_at = DateTimeField(null=True)
@@ -62,4 +63,3 @@ class RexJob(Job):
 
     class Meta: #pylint:disable=no-init
         db_table = 'jobs'
-
