@@ -17,6 +17,22 @@ class Job(BaseModel):
     started_at = DateTimeField(null=True)
     worker = CharField()
 
+    class Meta: #pylint:disable=no-init
+        db_table_func = lambda x: 'jobs'
+
+    @classmethod
+    def find(cls, id):
+        job = super(Job, cls).find(id)
+        if job is not None:
+            if job.worker == 'afl':
+                return AFLJob(job._data)
+            elif job.worker == 'driller':
+                return DrillerJob(job._data)
+            elif job.worker == 'rex':
+                return RexJob(job._data)
+            else:
+                return job
+
     @property
     def completed(self):
         return self.completed is not None
@@ -43,18 +59,12 @@ class DrillerJob(Job):
         from .test import Test
         return Test.get(id=self.payload)
 
-    class Meta: #pylint:disable=no-init
-        db_table = 'jobs'
-
 class AFLJob(Job):
     '''
     This represents a job for AFL. It requires no extra input.
     '''
 
     worker = CharField(default='afl')
-
-    class Meta: #pylint:disable=no-init
-        db_table = 'jobs'
 
 class RexJob(Job):
     '''
@@ -69,6 +79,3 @@ class RexJob(Job):
     def input_crash(self):
         from .crash import Crash
         return Crash.get(id=self.payload)
-
-    class Meta: #pylint:disable=no-init
-        db_table = 'jobs'
