@@ -1,5 +1,6 @@
 from peewee import * #pylint:disable=wildcard-import,unused-wildcard-import
 from playhouse.fields import PickledField
+from datetime import datetime
 
 from .base import BaseModel
 from .challenge_binary_node import ChallengeBinaryNode
@@ -19,6 +20,14 @@ class Job(BaseModel):
     @property
     def completed(self):
         return self.completed is not None
+
+    def started(self):
+        self.started_at = datetime.now()
+        self.save()
+
+    def completed(self):
+        self.completed_at = datetime.now()
+        self.save()
 
 class DrillerJob(Job):
     '''
