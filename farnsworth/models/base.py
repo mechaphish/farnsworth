@@ -11,6 +11,7 @@ class BaseModel(Model):
     class Meta:
         database = db
         db_table_func = table_name
+        validate_backrefs = False # bugfix https://github.com/coleifer/peewee/issues/465
 
     @classmethod
     def find(cls, id):
