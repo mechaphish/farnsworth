@@ -23,5 +23,18 @@ job = Job.get(1)
 
 ## Development
 
-    pip install -r requirements.txt
-    psql -U DBUSER < support/database/schema.sql
+```
+pip install -r requirements.txt
+dropdb --if-exists DBNAME
+createdb -U nebirhos farnsworth_test
+psql DBNAME -U DBUSER < support/database/schema.sql
+```
+
+## Test
+
+```
+cp .env.development .env.test
+# create test db
+# edit .env.test
+nosetests tests
+```

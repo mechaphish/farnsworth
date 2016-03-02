@@ -1,10 +1,5 @@
 set client_min_messages to WARNING;
 
-drop database if exists farnsworth;
-create database farnsworth;
-
-\c farnsworth;
-
 start transaction;
 
 -- Trees

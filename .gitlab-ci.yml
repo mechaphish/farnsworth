@@ -4,13 +4,14 @@ services:
 variables:
   POSTGRES_DATABASE_USER: "postgres"
   POSTGRES_DATABASE_PASSWORD: ""
-  POSTGRES_DATABASE_NAME: "farnsworth"
+  POSTGRES_DATABASE_NAME: "farnsworth_test"
   POSTGRES_SERVICE_HOST: "postgres"
   POSTGRES_SERVICE_PORT: "5432"
 
 before_script:
   - pip install -r requirements.txt
-  - psql -U $POSTGRES_DATABASE_USER -h $POSTGRES_SERVICE_HOST < support/database/schema.sql
+  - createdb $POSTGRES_DATABASE_NAME -U $POSTGRES_DATABASE_USER -h $POSTGRES_SERVICE_HOST
+  - psql $POSTGRES_DATABASE_NAME -U $POSTGRES_DATABASE_USER -h $POSTGRES_SERVICE_HOST < support/database/schema.sql
 
 tests:
   script: "nosetests tests"
