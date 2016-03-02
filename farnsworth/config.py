@@ -8,8 +8,3 @@ db = PostgresqlDatabase(
     host=os.environ['POSTGRES_SERVICE_HOST'],
     port=os.environ['POSTGRES_SERVICE_PORT'],
 )
-
-# import logging
-# logger = logging.getLogger('peewee')
-# logger.setLevel(logging.DEBUG)
-# logger.addHandler(logging.StreamHandler())
