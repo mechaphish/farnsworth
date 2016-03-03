@@ -6,7 +6,7 @@ from .base import BaseModel
 from .challenge_binary_node import ChallengeBinaryNode
 
 class Job(BaseModel):
-    cbn = ForeignKeyField(db_column='cbn_id', rel_model=ChallengeBinaryNode, to_field='id')
+    cbn = ForeignKeyField(ChallengeBinaryNode, db_column='cbn_id', to_field='id', related_name='jobs')
     completed_at = DateTimeField(null=True)
     limit_cpu = IntegerField(null=True)
     limit_memory = IntegerField(null=True)
@@ -57,7 +57,7 @@ class DrillerJob(Job):
     @property
     def input_test(self):
         from .test import Test
-        return Test.get(id=self.payload)
+        return Test.get(id=self.payload['test_id'])
 
 class AFLJob(Job):
     '''
@@ -78,4 +78,4 @@ class RexJob(Job):
     @property
     def input_crash(self):
         from .crash import Crash
-        return Crash.get(id=self.payload)
+        return Crash.get(id=self.payload['crash_id'])
