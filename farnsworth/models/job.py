@@ -20,23 +20,6 @@ class Job(BaseModel):
     class Meta: #pylint:disable=no-init
         db_table_func = lambda x: 'jobs'
 
-    @classmethod
-    def find(cls, id):
-        job = super(Job, cls).find(id)
-        if job is not None:
-            if job.worker == 'afl':
-                return AFLJob(job._data)
-            elif job.worker == 'driller':
-                return DrillerJob(job._data)
-            elif job.worker == 'rex':
-                return RexJob(job._data)
-            else:
-                return job
-
-    @property
-    def completed(self):
-        return self.completed is not None
-
     def started(self):
         self.started_at = datetime.now()
         self.save()
