@@ -1,5 +1,6 @@
 from peewee import * #pylint:disable=wildcard-import,unused-wildcard-import
-from playhouse.fields import PickledField
+from playhouse.postgres_ext import JSONField
+import json
 from datetime import datetime
 
 from .base import BaseModel
@@ -11,7 +12,7 @@ class Job(BaseModel):
     limit_cpu = IntegerField(null=True)
     limit_memory = IntegerField(null=True)
     limit_time = IntegerField(null=True)
-    payload = PickledField(null=True)
+    payload = JSONField()
     priority = IntegerField()
     produced_output = BooleanField(null=True)
     started_at = DateTimeField(null=True)

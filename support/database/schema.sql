@@ -52,7 +52,7 @@ create table jobs (
     completed_at timestamp null,
     cbn_id bigint not null references challenge_binary_nodes (id),
     produced_output boolean null,
-    payload text
+    payload jsonb
 );
 
 -- Tests
