@@ -29,12 +29,13 @@ class Job(BaseModel):
         self.completed_at = datetime.now()
         self.save()
 
+
 class DrillerJob(Job):
-    '''
+    """
     This represents a job for driller. Driller requires a testcase
     as an input. Here, we receive the testcase as a string in the
     `payload` field.
-    '''
+    """
 
     worker = CharField(default='driller')
 
@@ -44,18 +45,18 @@ class DrillerJob(Job):
         return Test.get(id=self.payload['test_id'])
 
 class AFLJob(Job):
-    '''
+    """
     This represents a job for AFL. It requires no extra input.
-    '''
+    """
 
     worker = CharField(default='afl')
 
 class RexJob(Job):
-    '''
+    """
     This represents a job for rex. Rex requires a crashing testcase
     as an input. Here, we receive the testcase as a string in the
     `payload` field.
-    '''
+    """
 
     worker = CharField(default='rex')
 
