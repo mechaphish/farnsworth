@@ -1,13 +1,13 @@
-from os.path import join, dirname
+import os
 from dotenv import load_dotenv
-import logging
 
-dotenv_path = join(dirname(__file__), '../.env.test')
+dotenv_path = os.path.join(os.path.dirname(__file__), '../.env')
 load_dotenv(dotenv_path)
 
 from farnsworth import *
 from farnsworth.config import db
 
+# import logging
 # logger = logging.getLogger('peewee')
 # logger.setLevel(logging.DEBUG)
 # logger.addHandler(logging.StreamHandler())

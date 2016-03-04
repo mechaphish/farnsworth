@@ -3,6 +3,6 @@
 /*.egg-info
 /.coverage
 /_coverage
-/.env.test
+/.env
 /docs
 /pylintrc
