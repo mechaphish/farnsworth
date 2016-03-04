@@ -44,12 +44,32 @@ class DrillerJob(Job):
         from .test import Test
         return Test.get(id=self.payload['test_id'])
 
+    @classmethod
+    def queued(cls, job):
+        try:
+            cls.get((cls.cbn == job.cbn) &
+                    (cls.payload['test_id'] == str(job.payload['test_id'])))
+            return True
+        except cls.DoesNotExist:
+            return False
+
+
+
 class AFLJob(Job):
     """
     This represents a job for AFL. It requires no extra input.
     """
 
     worker = CharField(default='afl')
+
+    @classmethod
+    def queued(cls, job):
+        try:
+            cls.get((cls.cbn == job.cbn) & cls.completed_at.is_null(True))
+            return True
+        except cls.DoesNotExist:
+            return False
+
 
 class RexJob(Job):
     """
