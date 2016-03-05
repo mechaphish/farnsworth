@@ -6,7 +6,7 @@ import os
 class ChallengeBinaryNode(BaseModel):
     parent = ForeignKeyField('self', related_name='children')
     root = ForeignKeyField('self', related_name='descendants')
-    blob = BlobField(null=True)
+    blob = BlobField()
     name = CharField()
     cs_id = CharField()
     # parent_path = UnknownField(null=True)  # FIXMEx
