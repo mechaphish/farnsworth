@@ -39,10 +39,15 @@ class DrillerJob(Job):
 
     worker = CharField(default='driller')
 
+    def __init__(self, *args, **kwargs):
+        self._input_test = None
+        super(DrillerJob, self).__init__(*args, **kwargs)
+
     @property
     def input_test(self):
         from .test import Test
-        return Test.get(id=self.payload['test_id'])
+        self._input_test = self._input_test or Test.get(id=self.payload['test_id'])
+        return self._input_test
 
     @classmethod
     def queued(cls, job):
@@ -80,7 +85,21 @@ class RexJob(Job):
 
     worker = CharField(default='rex')
 
+    def __init__(self, *args, **kwargs):
+        self._input_crash = None
+        super(RexJob, self).__init__(*args, **kwargs)
+
     @property
     def input_crash(self):
         from .crash import Crash
-        return Crash.get(id=self.payload['crash_id'])
+        self._input_crash = self._input_crash or Crash.get(id=self.payload['crash_id'])
+        return self._input_crash
+
+    @classmethod
+    def queued(cls, job):
+        try:
+            cls.get((cls.cbn == job.cbn) &
+                    (cls.payload['crash_id'] == str(job.payload['crash_id'])))
+            return True
+        except cls.DoesNotExist:
+            return False
