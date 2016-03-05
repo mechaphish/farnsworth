@@ -2,7 +2,8 @@ from nose.tools import *
 from datetime import datetime
 
 from . import support
-from farnsworth import DrillerJob, ChallengeBinaryNode, Test, AFLJob
+from farnsworth import DrillerJob, ChallengeBinaryNode, AFLJob
+import farnsworth               # to avoid collisions between Test and nosetests
 
 class TestDrillerJob:
     def setup(self):
@@ -23,7 +24,7 @@ class TestDrillerJob:
     def test_queued(self):
         cbn = ChallengeBinaryNode.create(name = "foo", cs_id = "foo")
         generating_job = AFLJob.create(cbn=cbn)
-        test = Test.create(job=generating_job, cbn=cbn)
+        test = farnsworth.Test.create(job=generating_job, cbn=cbn)
         job = DrillerJob(cbn=cbn, payload={'test_id': test.id})
         assert_false(DrillerJob.queued(job))
 
