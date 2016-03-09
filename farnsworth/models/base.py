@@ -1,15 +1,22 @@
-from peewee import *
+from peewee import Model, DateTimeField
+from playhouse.read_slave import ReadSlaveModel
 from datetime import datetime
 
-from ..config import db
+from ..config import master_db, slave_db
 from ..utils import table_name
 
-class BaseModel(Model):
+if slave_db is not None:
+    base_class = ReadSlaveModel
+else:
+    base_class = Model
+
+class BaseModel(base_class):
     created_at = DateTimeField(default=datetime.now)
     updated_at = DateTimeField(default=datetime.now)
 
     class Meta:
-        database = db
+        database = master_db
+        read_slaves = (slave_db,)
         db_table_func = table_name
         validate_backrefs = False # bugfix https://github.com/coleifer/peewee/issues/465
 

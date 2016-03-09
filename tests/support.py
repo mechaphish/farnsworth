@@ -5,7 +5,7 @@ dotenv_path = os.path.join(os.path.dirname(__file__), '../.env')
 load_dotenv(dotenv_path)
 
 from farnsworth import *
-from farnsworth.config import db
+from farnsworth.config import master_db
 
 # import logging
 # logger = logging.getLogger('peewee')
@@ -27,4 +27,4 @@ def truncate_tables():
         Test,
     ]
     table_names = map(lambda t: t._meta.db_table, tables)
-    db.execute_sql("TRUNCATE {} RESTART IDENTITY CASCADE".format(", ".join(table_names)))
+    master_db.execute_sql("TRUNCATE {} RESTART IDENTITY CASCADE".format(", ".join(table_names)))
