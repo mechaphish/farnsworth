@@ -1,7 +1,8 @@
 from peewee import * #pylint:disable=wildcard-import,unused-wildcard-import
-from .base import BaseModel
-
+from datetime import datetime
 import os
+
+from .base import BaseModel
 
 class ChallengeBinaryNode(BaseModel):
     parent = ForeignKeyField('self', related_name='children')
@@ -9,6 +10,7 @@ class ChallengeBinaryNode(BaseModel):
     blob = BlobField()
     name = CharField()
     cs_id = CharField()
+    submitted_at = DateTimeField(null=True)
     # parent_path = UnknownField(null=True)  # FIXME
 
     @property
@@ -28,3 +30,12 @@ class ChallengeBinaryNode(BaseModel):
     def __del__(self):
         if os.path.isfile(self.path):
             os.remove(self.path)
+
+    def submitted(self):
+        self.submitted_at = datetime.now()
+        self.save()
+
+    @classmethod
+    def unsubmitted_patched(cls):
+        return cls.select().where((cls.submitted_at.is_null(True)) &
+                                  (cls.parent.is_null(False)))
