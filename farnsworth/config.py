@@ -10,7 +10,7 @@ master_db = PostgresqlExtDatabase(
     register_hstore=False,
 )
 
-if os.environ.get('POSTGRES_SLAVE_SERVICE_HOST') is not None:
+if os.environ.get('POSTGRES_USE_SLAVES') is not None:
     slave_db = PostgresqlExtDatabase(
         os.environ['POSTGRES_DATABASE_NAME'],
         user=os.environ['POSTGRES_DATABASE_USER'],
