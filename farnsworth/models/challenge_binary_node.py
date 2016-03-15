@@ -35,7 +35,10 @@ class ChallengeBinaryNode(BaseModel):
         self.submitted_at = datetime.now()
         self.save()
 
+    @property
+    def unsubmitted_patches(self):
+        return self.children.where(self.__class__.submitted_at.is_null(True))
+
     @classmethod
-    def unsubmitted_patched(cls):
-        return cls.select().where((cls.submitted_at.is_null(True)) &
-                                  (cls.parent.is_null(False)))
+    def roots(cls):
+        return cls.select().where((cls.parent.is_null(True)))
