@@ -1,11 +1,12 @@
 from peewee import *
+from playhouse.postgres_ext import JSONField
+import json
 
 from .base import BaseModel
 from .round import Round
-from .test import Test
 
 class Score(BaseModel):
     round = ForeignKeyField(Round, related_name='scores')
-    test = ForeignKeyField(Test, related_name='scores')
-    score_actual = FloatField()
-    score_predicted = FloatField()
+    scores = JSONField()
+    # score_actual = FloatField()
+    # score_predicted = FloatField()

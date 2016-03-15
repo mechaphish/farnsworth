@@ -115,10 +115,10 @@ create table scores (
     id bigserial primary key,
     created_at timestamp not null default current_timestamp,
     updated_at timestamp not null default current_timestamp,
-    test_id bigint not null references tests (id),
     round_id bigint not null references rounds (id),
-    score_predicted float null,
-    score_actual float null
+    scores jsonb
+    -- score_predicted float null,
+    -- score_actual float null
 );
 
 -- Bitmaps
@@ -156,6 +156,19 @@ create table feedbacks (
     polls jsonb,
     cbs jsonb,
     povs jsonb
+    -- TODO: add raw performance measures
+);
+
+-- CGC consensus evaluation
+drop table if exists evaluations;
+create table evaluations (
+    id bigserial primary key,
+    created_at timestamp not null default current_timestamp,
+    updated_at timestamp not null default current_timestamp,
+    round_id bigint not null references rounds (id),
+    team_id bigint not null references teams (id),
+    cbs jsonb,
+    ids jsonb
     -- TODO: add raw performance measures
 );
 
