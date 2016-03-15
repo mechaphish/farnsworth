@@ -4,7 +4,7 @@ from .crash import Crash
 from .exploit import Exploit
 from .job import Job, AFLJob, DrillerJob, RexJob, PatcherexJob
 from .pcap import Pcap
-from .performance import Performance
+from .feedback import Feedback
 from .round import Round
 from .score import Score
 from .team import Team

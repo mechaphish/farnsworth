@@ -103,6 +103,7 @@ create table exploits (
 drop table if exists rounds;
 create table rounds (
     id bigserial primary key,
+    num integer not null,
     created_at timestamp not null default current_timestamp,
     updated_at timestamp not null default current_timestamp,
     ends_at timestamp null
@@ -145,13 +146,16 @@ create table pcaps (
     type pcap_type not null default 'unknown'
 );
 
--- Performances
-drop table if exists performances;
-create table performances (
+-- CGC Feedbacks
+drop table if exists feedbacks;
+create table feedbacks (
     id bigserial primary key,
     created_at timestamp not null default current_timestamp,
     updated_at timestamp not null default current_timestamp,
-    test_id bigint not null references tests (id)
+    round_id bigint not null references rounds (id),
+    polls jsonb,
+    cbs jsonb,
+    povs jsonb
     -- TODO: add raw performance measures
 );
 
