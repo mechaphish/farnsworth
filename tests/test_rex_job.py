@@ -15,6 +15,9 @@ class TestRexJob:
         job = RexJob(cbn=cbn, payload={'crash_id': crash.id})
         assert_false(RexJob.queued(job))
 
+        useless_job = AFLJob(cbn=cbn, payload={'crash_id': crash.id})
+        assert_false(RexJob.queued(job))
+
         job2 = RexJob.create(cbn=cbn, payload={'crash_id': 'foo'})
         assert_false(RexJob.queued(job))
 

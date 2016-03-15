@@ -53,6 +53,7 @@ class DrillerJob(Job):
     def queued(cls, job):
         try:
             cls.get((cls.cbn == job.cbn) &
+                    (cls.worker == 'driller') &
                     (cls.payload['test_id'] == str(job.payload['test_id'])))
             return True
         except cls.DoesNotExist:
@@ -70,7 +71,9 @@ class AFLJob(Job):
     @classmethod
     def queued(cls, job):
         try:
-            cls.get((cls.cbn == job.cbn) & cls.completed_at.is_null(True))
+            cls.get((cls.cbn == job.cbn) &
+                    (cls.worker == 'afl') &
+                    cls.completed_at.is_null(True))
             return True
         except cls.DoesNotExist:
             return False

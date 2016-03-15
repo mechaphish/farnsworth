@@ -28,6 +28,9 @@ class TestDrillerJob:
         job = DrillerJob(cbn=cbn, payload={'test_id': test.id})
         assert_false(DrillerJob.queued(job))
 
+        useless_job = AFLJob(cbn=cbn, payload={'test_id': test.id})
+        assert_false(DrillerJob.queued(job))
+
         job2 = DrillerJob.create(cbn=cbn, payload={'test_id': 'foo'})
         assert_false(DrillerJob.queued(job))
 

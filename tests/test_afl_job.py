@@ -2,7 +2,7 @@ from nose.tools import *
 from datetime import datetime
 
 from . import support
-from farnsworth import AFLJob, ChallengeBinaryNode
+from farnsworth import AFLJob, RexJob, ChallengeBinaryNode
 
 class TestAFLJob:
     def setup(self):
@@ -11,6 +11,9 @@ class TestAFLJob:
     def test_queued(self):
         cbn = ChallengeBinaryNode.create(name = "foo", cs_id = "foo")
         job = AFLJob(cbn=cbn)
+        assert_false(AFLJob.queued(job))
+
+        useless_job = RexJob.create(cbn=cbn)
         assert_false(AFLJob.queued(job))
 
         job.save()
