@@ -102,7 +102,20 @@ class RexJob(Job):
     def queued(cls, job):
         try:
             cls.get((cls.cbn == job.cbn) &
+                    (cls.worker == 'rex') &
                     (cls.payload['crash_id'] == str(job.payload['crash_id'])))
+            return True
+        except cls.DoesNotExist:
+            return False
+
+class PatcherexJob(Job):
+    worker = CharField(default='patcherex')
+    @classmethod
+    def queued(cls, job):
+        try:
+            cls.get((cls.cbn == job.cbn) &
+                    (cls.worker == 'patcherex') &
+                    cls.completed_at.is_null(True))
             return True
         except cls.DoesNotExist:
             return False
