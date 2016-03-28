@@ -4,8 +4,9 @@ import json
 
 from .base import BaseModel
 from .round import Round
+from .round_related_model import RoundRelatedModel
 
-class Score(BaseModel):
+class Score(BaseModel, RoundRelatedModel):
     round = ForeignKeyField(Round, related_name='scores')
     scores = JSONField()
     # score_actual = FloatField()
