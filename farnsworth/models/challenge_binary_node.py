@@ -39,6 +39,11 @@ class ChallengeBinaryNode(BaseModel):
     def unsubmitted_patches(self):
         return self.children.where(self.__class__.submitted_at.is_null(True))
 
+    @property
+    def unsubmitted_exploits(self):
+        from .exploit import Exploit
+        return self.exploits.where(Exploit.submitted_at.is_null(True))
+
     @classmethod
     def roots(cls):
         return cls.select().where((cls.parent.is_null(True)))

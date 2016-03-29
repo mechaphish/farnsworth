@@ -96,6 +96,8 @@ create table exploits (
     cbn_id bigint not null references challenge_binary_nodes (id),
     job_id bigint not null references jobs (id),
     pov_type pov_type not null,
+    submitted_at timestamp null,
+    submitted_teams varchar(256) null,
     blob bytea
 );
 

@@ -11,3 +11,7 @@ class Team(BaseModel):
             return cls.get(cls.name == name)
         except cls.DoesNotExist:
             return cls.create(name=name)
+
+    @classmethod
+    def opponents(cls):
+        return cls.select().where(cls.name != "6")
