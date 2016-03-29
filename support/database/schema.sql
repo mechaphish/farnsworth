@@ -96,7 +96,7 @@ create table exploits (
     cbn_id bigint not null references challenge_binary_nodes (id),
     job_id bigint not null references jobs (id),
     pov_type pov_type not null,
-    payload bytea
+    blob bytea
 );
 
 -- Rounds
