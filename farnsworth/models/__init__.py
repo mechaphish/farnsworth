@@ -5,6 +5,7 @@ from .evaluation import Evaluation
 from .exploit import Exploit
 from .feedback import Feedback
 from .job import Job, AFLJob, DrillerJob, RexJob, PatcherexJob
+from .fuzzer_stats import FuzzerStats
 from .pcap import Pcap
 from .round import Round
 from .score import Score
