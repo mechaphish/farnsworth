@@ -143,7 +143,6 @@ create table fuzzer_stats (
     pending_total int null default 0,
     paths_total int null default 0,
     paths_found int null default 0,
-    paths_imported int null default 0,
     last_path timestamp null
 );
 

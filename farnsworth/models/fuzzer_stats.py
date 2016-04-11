@@ -9,5 +9,4 @@ class FuzzerStats(BaseModel):
     pending_total = IntegerField(null=True)
     paths_total = IntegerField(null=True)
     paths_found = IntegerField(null=True)
-    paths_imported = IntegerField(null=True)
     last_path = DateTimeField(null=True)
