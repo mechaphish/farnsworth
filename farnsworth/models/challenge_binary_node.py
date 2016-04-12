@@ -14,6 +14,13 @@ class ChallengeBinaryNode(BaseModel):
     # parent_path = UnknownField(null=True)  # FIXME
 
     @property
+    def fuzzer_stat(self):
+        if len(self.fuzzer_stats_collection) == 0:
+            return None
+
+        return self.fuzzer_stats_collection[0]
+
+    @property
     def path(self):
         filename = "{}-{}-{}".format(self.id, self.cs_id, self.name)
         filepath = os.path.join(os.path.expanduser("~"), filename) # FIXME: afl doesn't like /tmp
