@@ -138,6 +138,7 @@ drop table if exists fuzzer_stats;
 create table fuzzer_stats (
     id bigserial primary key,
     cbn_id bigint not null references challenge_binary_nodes (id),
+    created_at timestamp not null default current_timestamp,
     updated_at timestamp not null default current_timestamp,
     pending_favs int null default 0,
     pending_total int null default 0,

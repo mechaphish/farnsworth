@@ -3,8 +3,8 @@ from peewee import *
 from .base import BaseModel
 from .challenge_binary_node import ChallengeBinaryNode
 
-class FuzzerStats(BaseModel):
-    cbn = ForeignKeyField(db_column='cbnid', rel_model=ChallengeBinaryNode, to_field='id', related_name='fuzzer_stats')
+class FuzzerStat(BaseModel):
+    cbn = ForeignKeyField(db_column='cbn_id', rel_model=ChallengeBinaryNode, to_field='id', related_name='fuzzer_stat')
     pending_favs = IntegerField(null=True)
     pending_total = IntegerField(null=True)
     paths_total = IntegerField(null=True)
