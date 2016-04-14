@@ -12,4 +12,4 @@ class Test(BaseModel):
 
     @classmethod
     def unsynced_testcases(cls, worker, prev_sync_time):
-        return cls.select().where(cls.job.worker == worker & cls.created_at > prev_sync_time)
+        return cls.select().join(Job).where((Job.worker == worker) & (cls.created_at > prev_sync_time))
