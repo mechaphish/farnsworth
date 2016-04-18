@@ -15,7 +15,7 @@ Set your db connection params in the env of your project (see .env.example).
 Then:
 
 ```
-from farnsworth import *
+from farnsworth.models import *
 
 job = Job.get(1)
 ```

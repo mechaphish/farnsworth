@@ -1,18 +1,18 @@
 from nose.tools import *
 from datetime import datetime
 
-from . import support
-from farnsworth import DrillerJob, ChallengeBinaryNode, AFLJob
-import farnsworth               # to avoid collisions between Test and nosetests
+import farnsworth.test_support
+from farnsworth.models import DrillerJob, ChallengeBinaryNode, AFLJob
+import farnsworth.models               # to avoid collisions between Test and nosetests
 
 class TestDrillerJob:
     def setup(self):
-        support.truncate_tables()
+        farnsworth.test_support.truncate_tables()
 
     def test_input_test(self):
         cbn = ChallengeBinaryNode.create(name = "foo", cs_id = "foo")
         generating_job = AFLJob.create(cbn=cbn)
-        test = farnsworth.Test.create(job=generating_job, cbn=cbn, blob="ciao")
+        test = farnsworth.models.Test.create(job=generating_job, cbn=cbn, blob="ciao")
         job = DrillerJob(cbn=cbn, payload={'test_id': test.id})
         assert_equal(str(job.input_test.blob), "ciao")
         # it caches result between different requests
@@ -24,7 +24,7 @@ class TestDrillerJob:
     def test_queued(self):
         cbn = ChallengeBinaryNode.create(name = "foo", cs_id = "foo")
         generating_job = AFLJob.create(cbn=cbn)
-        test = farnsworth.Test.create(job=generating_job, cbn=cbn)
+        test = farnsworth.models.Test.create(job=generating_job, cbn=cbn)
         job = DrillerJob(cbn=cbn, payload={'test_id': test.id})
         assert_false(DrillerJob.queued(job))
 

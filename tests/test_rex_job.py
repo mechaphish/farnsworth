@@ -1,12 +1,12 @@
 from nose.tools import *
 from datetime import datetime
 
-from . import support
-from farnsworth import RexJob, AFLJob, ChallengeBinaryNode, Crash
+import farnsworth.test_support
+from farnsworth.models import RexJob, AFLJob, ChallengeBinaryNode, Crash
 
 class TestRexJob:
     def setup(self):
-        support.truncate_tables()
+        farnsworth.test_support.truncate_tables()
 
     def test_queued(self):
         cbn = ChallengeBinaryNode.create(name = "foo", cs_id = "foo")

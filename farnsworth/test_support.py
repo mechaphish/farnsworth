@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 dotenv_path = os.path.join(os.path.dirname(__file__), '../.env.test')
 load_dotenv(dotenv_path)
 
-from farnsworth import *
+from farnsworth.models import *
 from farnsworth.config import master_db
 
 # import logging
