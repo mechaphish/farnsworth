@@ -11,7 +11,7 @@ It provides a collection of models to access the PostgreSQL data store.
 
 ## Usage
 
-Set your db connection params in the env of your project (see .env.test).
+Set your db connection params in the env of your project (see .env.example).
 Then:
 
 ```
@@ -24,10 +24,8 @@ job = Job.get(1)
 ## Test
 
 ```
-pip install -r requirements.txt
 pip install -e .
-cp .env.test .env
-# edit .env
-./setupdb.sh
+# edit .env.test if needed
+./setupdb.sh .env.test
 nosetests tests
 ```

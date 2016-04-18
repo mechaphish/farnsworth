@@ -3,8 +3,7 @@ tests:
     - postgres:9.5
   script:
     - pip install -e .
-    - mv .env.test .env
-    - ./setupdb.sh
+    - ./setupdb.sh .env.test
     - nosetests tests
   tags: ["angr"]
 

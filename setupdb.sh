@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-[ -f .env ] && source .env
+ENVFILE=${1-.env}
+[ -f "$ENVFILE" ] && source "$ENVFILE"
 
 drop()
 {
