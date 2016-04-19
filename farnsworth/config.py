@@ -8,6 +8,8 @@ master_db = PostgresqlExtDatabase(
     host=os.environ['POSTGRES_MASTER_SERVICE_HOST'],
     port=os.environ['POSTGRES_MASTER_SERVICE_PORT'],
     register_hstore=False,
+    autocommit=True,
+    autorollback=True,
 )
 
 if os.environ.get('POSTGRES_USE_SLAVES') is not None:
