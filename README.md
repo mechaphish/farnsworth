@@ -29,7 +29,7 @@ job = Job.get(1)
 ```
 
 Please read [Peewee documentation](https://peewee.readthedocs.org/en/latest/peewee/querying.html)
-to learn what you can do.
+to see how you can query the db.
 
 
 ## Test
