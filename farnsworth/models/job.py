@@ -6,6 +6,7 @@ from datetime import datetime
 from .base import BaseModel
 from .challenge_binary_node import ChallengeBinaryNode
 
+
 class Job(BaseModel):
     cbn = ForeignKeyField(ChallengeBinaryNode, db_column='cbn_id', to_field='id', related_name='jobs')
     completed_at = DateTimeField(null=True)
@@ -34,6 +35,10 @@ class Job(BaseModel):
     def completed(self):
         self.completed_at = datetime.now()
         self.save()
+
+    @classmethod
+    def unstarted(cls):
+        return cls.select().where(cls.started_at.is_null(True) & (cls.worker == cls.worker.default))
 
 
 class DrillerJob(Job):
@@ -64,7 +69,6 @@ class DrillerJob(Job):
             return True
         except cls.DoesNotExist:
             return False
-
 
 
 class AFLJob(Job):

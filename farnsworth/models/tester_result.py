@@ -11,4 +11,7 @@ class TesterResult(BaseModel):
     job = ForeignKeyField(Job, db_column='job_id', to_field='id', related_name='tester_results')
     error_code = IntegerField()
     performances = JSONField()
+    result = CharField()
+    stdout_out = BlobField()
+    stderr_out = BlobField()
     output = BlobField()

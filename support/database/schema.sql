@@ -188,4 +188,18 @@ create table evaluations (
     -- TODO: add raw performance measures
 );
 
+-- Tester results.
+drop table if exists tester_results;
+create table tester_results (
+    id bigserial primary key,
+    created_at timestamp not null default current_timestamp,
+    updated_at timestamp not null default current_timestamp,
+    job_id bigint not null references jobs (id),
+    error_code int,
+    result varchar(256) null,
+    stdout_out bytea,
+    stderr_out bytea,
+    performances jsonb
+);
+
 commit;
