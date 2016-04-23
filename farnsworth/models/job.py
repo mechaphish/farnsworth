@@ -25,6 +25,12 @@ class Job(BaseModel):
         self.started_at = datetime.now()
         self.save()
 
+    def is_started(self):
+        return self.started_at is not None
+
+    def is_completed(self):
+        return self.completed_at is not None
+
     def completed(self):
         self.completed_at = datetime.now()
         self.save()
@@ -108,6 +114,7 @@ class RexJob(Job):
         except cls.DoesNotExist:
             return False
 
+
 class PatcherexJob(Job):
     worker = CharField(default='patcherex')
     @classmethod
@@ -119,3 +126,41 @@ class PatcherexJob(Job):
             return True
         except cls.DoesNotExist:
             return False
+
+
+class TesterJob(Job):
+    """
+    This represents a job for Tester. Tester requires a testcase
+    as an input. Here, we receive the testcase id as a string in the
+    `payload` field.
+    """
+
+    worker = CharField(default='tester')
+
+    def __init__(self, *args, **kwargs):
+        self._target_test = None
+        super(TesterJob, self).__init__(*args, **kwargs)
+
+    @property
+    def target_test(self):
+        """
+        Get the target test corresponding to this tester job
+        :return: Test corresponding to this job.
+        """
+        from .test import Test
+        self._target_test = self._target_test or Test.get(id=self.payload['test_id'])
+        return self._target_test
+
+    def mark_job_not_started(self):
+        """
+        Mark this current job as not started.
+        This is required in case, the job incurred an schrodinger failure.
+        :return: None
+        """
+        self.started_at = DateTimeField(null=True)
+        self.completed_at = DateTimeField(null=True)
+        self.save()
+
+
+
+
