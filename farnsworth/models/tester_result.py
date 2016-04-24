@@ -14,4 +14,3 @@ class TesterResult(BaseModel):
     result = CharField()
     stdout_out = BlobField()
     stderr_out = BlobField()
-    output = BlobField()
