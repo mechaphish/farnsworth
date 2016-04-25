@@ -21,22 +21,28 @@ class ChallengeBinaryNode(BaseModel):
         return self.fuzzer_stats_collection[0]
 
     @property
-    def path(self):
+    def _path(self):
         filename = "{}-{}-{}".format(self.id, self.cs_id, self.name)
-        filepath = os.path.join(os.path.expanduser("~"), filename) # FIXME: afl doesn't like /tmp
-        if not os.path.isfile(filepath):
-            open(filepath, 'wb').write(self.blob)
-            os.chmod(filepath, 0o777)
-        return filepath
+        return os.path.join(os.path.expanduser("~"), filename) # FIXME: afl doesn't like /tmp
+
+    @property
+    def path(self):
+        if not os.path.isfile(self._path):
+            open(self._path, 'wb').write(self.blob)
+            os.chmod(self._path, 0o777)
+        return self._path
 
     @property
     def undrilled_tests(self):
         from .test import Test
         return self.tests.where(Test.drilled == False)
 
+    def delete_binary(self):
+        if os.path.isfile(self._path):
+            os.remove(self._path)
+
     def __del__(self):
-        if os.path.isfile(self.path):
-            os.remove(self.path)
+        self.delete_binary()
 
     def submitted(self):
         self.submitted_at = datetime.now()
