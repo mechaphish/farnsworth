@@ -32,6 +32,20 @@ Please read [Peewee documentation](https://peewee.readthedocs.org/en/latest/peew
 to see how you can query the db.
 
 
+### Use with multi-process
+
+You need to open a new db connection for every process.
+To do so:
+
+```
+import farnsworth.config
+
+farnsworth.config.connect_dbs()
+Job.create(...)
+farnsworth.config.close_dbs()
+```
+
+
 ## Test
 
 ```

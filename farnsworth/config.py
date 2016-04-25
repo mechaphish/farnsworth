@@ -23,3 +23,13 @@ if os.environ.get('POSTGRES_USE_SLAVES') is not None:
     )
 else:
     slave_db = None
+
+def connect_dbs():
+    for db in (master_db, slave_db):
+        if db is not None:
+            db.connect()
+
+def close_dbs():
+    for db in (master_db, slave_db):
+        if db is not None and not db.is_closed():
+            db.close()
