@@ -1,13 +1,9 @@
 from nose.tools import *
 from datetime import datetime
 
-import farnsworth.test_support
 from farnsworth.models import PatcherexJob, AFLJob, ChallengeBinaryNode
 
 class TestPatcherexJob:
-    def setup(self):
-        farnsworth.test_support.truncate_tables()
-
     def test_queued(self):
         cbn = ChallengeBinaryNode.create(name = "foo", cs_id = "foo")
         job = PatcherexJob(cbn=cbn)

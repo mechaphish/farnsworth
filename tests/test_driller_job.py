@@ -1,14 +1,10 @@
 from nose.tools import *
 from datetime import datetime
 
-import farnsworth.test_support
 from farnsworth.models import DrillerJob, ChallengeBinaryNode, AFLJob
 import farnsworth.models               # to avoid collisions between Test and nosetests
 
 class TestDrillerJob:
-    def setup(self):
-        farnsworth.test_support.truncate_tables()
-
     def test_input_test(self):
         cbn = ChallengeBinaryNode.create(name = "foo", cs_id = "foo")
         generating_job = AFLJob.create(cbn=cbn)

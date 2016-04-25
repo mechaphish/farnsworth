@@ -2,13 +2,9 @@ from nose.tools import *
 import time
 import os
 
-import farnsworth.test_support
 from farnsworth.models import ChallengeBinaryNode
 
 class TestChallengeBinaryNode:
-    def setup(self):
-        farnsworth.test_support.truncate_tables()
-
     def test_root_association(self):
         root_cbn = ChallengeBinaryNode.create(name = "root", cs_id = "foo")
         cbn1 = ChallengeBinaryNode.create(name = "test1", cs_id = "foo", root = root_cbn)
