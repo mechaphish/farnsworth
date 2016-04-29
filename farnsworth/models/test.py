@@ -23,7 +23,7 @@ class Test(BaseModel):
         pov_header = """<?xml version="1.0" standalone="no" ?>
                         <!DOCTYPE pov SYSTEM "/usr/share/cgc-docs/replay.dtd">
                     """
-        pov = CQE_POV(self.cbn.id, [ ])
+        pov = CQE_POV(str(self.cbn.id), [ ])
         # the Write
         pov.actions.append(Write([ Data(self.blob) ]))
 
