@@ -1,9 +1,13 @@
 from nose.tools import *
 from datetime import datetime
 
+from . import setup_each, teardown_each
 from farnsworth.models import RexJob, AFLJob, ChallengeBinaryNode, Crash
 
 class TestRexJob:
+    def setup(self): setup_each()
+    def teardown(self): teardown_each()
+
     def test_queued(self):
         cbn = ChallengeBinaryNode.create(name = "foo", cs_id = "foo")
         generating_job = AFLJob.create(cbn=cbn)

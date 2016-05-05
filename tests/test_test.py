@@ -1,9 +1,13 @@
 from nose.tools import *
 
+from . import setup_each, teardown_each
 from farnsworth.models import ChallengeBinaryNode, AFLJob
 import farnsworth.models # to avoid collisions between Test and nosetests
 
 class TestTest:
+    def setup(self): setup_each()
+    def teardown(self): teardown_each()
+
     def test_cbn_association(self):
         cbn = ChallengeBinaryNode.create(name="foo", cs_id="foo")
         job = AFLJob.create(cbn=cbn)

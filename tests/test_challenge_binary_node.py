@@ -2,9 +2,13 @@ from nose.tools import *
 import time
 import os
 
+from . import setup_each, teardown_each
 from farnsworth.models import ChallengeBinaryNode
 
 class TestChallengeBinaryNode:
+    def setup(self): setup_each()
+    def teardown(self): teardown_each()
+
     def test_root_association(self):
         root_cbn = ChallengeBinaryNode.create(name = "root", cs_id = "foo")
         cbn1 = ChallengeBinaryNode.create(name = "test1", cs_id = "foo", root = root_cbn)
