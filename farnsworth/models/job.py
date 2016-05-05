@@ -22,6 +22,19 @@ class Job(BaseModel):
     class Meta: #pylint:disable=no-init
         db_table_func = lambda x: 'jobs'
 
+    def subclass(self):
+        if self.worker == 'afl':
+            self.__class__ = AFLJob
+        elif self.worker == 'driller':
+            self.__class__ = DrillerJob
+        elif self.worker == 'rex':
+            self.__class__ = RexJob
+        elif self.worker == 'patcherex':
+            self.__class__ = PatcherexJob
+        elif self.worker == 'tester':
+            self.__class__ = TesterJob
+        return self
+
     def started(self):
         self.started_at = datetime.now()
         self.save()
@@ -50,13 +63,10 @@ class DrillerJob(Job):
 
     worker = CharField(default='driller')
 
-    def __init__(self, *args, **kwargs):
-        self._input_test = None
-        super(DrillerJob, self).__init__(*args, **kwargs)
-
     @property
     def input_test(self):
         from .test import Test
+        if not hasattr(self, '_input_test'): self._input_test = None
         self._input_test = self._input_test or Test.get(id=self.payload['test_id'])
         return self._input_test
 
@@ -98,13 +108,10 @@ class RexJob(Job):
 
     worker = CharField(default='rex')
 
-    def __init__(self, *args, **kwargs):
-        self._input_crash = None
-        super(RexJob, self).__init__(*args, **kwargs)
-
     @property
     def input_crash(self):
         from .crash import Crash
+        if not hasattr(self, '_input_crash'): self._input_crash = None
         self._input_crash = self._input_crash or Crash.get(id=self.payload['crash_id'])
         return self._input_crash
 
@@ -120,7 +127,9 @@ class RexJob(Job):
 
 
 class PatcherexJob(Job):
+
     worker = CharField(default='patcherex')
+
     @classmethod
     def queued(cls, job):
         try:
@@ -141,10 +150,6 @@ class TesterJob(Job):
 
     worker = CharField(default='tester')
 
-    def __init__(self, *args, **kwargs):
-        self._target_test = None
-        super(TesterJob, self).__init__(*args, **kwargs)
-
     @property
     def target_test(self):
         """
@@ -152,6 +157,7 @@ class TesterJob(Job):
         :return: Test corresponding to this job.
         """
         from .test import Test
+        if not hasattr(self, '_target_test'): self._target_test = None
         self._target_test = self._target_test or Test.get(id=self.payload['test_id'])
         return self._target_test
 
@@ -164,7 +170,3 @@ class TesterJob(Job):
         self.started_at = DateTimeField(null=True)
         self.completed_at = DateTimeField(null=True)
         self.save()
-
-
-
-
