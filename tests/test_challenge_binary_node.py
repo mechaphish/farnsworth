@@ -38,3 +38,12 @@ class TestChallengeBinaryNode:
         assert_equals(open(cbn.path, 'rb').read(), "byte data")
         cbn = None
         assert_false(os.path.isfile(binpath))
+
+    def test_roots(self):
+        cbn1 = ChallengeBinaryNode.create(name = "root1", cs_id = "foo", blob="data")
+        cbn2 = ChallengeBinaryNode.create(name = "root2", cs_id = "foo", blob="data")
+        cbn3 = ChallengeBinaryNode.create(name = "child", cs_id = "foo", blob="data", root = cbn1)
+
+        assert_equals(len(ChallengeBinaryNode.roots()), 2)
+        assert_in(cbn1, ChallengeBinaryNode.roots())
+        assert_in(cbn2, ChallengeBinaryNode.roots())

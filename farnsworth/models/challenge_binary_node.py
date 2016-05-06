@@ -59,4 +59,4 @@ class ChallengeBinaryNode(BaseModel):
 
     @classmethod
     def roots(cls):
-        return cls.select().where((cls.parent.is_null(True)))
+        return cls.select().where((cls.root.is_null(True)))
