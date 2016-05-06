@@ -1,14 +1,19 @@
-from peewee import * #pylint:disable=wildcard-import,unused-wildcard-import
-from playhouse.postgres_ext import JSONField
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
+
+import datetime
 import json
-from datetime import datetime
+
+from peewee import *    # pylint:disable=wildcard-import,unused-wildcard-import
+from playhouse.postgres_ext import JSONField
 
 from .base import BaseModel
 from .challenge_binary_node import ChallengeBinaryNode
 
 
 class Job(BaseModel):
-    cbn = ForeignKeyField(ChallengeBinaryNode, db_column='cbn_id', to_field='id', related_name='jobs')
+    cbn = ForeignKeyField(ChallengeBinaryNode, db_column='cbn_id', to_field='id',
+                          related_name='jobs')
     completed_at = DateTimeField(null=True)
     limit_cpu = IntegerField(null=True)
     limit_memory = IntegerField(null=True)
@@ -19,8 +24,9 @@ class Job(BaseModel):
     started_at = DateTimeField(null=True)
     worker = CharField()
 
-    class Meta: #pylint:disable=no-init
-        db_table_func = lambda x: 'jobs'
+    class Meta:     # pylint:disable=no-init
+        def db_table_func():
+            return 'jobs'
 
     def subclass(self):
         if self.worker == 'afl':
@@ -36,7 +42,7 @@ class Job(BaseModel):
         return self
 
     def started(self):
-        self.started_at = datetime.now()
+        self.started_at = datetime.datetime.now()
         self.save()
 
     def is_started(self):
@@ -46,7 +52,7 @@ class Job(BaseModel):
         return self.completed_at is not None
 
     def completed(self):
-        self.completed_at = datetime.now()
+        self.completed_at = datetime.datetime.now()
         self.save()
 
     @classmethod
@@ -66,7 +72,8 @@ class DrillerJob(Job):
     @property
     def input_test(self):
         from .test import Test
-        if not hasattr(self, '_input_test'): self._input_test = None
+        if not hasattr(self, '_input_test'):
+            self._input_test = None
         self._input_test = self._input_test or Test.get(id=self.payload['test_id'])
         return self._input_test
 
@@ -82,10 +89,7 @@ class DrillerJob(Job):
 
 
 class AFLJob(Job):
-    """
-    This represents a job for AFL. It requires no extra input.
-    """
-
+    """This represents a job for AFL. It requires no extra input."""
     worker = CharField(default='afl')
 
     @classmethod
@@ -127,7 +131,7 @@ class RexJob(Job):
 
 
 class PatcherexJob(Job):
-
+    """A PatcherexJob."""
     worker = CharField(default='patcherex')
 
     @classmethod
@@ -157,7 +161,8 @@ class TesterJob(Job):
         :return: Test corresponding to this job.
         """
         from .test import Test
-        if not hasattr(self, '_target_test'): self._target_test = None
+        if not hasattr(self, '_target_test'):
+            self._target_test = None
         self._target_test = self._target_test or Test.get(id=self.payload['test_id'])
         return self._target_test
 
