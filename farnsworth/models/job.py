@@ -11,7 +11,12 @@ from .base import BaseModel
 from .challenge_binary_node import ChallengeBinaryNode
 
 def to_job_type(job):
-    """Cast a generic job to its proper subclass."""
+    """
+    Cast a generic job to its proper subclass.
+
+    Note: This function *modifies* the input job, but it also returns the
+    modified one for convience.
+    """
     if job.worker == 'afl':
         job.__class__ = AFLJob
     elif job.worker == 'driller':
