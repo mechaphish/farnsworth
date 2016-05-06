@@ -145,8 +145,7 @@ class PatcherexJob(Job):
     def queued(cls, job):
         try:
             cls.get((cls.cbn == job.cbn) &
-                    (cls.worker == 'patcherex') &
-                    cls.completed_at.is_null(True))
+                    (cls.worker == 'patcherex'))
             return True
         except cls.DoesNotExist:
             return False

@@ -18,7 +18,3 @@ class TestPatcherexJob:
 
         job.save()
         assert_true(PatcherexJob.queued(job))
-
-        job.completed_at = datetime.now()
-        job.save()
-        assert_false(PatcherexJob.queued(job))
