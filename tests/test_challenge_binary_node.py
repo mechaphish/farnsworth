@@ -47,3 +47,16 @@ class TestChallengeBinaryNode:
         assert_equals(len(ChallengeBinaryNode.roots()), 2)
         assert_in(cbn1, ChallengeBinaryNode.roots())
         assert_in(cbn2, ChallengeBinaryNode.roots())
+
+    def test_unsubmitted_patches(self):
+        cbn = ChallengeBinaryNode.create(name = "cbn", cs_id = "foo", blob="data")
+        patch1 = ChallengeBinaryNode.create(name = "patch1", cs_id = "foo", blob="data", root = cbn)
+        patch2 = ChallengeBinaryNode.create(name = "patch2", cs_id = "foo", blob="data", root = cbn)
+
+        assert_equals(len(cbn.unsubmitted_patches), 2)
+        assert_equals(patch1, cbn.unsubmitted_patches[0])
+        assert_equals(patch2, cbn.unsubmitted_patches[1])
+
+        patch1.submit()
+        patch2.submit()
+        assert_equals(len(cbn.unsubmitted_patches), 0)

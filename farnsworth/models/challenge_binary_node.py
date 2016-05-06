@@ -44,13 +44,13 @@ class ChallengeBinaryNode(BaseModel):
     def __del__(self):
         self.delete_binary()
 
-    def submitted(self):
+    def submit(self):
         self.submitted_at = datetime.now()
         self.save()
 
     @property
     def unsubmitted_patches(self):
-        return self.children.where(self.__class__.submitted_at.is_null(True))
+        return self.descendants.where(self.__class__.submitted_at.is_null(True))
 
     @property
     def unsubmitted_exploits(self):
