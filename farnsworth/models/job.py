@@ -10,6 +10,20 @@ from playhouse.postgres_ext import JSONField
 from .base import BaseModel
 from .challenge_binary_node import ChallengeBinaryNode
 
+def to_job_type(job):
+    """Cast a generic job to its proper subclass."""
+    if job.worker == 'afl':
+        job.__class__ = AFLJob
+    elif job.worker == 'driller':
+        job.__class__ = DrillerJob
+    elif job.worker == 'rex':
+        job.__class__ = RexJob
+    elif job.worker == 'patcherex':
+        job.__class__ = PatcherexJob
+    elif job.worker == 'tester':
+        job.__class__ = TesterJob
+    return job
+
 
 class Job(BaseModel):
     cbn = ForeignKeyField(ChallengeBinaryNode, db_column='cbn_id', to_field='id',
@@ -28,18 +42,6 @@ class Job(BaseModel):
         def db_table_func():
             return 'jobs'
 
-    def subclass(self):
-        if self.worker == 'afl':
-            self.__class__ = AFLJob
-        elif self.worker == 'driller':
-            self.__class__ = DrillerJob
-        elif self.worker == 'rex':
-            self.__class__ = RexJob
-        elif self.worker == 'patcherex':
-            self.__class__ = PatcherexJob
-        elif self.worker == 'tester':
-            self.__class__ = TesterJob
-        return self
 
     def started(self):
         self.started_at = datetime.datetime.now()
