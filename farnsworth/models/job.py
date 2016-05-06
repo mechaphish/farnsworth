@@ -44,7 +44,7 @@ class Job(BaseModel):
     worker = CharField()
 
     class Meta:     # pylint:disable=no-init
-        def db_table_func():
+        def db_table_func(_):
             return 'jobs'
 
 
