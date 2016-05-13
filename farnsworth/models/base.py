@@ -26,3 +26,7 @@ class BaseModel(base_class):
             return cls.get(cls.id == id)
         except cls.DoesNotExist:
             return None
+
+    def save(self, **kwargs):
+        self.updated_at = datetime.now()
+        return super(BaseModel, self).save(**kwargs)
