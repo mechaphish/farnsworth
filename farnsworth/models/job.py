@@ -181,3 +181,13 @@ class TesterJob(Job):
         self.started_at = DateTimeField(null=True)
         self.completed_at = DateTimeField(null=True)
         self.save()
+
+    @classmethod
+    def queued(cls, job):
+        try:
+            cls.get((cls.cbn == job.cbn) &
+                    (cls.worker == 'tester') &
+                    (cls.payload['test_id'] == str(job.payload['test_id'])))
+            return True
+        except cls.DoesNotExist:
+            return False

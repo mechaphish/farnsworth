@@ -13,11 +13,21 @@ class ChallengeBinaryNode(BaseModel):
     submitted_at = DateTimeField(null=True)
     # parent_path = UnknownField(null=True)  # FIXME
 
+    def delete_binary(self):
+        if os.path.isfile(self._path):
+            os.remove(self._path)
+
+    def __del__(self):
+        self.delete_binary()
+
+    def submit(self):
+        self.submitted_at = datetime.now()
+        self.save()
+
     @property
     def fuzzer_stat(self):
         if len(self.fuzzer_stats_collection) == 0:
             return None
-
         return self.fuzzer_stats_collection[0]
 
     @property
@@ -37,17 +47,6 @@ class ChallengeBinaryNode(BaseModel):
         from .test import Test
         return self.tests.where(Test.drilled == False)
 
-    def delete_binary(self):
-        if os.path.isfile(self._path):
-            os.remove(self._path)
-
-    def __del__(self):
-        self.delete_binary()
-
-    def submit(self):
-        self.submitted_at = datetime.now()
-        self.save()
-
     @property
     def unsubmitted_patches(self):
         return self.descendants.where(self.__class__.submitted_at.is_null(True))
@@ -57,6 +56,15 @@ class ChallengeBinaryNode(BaseModel):
         from .exploit import Exploit
         return self.exploits.where(Exploit.submitted_at.is_null(True))
 
+    @property
+    def all_tests_for_this_cb(self):
+        from .test import Test
+        return Test.select().where(Test.cbn == self.root)
+
     @classmethod
     def roots(cls):
-        return cls.select().where((cls.root.is_null(True)))
+        return cls.select().where(cls.root.is_null(True))
+
+    @classmethod
+    def all_descendants(cls):
+        return cls.select().where(cls.root.is_null(False))

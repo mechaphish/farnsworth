@@ -3,7 +3,8 @@ import time
 import os
 
 from . import setup_each, teardown_each
-from farnsworth.models import ChallengeBinaryNode
+from farnsworth.models import AFLJob, ChallengeBinaryNode
+import farnsworth.models # to avoid collisions between Test and nosetests
 
 class TestChallengeBinaryNode:
     def setup(self): setup_each()
@@ -48,6 +49,14 @@ class TestChallengeBinaryNode:
         assert_in(cbn1, ChallengeBinaryNode.roots())
         assert_in(cbn2, ChallengeBinaryNode.roots())
 
+    def test_all_descendants(self):
+        cbn1 = ChallengeBinaryNode.create(name = "root1", cs_id = "foo", blob="data")
+        cbn2 = ChallengeBinaryNode.create(name = "root2", cs_id = "foo", blob="data")
+        cbn3 = ChallengeBinaryNode.create(name = "child", cs_id = "foo", blob="data", root = cbn1)
+
+        assert_equals(len(ChallengeBinaryNode.all_descendants()), 1)
+        assert_in(cbn3, ChallengeBinaryNode.all_descendants())
+
     def test_unsubmitted_patches(self):
         cbn = ChallengeBinaryNode.create(name = "cbn", cs_id = "foo", blob="data")
         patch1 = ChallengeBinaryNode.create(name = "patch1", cs_id = "foo", blob="data", root = cbn)
@@ -60,3 +69,13 @@ class TestChallengeBinaryNode:
         patch1.submit()
         patch2.submit()
         assert_equals(len(cbn.unsubmitted_patches), 0)
+
+    def test_all_tests_for_this_cb(self):
+        cbn = ChallengeBinaryNode.create(name = "cbn", cs_id = "foo", blob="data")
+        patch1 = ChallengeBinaryNode.create(name = "patch1", cs_id = "foo", blob="data", root = cbn)
+        job = AFLJob.create(cbn=cbn)
+        test1 = farnsworth.models.Test.create(cbn=cbn, job=job, blob="test1")
+        test2 = farnsworth.models.Test.create(cbn=cbn, job=job, blob="test2")
+
+        assert_equals(len(patch1.tests), 0)
+        assert_equals(len(patch1.all_tests_for_this_cb), 2)
