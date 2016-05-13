@@ -2,7 +2,7 @@ from peewee import * #pylint:disable=wildcard-import,unused-wildcard-import
 from .base import BaseModel
 from .challenge_binary_node import ChallengeBinaryNode
 from .job import Job
-from crscommon.actions import CQE_POV, Data, Write
+from farnsworth.actions import CQE_POV, Data, Write
 
 
 class Test(BaseModel):
@@ -28,4 +28,3 @@ class Test(BaseModel):
         pov.actions.append(Write([ Data(self.blob) ]))
 
         return pov_header + str(pov)
-
