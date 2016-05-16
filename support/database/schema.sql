@@ -197,8 +197,8 @@ create table tester_results (
     job_id bigint not null references jobs (id),
     error_code int,
     result varchar(256) null,
-    stdout_out bytea,
-    stderr_out bytea,
+    stdout_out text,
+    stderr_out text,
     performances jsonb
 );
 

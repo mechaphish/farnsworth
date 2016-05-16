@@ -12,5 +12,5 @@ class TesterResult(BaseModel):
     error_code = IntegerField()
     performances = JSONField()
     result = CharField()
-    stdout_out = BlobField()
-    stderr_out = BlobField()
+    stdout_out = TextField()
+    stderr_out = TextField()
