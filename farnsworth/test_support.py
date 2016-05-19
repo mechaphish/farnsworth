@@ -24,6 +24,7 @@ def truncate_tables():
         Exploit,
         Feedback,
         FuzzerStat,
+        IDSRule,
         Job,
         Pcap,
         Round,

@@ -7,6 +7,7 @@ from .evaluation import Evaluation
 from .exploit import Exploit
 from .feedback import Feedback
 from .fuzzer_stats import FuzzerStat
+from .ids_rule import IDSRule
 from .job import Job, DrillerJob, AFLJob, RexJob, PatcherexJob, TesterJob
 from .pcap import Pcap
 from .round import Round

@@ -202,4 +202,16 @@ create table tester_results (
     performances jsonb
 );
 
+-- IDS Rules
+drop table if exists ids_rules;
+create table ids_rules (
+    id bigserial primary key,
+    created_at timestamp not null default current_timestamp,
+    updated_at timestamp not null default current_timestamp,
+    cbn_id bigint not null references challenge_binary_nodes (id),
+    submitted_at timestamp null,
+    rules text
+);
+
+
 commit;
