@@ -3,12 +3,18 @@ import time
 import os
 
 from . import setup_each, teardown_each
-from farnsworth.models import AFLJob, ChallengeBinaryNode
+from farnsworth.models import AFLJob, ChallengeBinaryNode, ChallengeSet
 import farnsworth.models # to avoid collisions between Test and nosetests
 
 class TestChallengeBinaryNode:
     def setup(self): setup_each()
     def teardown(self): teardown_each()
+
+    def test_init(self):
+        cs = ChallengeSet.find_or_create(name = 'foo')
+        cbn1 = ChallengeBinaryNode.create(name = "test1", cs_id = "foo")
+        cbn2 = ChallengeBinaryNode.create(name = "test1", cs = cs)
+        assert_equals(cbn1.cs, cs)
 
     def test_root_association(self):
         root_cbn = ChallengeBinaryNode.create(name = "root", cs_id = "foo")
@@ -31,7 +37,7 @@ class TestChallengeBinaryNode:
         assert_in(cbn2, parent_cbn.children)
 
     def test_binary_is_created_and_deleted_properly(self):
-        cbn = ChallengeBinaryNode.create(name = "mybin", cs_id = int(time.time()), blob="byte data")
+        cbn = ChallengeBinaryNode.create(name = "mybin", cs_id = str(time.time()), blob="byte data")
         binpath = cbn._path
         assert_false(os.path.isfile(binpath))
         cbn.path

@@ -2,6 +2,7 @@
 
 from .bitmap import Bitmap
 from .challenge_binary_node import ChallengeBinaryNode
+from .challenge_set import ChallengeSet
 from .crash import Crash
 from .evaluation import Evaluation
 from .exploit import Exploit

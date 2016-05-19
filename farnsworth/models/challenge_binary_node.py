@@ -6,6 +6,7 @@ from datetime import datetime
 from peewee import * #pylint:disable=wildcard-import,unused-wildcard-import
 
 from .base import BaseModel
+from .challenge_set import ChallengeSet
 
 class ChallengeBinaryNode(BaseModel):
     """ChallengeBinaryNode model"""
@@ -13,9 +14,17 @@ class ChallengeBinaryNode(BaseModel):
     root = ForeignKeyField('self', related_name='descendants')
     blob = BlobField()
     name = CharField()
-    cs_id = CharField()
+    cs = ForeignKeyField(ChallengeSet, db_column='cs_id', to_field='id',
+                         related_name='cbns')
     submitted_at = DateTimeField(null=True)
     # parent_path = UnknownField(null=True)  # FIXME
+
+    def __init__(self, *args, **kwargs):
+        """Create CS on the fly if cs_id is a string"""
+        if isinstance(kwargs.get('cs_id'), basestring):
+            kwargs['cs'] = ChallengeSet.find_or_create(name = kwargs['cs_id'])
+            del(kwargs['cs_id'])
+        super(BaseModel, self).__init__(*args, **kwargs)
 
     def delete_binary(self):
         """Remove binary file"""

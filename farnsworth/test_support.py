@@ -19,6 +19,7 @@ def truncate_tables():
     tables = [
         Bitmap,
         ChallengeBinaryNode,
+        ChallengeSet,
         Crash,
         Evaluation,
         Exploit,
