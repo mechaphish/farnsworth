@@ -60,7 +60,7 @@ create table jobs (
     limit_time int null,  -- In Seconds
     started_at timestamp null,
     completed_at timestamp null,
-    cbn_id bigint not null references challenge_binary_nodes (id),
+    cbn_id bigint null references challenge_binary_nodes (id),
     produced_output boolean null,
     payload jsonb
 );

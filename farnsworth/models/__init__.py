@@ -9,7 +9,15 @@ from .exploit import Exploit
 from .feedback import Feedback
 from .fuzzer_stats import FuzzerStat
 from .ids_rule import IDSRule
-from .job import Job, DrillerJob, AFLJob, RexJob, PatcherexJob, TesterJob
+from .job import (
+    AFLJob,
+    DrillerJob,
+    IDSJob,
+    Job,
+    PatcherexJob,
+    RexJob,
+    TesterJob,
+)
 from .pcap import Pcap
 from .round import Round
 from .score import Score

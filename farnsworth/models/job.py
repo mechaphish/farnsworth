@@ -250,3 +250,27 @@ class PollerJob(Job):
             return True
         except cls.DoesNotExist:
             return False
+
+
+class IDSJob(Job):
+    """A IDSJob."""
+    worker = CharField(default='ids')
+
+    @property
+    def cs(self):
+        """Return input ChallengeSet"""
+        from .challenge_set import ChallengeSet
+        if not hasattr(self, '_cs'):
+            self._cs = None # pylint:disable=attribute-defined-outside-init
+        self._cs = self._cs or ChallengeSet.find(self.payload.get('cs_id')) # pylint:disable=attribute-defined-outside-init
+        return self._cs
+
+    @classmethod
+    def queued(cls, job):
+        """Return true if job is already queued"""
+        try:
+            cls.get((cls.worker == 'ids') &
+                    (cls.payload['cs_id'] == str(job.payload['cs_id'])))
+            return True
+        except cls.DoesNotExist: # pylint:disable=no-member
+            return False
