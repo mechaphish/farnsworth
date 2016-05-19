@@ -9,14 +9,6 @@ class Team(BaseModel):
     name = CharField()
 
     @classmethod
-    def find_or_create(cls, name):
-        """Find or create record"""
-        try:
-            return cls.get(cls.name == name)
-        except cls.DoesNotExist: # pylint:disable=no-member
-            return cls.create(name=name)
-
-    @classmethod
     def opponents(cls):
         """Return oppenent teams"""
         return cls.select().where(cls.name != "6")

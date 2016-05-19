@@ -31,6 +31,18 @@ class BaseModel(BaseClass):
         except cls.DoesNotExist:          # pylint:disable=no-member
             return None
 
+    @classmethod
+    def find_or_create(cls, **kwargs):
+        """Find or create record by attributes"""
+        conditions = [
+            getattr(cls, attr) == value
+            for attr, value in kwargs.items()
+        ]
+        try:
+            return cls.get(*conditions)
+        except cls.DoesNotExist: # pylint:disable=no-member
+            return cls.create(**kwargs)
+
     def save(self, **kwargs):
         self.updated_at = datetime.now()
         return super(BaseModel, self).save(**kwargs)
