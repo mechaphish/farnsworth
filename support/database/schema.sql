@@ -211,7 +211,6 @@ create table tester_results (
     performances jsonb
 );
 
-<<<<<<< HEAD
 -- Poller results.
 drop table if exists valid_polls;
 create table valid_polls (
@@ -223,7 +222,6 @@ create table valid_polls (
     blob bytea
 );
 
-=======
 -- IDS Rules
 drop table if exists ids_rules;
 create table ids_rules (
@@ -235,6 +233,4 @@ create table ids_rules (
     rules text
 );
 
-
->>>>>>> 88904b18cba80967db63ece15f3bbe7fc94e6c5a
 commit;

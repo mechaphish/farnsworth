@@ -9,7 +9,7 @@ from playhouse.postgres_ext import JSONField
 
 from .base import BaseModel
 from .challenge_binary_node import ChallengeBinaryNode
-from .valid_polls import ValidPoll
+
 
 def to_job_type(job):
     """
@@ -250,11 +250,3 @@ class PollerJob(Job):
             return True
         except cls.DoesNotExist:
             return False
-
-    def create_valid_poll(self, poll_xml_content):
-        """
-        Create a valid poll corresponding to this poller job.
-        :param poll_xml_content: xml contents of the generated poll
-        :return: None
-        """
-        ValidPoll.create(cbn=self.cbn, test=self.target_test, blob=poll_xml_content)
