@@ -43,6 +43,11 @@ class BaseModel(BaseClass):
         except cls.DoesNotExist: # pylint:disable=no-member
             return cls.create(**kwargs)
 
+    @classmethod
+    def all(cls):
+        """Return all record sorted by id"""
+        return cls.select().order_by(cls.id.asc())
+
     def save(self, **kwargs):
         self.updated_at = datetime.now()
         return super(BaseModel, self).save(**kwargs)

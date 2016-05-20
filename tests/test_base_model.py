@@ -26,3 +26,10 @@ class TestBaseModel:
         assert_equals(len(ChallengeSet.select()), 2)
         assert_equals(cs2.id, cs1.id)
         assert_not_equals(cs3.id, cs1.id)
+
+    def test_all(self):
+        cbn1 = ChallengeBinaryNode.create(name = "foo", cs_id = "foo")
+        cbn2 = ChallengeBinaryNode.create(name = "bar", cs_id = "foo")
+        assert_equals(len(ChallengeBinaryNode.all()), 2)
+        assert_equals(ChallengeBinaryNode.all()[0], cbn1)
+        assert_equals(ChallengeBinaryNode.all()[1], cbn2)
