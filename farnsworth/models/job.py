@@ -1,8 +1,8 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
+"""Job models"""
 
 import datetime
-import json
 
 from peewee import *    # pylint:disable=wildcard-import,unused-wildcard-import
 from playhouse.postgres_ext import JSONField
@@ -32,6 +32,7 @@ def to_job_type(job):
 
 
 class Job(BaseModel):
+    """Base Job model"""
     cbn = ForeignKeyField(ChallengeBinaryNode, db_column='cbn_id', to_field='id',
                           related_name='jobs')
     completed_at = DateTimeField(null=True)
@@ -44,15 +45,17 @@ class Job(BaseModel):
     started_at = DateTimeField(null=True)
     worker = CharField()
 
-    class Meta:     # pylint:disable=no-init
-        def db_table_func(_):
+    class Meta:     # pylint:disable=no-init,missing-docstring,old-style-class
+        def db_table_func(self):   # pylint:disable=no-self-argument,no-self-use
             return 'jobs'
 
     def started(self):
+        """Mark job as started"""
         self.started_at = datetime.datetime.now()
         self.save()
 
     def is_started(self):
+        """Check if job is started"""
         return self.started_at is not None
 
     def try_start(self):
@@ -67,14 +70,17 @@ class Job(BaseModel):
         return False
 
     def is_completed(self):
+        """Check if job is completed"""
         return self.completed_at is not None
 
     def completed(self):
+        """Mark job as completed"""
         self.completed_at = datetime.datetime.now()
         self.save()
 
     @classmethod
     def unstarted(cls):
+        """Return all unstarted jobs"""
         return cls.select().where(cls.started_at.is_null(True) & (cls.worker == cls.worker.default))
 
 
@@ -89,20 +95,22 @@ class DrillerJob(Job):
 
     @property
     def input_test(self):
+        """Return input test case"""
         from .test import Test
         if not hasattr(self, '_input_test'):
-            self._input_test = None
-        self._input_test = self._input_test or Test.get(id=self.payload['test_id'])
+            self._input_test = None # pylint:disable=attribute-defined-outside-init
+        self._input_test = self._input_test or Test.get(id=self.payload['test_id']) # pylint:disable=attribute-defined-outside-init
         return self._input_test
 
     @classmethod
     def queued(cls, job):
+        """Return true if job is already queued"""
         try:
             cls.get((cls.cbn == job.cbn) &
                     (cls.worker == 'driller') &
                     (cls.payload['test_id'] == str(job.payload['test_id'])))
             return True
-        except cls.DoesNotExist:
+        except cls.DoesNotExist: # pylint:disable=no-member
             return False
 
 
@@ -112,12 +120,13 @@ class AFLJob(Job):
 
     @classmethod
     def queued(cls, job):
+        """Return true if job is already queued"""
         try:
             cls.get((cls.cbn == job.cbn) &
                     (cls.worker == 'afl') &
                     cls.completed_at.is_null(True))
             return True
-        except cls.DoesNotExist:
+        except cls.DoesNotExist: # pylint:disable=no-member
             return False
 
 
@@ -132,19 +141,22 @@ class RexJob(Job):
 
     @property
     def input_crash(self):
+        """Return input crash"""
         from .crash import Crash
-        if not hasattr(self, '_input_crash'): self._input_crash = None
-        self._input_crash = self._input_crash or Crash.get(id=self.payload['crash_id'])
+        if not hasattr(self, '_input_crash'):
+            self._input_crash = None # pylint:disable=attribute-defined-outside-init
+        self._input_crash = self._input_crash or Crash.get(id=self.payload['crash_id']) # pylint:disable=attribute-defined-outside-init
         return self._input_crash
 
     @classmethod
     def queued(cls, job):
+        """Return true if job is already queued"""
         try:
             cls.get((cls.cbn == job.cbn) &
                     (cls.worker == 'rex') &
                     (cls.payload['crash_id'] == str(job.payload['crash_id'])))
             return True
-        except cls.DoesNotExist:
+        except cls.DoesNotExist: # pylint:disable=no-member
             return False
 
 
@@ -154,11 +166,12 @@ class PatcherexJob(Job):
 
     @classmethod
     def queued(cls, job):
+        """Return true if job is already queued"""
         try:
             cls.get((cls.cbn == job.cbn) &
                     (cls.worker == 'patcherex'))
             return True
-        except cls.DoesNotExist:
+        except cls.DoesNotExist: # pylint:disable=no-member
             return False
 
 
@@ -179,8 +192,8 @@ class TesterJob(Job):
         """
         from .test import Test
         if not hasattr(self, '_target_test'):
-            self._target_test = None
-        self._target_test = self._target_test or Test.get(id=self.payload['test_id'])
+            self._target_test = None # pylint:disable=attribute-defined-outside-init
+        self._target_test = self._target_test or Test.get(id=self.payload['test_id']) # pylint:disable=attribute-defined-outside-init
         return self._target_test
 
     def mark_testjob_not_completed(self):
@@ -198,12 +211,13 @@ class TesterJob(Job):
 
     @classmethod
     def queued(cls, job):
+        """Return true if job is already queued"""
         try:
             cls.get((cls.cbn == job.cbn) &
                     (cls.worker == 'tester') &
                     (cls.payload['test_id'] == str(job.payload['test_id'])))
             return True
-        except cls.DoesNotExist:
+        except cls.DoesNotExist: # pylint:disable=no-member
             return False
 
 

@@ -1,17 +1,14 @@
-from peewee import *
+"""Team model"""
+
+from peewee import * # pylint:disable=wildcard-import,unused-wildcard-import
 
 from .base import BaseModel
 
 class Team(BaseModel):
+    """Team model"""
     name = CharField()
 
     @classmethod
-    def find_or_create(cls, name):
-        try:
-            return cls.get(cls.name == name)
-        except cls.DoesNotExist:
-            return cls.create(name=name)
-
-    @classmethod
     def opponents(cls):
+        """Return oppenent teams"""
         return cls.select().where(cls.name != "6")

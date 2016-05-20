@@ -1,6 +1,9 @@
-from peewee import *
+"""Extend Peewee basic types."""
+
+from peewee import Field
 
 class EnumField(Field):
+    """Define a EnumField type"""
     db_field = "enum"
 
     def coerce(self, value):

@@ -16,6 +16,15 @@ create table teams (
     name varchar(256) not null
 );
 
+-- Challenge Sets
+drop table if exists challenge_sets;
+create table challenge_sets (
+    id bigserial primary key,
+    created_at timestamp not null default current_timestamp,
+    updated_at timestamp not null default current_timestamp,
+    name varchar(256) not null
+);
+
 -- Challenge Binary Nodes
 drop table if exists challenge_binary_nodes;
 create table challenge_binary_nodes (
@@ -26,7 +35,7 @@ create table challenge_binary_nodes (
     parent_id bigint null,
     parent_path ltree null,
     name varchar(256) not null,
-    cs_id varchar(256) not null,
+    cs_id bigint not null references challenge_sets (id),
     submitted_at timestamp null,
     blob bytea
 );
@@ -47,7 +56,7 @@ create table jobs (
     priority int not null default 0,
     worker varchar(256) not null,
     limit_cpu int null default 4,
-    limit_memory int null default 8192,  -- In MB
+    limit_memory int null default 8192,  -- In MiB
     limit_time int null,  -- In Seconds
     started_at timestamp null,
     completed_at timestamp null,
@@ -202,6 +211,7 @@ create table tester_results (
     performances jsonb
 );
 
+<<<<<<< HEAD
 -- Poller results.
 drop table if exists valid_polls;
 create table valid_polls (
@@ -213,4 +223,18 @@ create table valid_polls (
     blob bytea
 );
 
+=======
+-- IDS Rules
+drop table if exists ids_rules;
+create table ids_rules (
+    id bigserial primary key,
+    created_at timestamp not null default current_timestamp,
+    updated_at timestamp not null default current_timestamp,
+    cbn_id bigint not null references challenge_binary_nodes (id),
+    submitted_at timestamp null,
+    rules text
+);
+
+
+>>>>>>> 88904b18cba80967db63ece15f3bbe7fc94e6c5a
 commit;

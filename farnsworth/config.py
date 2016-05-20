@@ -1,7 +1,9 @@
-from playhouse.postgres_ext import PostgresqlExtDatabase # for JSONB type
-import os
+"""Database connection configurations."""
 
-master_db = PostgresqlExtDatabase(
+import os
+from playhouse.postgres_ext import PostgresqlExtDatabase # for JSONB type
+
+master_db = PostgresqlExtDatabase( # pylint: disable=invalid-name
     os.environ['POSTGRES_DATABASE_NAME'],
     user=os.environ['POSTGRES_DATABASE_USER'],
     password=os.environ['POSTGRES_DATABASE_PASSWORD'],
@@ -13,7 +15,7 @@ master_db = PostgresqlExtDatabase(
 )
 
 if os.environ.get('POSTGRES_USE_SLAVES') is not None:
-    slave_db = PostgresqlExtDatabase(
+    slave_db = PostgresqlExtDatabase( # pylint: disable=invalid-name
         os.environ['POSTGRES_DATABASE_NAME'],
         user=os.environ['POSTGRES_DATABASE_USER'],
         password=os.environ['POSTGRES_DATABASE_PASSWORD'],
@@ -22,14 +24,16 @@ if os.environ.get('POSTGRES_USE_SLAVES') is not None:
         register_hstore=False,
     )
 else:
-    slave_db = None
+    slave_db = None              # pylint: disable=invalid-name
 
 def connect_dbs():
-    for db in (master_db, slave_db):
-        if db is not None:
-            db.connect()
+    """Open connection to databases"""
+    for database in (master_db, slave_db):
+        if database is not None:
+            database.connect()
 
 def close_dbs():
-    for db in (master_db, slave_db):
-        if db is not None and not db.is_closed():
-            db.close()
+    """Close connection to databases"""
+    for database in (master_db, slave_db):
+        if database is not None and not database.is_closed():
+            database.close()
