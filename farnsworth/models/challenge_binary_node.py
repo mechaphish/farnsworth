@@ -38,9 +38,28 @@ class ChallengeBinaryNode(BaseModel):
     @property
     def path(self):
         if not os.path.isfile(self._path):
-            open(self._path, 'wb').write(self.blob)
+            fp = open(self._path, 'wb')
+            fp.write(self.blob)
+            fp.close()
             os.chmod(self._path, 0o777)
         return self._path
+
+    def prefix_path(self, prefix_str=None):
+        """
+        Returns path of a binary with filename prefixed with a given string.
+        :param prefix_str: string to be prefixed for filename
+        :return: new path to the binary
+        """
+        if prefix_str is None:
+            return self.path
+        new_fname = prefix_str + os.path.basename(self._path)
+        prefixed_path = os.path.join(os.path.dirname(self._path), new_fname)
+        fp = open(prefixed_path, 'wb')
+        fp.write(self.blob)
+        fp.close()
+        os.chmod(prefixed_path, 0o777)
+        return prefixed_path
+
 
     @property
     def undrilled_tests(self):

@@ -12,3 +12,4 @@ from .round import Round
 from .score import Score
 from .team import Team
 from .test import Test
+from .valid_polls import ValidPoll

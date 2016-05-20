@@ -202,4 +202,15 @@ create table tester_results (
     performances jsonb
 );
 
+-- Poller results.
+drop table if exists valid_polls;
+create table valid_polls (
+    id bigserial primary key,
+    created_at timestamp not null default current_timestamp,
+    updated_at timestamp not null default current_timestamp,
+    test_id bigint not null references tests (id),
+    cbn_id bigint not null references challenge_binary_nodes (id),
+    blob bytea
+);
+
 commit;

@@ -9,6 +9,7 @@ from playhouse.postgres_ext import JSONField
 
 from .base import BaseModel
 from .challenge_binary_node import ChallengeBinaryNode
+from .valid_polls import ValidPoll
 
 def to_job_type(job):
     """
@@ -47,13 +48,23 @@ class Job(BaseModel):
         def db_table_func(_):
             return 'jobs'
 
-
     def started(self):
         self.started_at = datetime.datetime.now()
         self.save()
 
     def is_started(self):
         return self.started_at is not None
+
+    def try_start(self):
+        """
+        Mark the provide job as started, only if it not started before.
+        :return: True if successful else false
+        """
+
+        if not self.is_started():
+            self.started()
+            return True
+        return False
 
     def is_completed(self):
         return self.completed_at is not None
@@ -172,15 +183,18 @@ class TesterJob(Job):
         self._target_test = self._target_test or Test.get(id=self.payload['test_id'])
         return self._target_test
 
-    def mark_job_not_started(self):
+    def mark_testjob_not_completed(self):
         """
-        Mark this current job as not started.
-        This is required in case, the job incurred an schrodinger failure.
-        :return: None
+        Mark the provided job as not completed.
+        i.e Failed
+        :return: True if successful else false
         """
-        self.started_at = DateTimeField(null=True)
-        self.completed_at = DateTimeField(null=True)
-        self.save()
+        if self.is_started():
+            self.started_at = DateTimeField(null=True)
+            self.completed_at = DateTimeField(null=True)
+            self.save()
+            return True
+        return False
 
     @classmethod
     def queued(cls, job):
@@ -191,3 +205,42 @@ class TesterJob(Job):
             return True
         except cls.DoesNotExist:
             return False
+
+
+class PollerJob(Job):
+    """
+    This represents a job for Poller. Poller requires a testcase
+    as an input. Here, we receive the testcase id as a string in the
+    `payload` field.
+    """
+    worker = CharField(default='poller')
+
+    @property
+    def target_test(self):
+        """
+        Get the target test corresponding to this Poller job
+        :return: Test corresponding to this job.
+        """
+        from .test import Test
+        if not hasattr(self, '_target_test'):
+            self._target_test = None
+        self._target_test = self._target_test or Test.get(id=self.payload['test_id'])
+        return self._target_test
+
+    @classmethod
+    def queued(cls, job):
+        try:
+            cls.get((cls.cbn == job.cbn) &
+                    (cls.worker == 'poller') &
+                    (cls.payload['test_id'] == str(job.payload['test_id'])))
+            return True
+        except cls.DoesNotExist:
+            return False
+
+    def create_valid_poll(self, poll_xml_content):
+        """
+        Create a valid poll corresponding to this poller job.
+        :param poll_xml_content: xml contents of the generated poll
+        :return: None
+        """
+        ValidPoll.create(cbn=self.cbn, test=self.target_test, blob=poll_xml_content)

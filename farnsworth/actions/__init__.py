@@ -23,6 +23,48 @@ from .common.helper import random_string, element_or_xml
 # pylint: enable=unused-import
 
 
+class CFE_POLL(object):
+    def __init__(self, target, seed, actions):
+        """Initialize a POLL Xml object.
+
+        :param target: the target, i.e., the name of the challenge binary (used
+                       for cbid)
+        :param seed: random seed to be used for poll. (Hexadecimal string in ASCII)
+                    Ex: db60b8b5baf19ae24209f8c41ec831731884bfab905aa6992ce1157ea
+        :param actions: list of actions, which should be .knowledge.action
+                        objects
+
+        """
+        self.target = target
+        self.seed = seed
+        self.actions = actions
+
+    def to_xml(self):
+        root = Element('pov')
+
+        cbid = Element('cbid')
+        cbid.text = self.target
+        root.append(cbid)
+
+        seed_node = Element('seed')
+        seed_node.text = self.seed
+        root.append(seed_node)
+
+        replay = Element('replay')
+        root.append(replay)
+
+        for action in self.actions:
+            replay.append(action.to_xml())
+
+        # hack to make sure all crashes happen regardless of sockets closing
+        # replay.append(Delay(500).to_xml())
+
+        return root
+
+    def __repr__(self):
+        return ElementTree.tostring(self.to_xml())
+
+
 class CQE_POV(object):
     def __init__(self, target, actions):
         """Initialize a POV object.
