@@ -228,7 +228,7 @@ create table ids_rules (
     id bigserial primary key,
     created_at timestamp not null default current_timestamp,
     updated_at timestamp not null default current_timestamp,
-    cbn_id bigint not null references challenge_binary_nodes (id),
+    cs_id bigint not null references challenge_sets (id),
     submitted_at timestamp null,
     rules text
 );

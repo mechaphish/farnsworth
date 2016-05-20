@@ -28,6 +28,8 @@ def to_job_type(job):
         job.__class__ = PatcherexJob
     elif job.worker == 'tester':
         job.__class__ = TesterJob
+    elif job.worker == 'ids':
+        job.__class__ = IDSJob
     return job
 
 
