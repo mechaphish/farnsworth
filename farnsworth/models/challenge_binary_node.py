@@ -91,6 +91,11 @@ class ChallengeBinaryNode(BaseModel):
         return self.descendants.where(self.__class__.submitted_at.is_null(True))
 
     @property
+    def submitted_patches(self):
+        """Rertun all submitted patches"""
+        return self.descendants.where(self.__class__.submitted_at.is_null(False))
+
+    @property
     def unsubmitted_exploits(self):
         """Return exploits not submitted"""
         from .exploit import Exploit

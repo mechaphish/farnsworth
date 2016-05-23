@@ -33,6 +33,7 @@ def truncate_tables():
         Team,
         Test,
         TesterResult,
+        ValidPoll,
     ]
     table_names = map(lambda t: t._meta.db_table, tables) # pylint:disable=protected-access,deprecated-lambda,bad-builtin
     master_db.execute_sql("TRUNCATE {} RESTART IDENTITY CASCADE".format(", ".join(table_names)))
