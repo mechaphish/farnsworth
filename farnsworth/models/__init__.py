@@ -17,6 +17,7 @@ from .job import (
     PatcherexJob,
     RexJob,
     TesterJob,
+    WereRabbitJob,
     to_job_type,
 )
 from .pcap import Pcap

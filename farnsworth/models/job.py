@@ -30,6 +30,8 @@ def to_job_type(job):
         job.__class__ = TesterJob
     elif job.worker == 'ids':
         job.__class__ = IDSJob
+    elif job.worker == 'were_rabbit':
+        job.__class__ = WereRabbitJob
     return job
 
 
@@ -131,6 +133,21 @@ class AFLJob(Job):
         except cls.DoesNotExist: # pylint:disable=no-member
             return False
 
+
+class WereRabbitJob(Job):
+    """This represents a job for AFL's Were Rabbit crash exploration mode."""
+    worker = CharField(default='were_rabbit')
+
+    @classmethod
+    def queued(cls, job):
+        """Return true if job is already queued"""
+        try:
+            cls.get((cls.cbn == job.cbn) &
+                    (cls.worker == 'were_rabbit') &
+                    cls.completed_at.is_null(True))
+            return True
+        except cls.DoesNotExist: # pylint:disable=no-member
+            return False
 
 class RexJob(Job):
     """
