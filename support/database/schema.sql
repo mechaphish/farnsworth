@@ -211,6 +211,16 @@ create table tester_results (
     performances jsonb
 );
 
+-- Round Captured Network Traffic.
+drop table if exists round_traffic;
+create table round_traffic (
+    id bigserial primary key,
+    created_at timestamp not null default current_timestamp,
+    updated_at timestamp not null default current_timestamp,
+    round_id bigint not null references rounds (id),
+    pickled_data bytea
+);
+
 -- Poller results.
 drop table if exists valid_polls;
 create table valid_polls (
