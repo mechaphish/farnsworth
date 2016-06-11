@@ -65,6 +65,24 @@ class CFE_POLL(object):
         return ElementTree.tostring(self.to_xml())
 
 
+@element_or_xml
+def cfe_poll_from_xml(pov):
+    cbid = pov.find('cbid').text
+    rand_seed = pov.find('seed').text
+    actions = []
+    for entry in pov.find('replay'):
+        if entry.tag == 'decl':
+            actions.append(decl_from_xml(entry))
+        elif entry.tag == 'write':
+            actions.append(write_from_xml(entry))
+        elif entry.tag == 'read':
+            actions.append(read_from_xml(entry))
+        elif entry.tag == 'delay':
+            actions.append(delay_from_xml(entry))
+
+    return CFE_POLL(cbid, rand_seed, actions)
+
+
 class CQE_POV(object):
     def __init__(self, target, actions):
         """Initialize a POV object.

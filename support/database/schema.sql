@@ -221,6 +221,18 @@ create table raw_round_traffic (
     pickled_data bytea
 );
 
+-- Polls Created from Network Traffic for each round
+drop table if exists raw_round_polls;
+create table raw_round_polls (
+    id bigserial primary key,
+    created_at timestamp not null default current_timestamp,
+    updated_at timestamp not null default current_timestamp,
+    cs_id bigint not null references challenge_sets (id),
+    round_id bigint not null references rounds (id),
+    is_crash boolean not null default false,
+    blob bytea
+);
+
 -- Poller results.
 drop table if exists valid_polls;
 create table valid_polls (
