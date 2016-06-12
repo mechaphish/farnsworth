@@ -9,6 +9,7 @@ from playhouse.postgres_ext import JSONField
 
 from .base import BaseModel
 from .challenge_binary_node import ChallengeBinaryNode
+from .raw_round_traffic import RawRoundTraffic
 
 
 def to_job_type(job):
@@ -268,6 +269,32 @@ class PollerJob(Job):
                     (cls.payload['test_id'] == str(job.payload['test_id'])))
             return True
         except cls.DoesNotExist:
+            return False
+
+
+class NetworkPollJob(Job):
+    """ A Job to create polls from captured network traffic.
+    """
+    worker_name = 'network_poll'
+    worker = CharField(default=worker_name)
+
+    @property
+    def target_round_traffic(self):
+        """Return RawRoundTraffic to be processed by this job"""
+        if not hasattr(self, '_target_round_traffic'):
+            self._target_round_traffic = None # pylint:disable=attribute-defined-outside-init
+        # pylint:disable=attribute-defined-outside-init
+        self._target_round_traffic = self._target_round_traffic or RawRoundTraffic.find(self.payload['rrt_id'])
+        return self._target_round_traffic
+
+    @classmethod
+    def queued(cls, job):
+        """Return true if job is already queued"""
+        try:
+            cls.get((cls.worker == NetworkPollJob.worker_name) &
+                    (cls.payload['rrt_id'] == str(job.payload['rrt_id'])))
+            return True
+        except cls.DoesNotExist: # pylint:disable=no-member
             return False
 
 

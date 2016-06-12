@@ -212,8 +212,8 @@ create table tester_results (
 );
 
 -- Round Captured Network Traffic.
-drop table if exists raw_round_traffic;
-create table raw_round_traffic (
+drop table if exists raw_round_traffics;
+create table raw_round_traffics (
     id bigserial primary key,
     created_at timestamp not null default current_timestamp,
     updated_at timestamp not null default current_timestamp,
