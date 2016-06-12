@@ -13,5 +13,6 @@ class RawRoundPoll(BaseModel):
     """
     round = ForeignKeyField(Round, related_name='raw_round_polls')
     is_crash = BooleanField()
+    is_failed = BooleanField()
     cs = ForeignKeyField(ChallengeSet, db_column='cs_id', related_name='raw_round_polls')
     blob = BlobField()

@@ -230,6 +230,7 @@ create table raw_round_polls (
     cs_id bigint not null references challenge_sets (id),
     round_id bigint not null references rounds (id),
     is_crash boolean not null default false,
+    is_failed boolean not null default false,
     blob bytea
 );
 
@@ -239,8 +240,9 @@ create table valid_polls (
     id bigserial primary key,
     created_at timestamp not null default current_timestamp,
     updated_at timestamp not null default current_timestamp,
-    test_id bigint not null references tests (id),
+    test_id bigint null references tests (id),
     cbn_id bigint not null references challenge_binary_nodes (id),
+    src_round_id bigint null references rounds (id),
     blob bytea
 );
 

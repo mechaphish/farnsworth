@@ -9,7 +9,6 @@ from playhouse.postgres_ext import JSONField
 
 from .base import BaseModel
 from .challenge_binary_node import ChallengeBinaryNode
-from .raw_round_traffic import RawRoundTraffic
 
 
 def to_job_type(job):
@@ -264,9 +263,39 @@ class PollerJob(Job):
     @classmethod
     def queued(cls, job):
         try:
-            cls.get((cls.cbn == job.cbn) &
-                    (cls.worker == 'poller') &
+            cls.get((cls.worker == 'poller') &
                     (cls.payload['test_id'] == str(job.payload['test_id'])))
+            return True
+        except cls.DoesNotExist:
+            return False
+
+
+class PollSanitizerJob(Job):
+    """
+    This represents a job for NetworkPollSanitizer. NetworkPollSanitizer requires a
+    untested network poll as an input. Here, we receive the raw_round_poll id as a string in the
+    `payload` field.
+    """
+    worker_name = 'pollsanitizer'
+    worker = CharField(default=worker_name)
+
+    @property
+    def raw_poll(self):
+        """
+        Get the raw round poll that needs to be tested.
+        :return: RawRoundPoll corresponding to this job.
+        """
+        from .raw_round_poll import RawRoundPoll
+        if not hasattr(self, '_round_poll'):
+            self._round_poll = None
+        self._round_poll = self._round_poll or RawRoundPoll.get(id=self.payload['rrp_id'])
+        return self._round_poll
+
+    @classmethod
+    def queued(cls, job):
+        try:
+            cls.get((cls.worker == PollSanitizerJob.worker_name) &
+                    (cls.payload['rrp_id'] == str(job.payload['rrp_id'])))
             return True
         except cls.DoesNotExist:
             return False
@@ -284,6 +313,7 @@ class NetworkPollJob(Job):
         if not hasattr(self, '_target_round_traffic'):
             self._target_round_traffic = None # pylint:disable=attribute-defined-outside-init
         # pylint:disable=attribute-defined-outside-init
+        from .raw_round_traffic import RawRoundTraffic
         self._target_round_traffic = self._target_round_traffic or RawRoundTraffic.find(self.payload['rrt_id'])
         return self._target_round_traffic
 

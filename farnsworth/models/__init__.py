@@ -17,7 +17,9 @@ from .job import (
     PatcherexJob,
     RexJob,
     TesterJob,
+    PollerJob,
     NetworkPollJob,
+    PollSanitizerJob,
     WereRabbitJob,
     to_job_type,
 )
