@@ -27,7 +27,8 @@ class Crash(BaseModel):
                           to_field='id',
                           related_name='crashes')
     triaged = BooleanField()
-    kind = EnumField(choices=['ip_overwrite', 'arbitrary_read'], null=True)
+    kind = EnumField(choices=['partial_ip_overwrite', 'ip_overwrite',
+                              'arbitrary_read','write_what_where'], null=True)
 
     class Meta:     # pylint: disable=no-init,too-few-public-methods,old-style-class
         db_table = 'crashes'
