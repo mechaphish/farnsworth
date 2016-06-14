@@ -1,5 +1,7 @@
 set client_min_messages to WARNING;
 
+-- TODO: rename _type to _kind to prevent name clashes
+
 start transaction;
 
 -- Trees
@@ -78,6 +80,11 @@ create table tests (
 );
 
 -- Crashes
+drop type if exists crash_kind;
+create type crash_kind as enum('unknown', 'partial_ip_overwrite',
+                               'ip_overwrite', 'arbitrary_read',
+                               'write_what_where');
+
 drop table if exists crashes;
 create table crashes (
     id bigserial primary key,
@@ -90,7 +97,8 @@ create table crashes (
     explored boolean null,
     exploitable boolean null,
     exploited boolean null,
-    blob bytea
+    blob bytea,
+    kind crash_kind not null default 'unknown'
 );
 
 -- Exploits
