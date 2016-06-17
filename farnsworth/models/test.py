@@ -13,6 +13,7 @@ class Test(BaseModel):
     cbn = ForeignKeyField(ChallengeBinaryNode, db_column='cbn_id', related_name='tests')
     job = ForeignKeyField(Job, db_column='job_id', to_field='id', related_name='tests')
     drilled = BooleanField()
+    colorguard_traced = BooleanField()
 
     @classmethod
     def unsynced_testcases(cls, worker, prev_sync_time):

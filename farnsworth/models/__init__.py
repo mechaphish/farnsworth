@@ -21,6 +21,7 @@ from .job import (
     NetworkPollJob,
     PollSanitizerJob,
     WereRabbitJob,
+    ColorGuardJob,
     to_job_type,
 )
 from .pcap import Pcap
