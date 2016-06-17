@@ -32,6 +32,9 @@ def to_job_type(job):
         job.__class__ = IDSJob
     elif job.worker == 'were_rabbit':
         job.__class__ = WereRabbitJob
+    elif job.worker == 'colorguard':
+        job.__class__ = ColorGuardJob
+
     return job
 
 
@@ -117,6 +120,34 @@ class DrillerJob(Job):
         except cls.DoesNotExist: # pylint:disable=no-member
             return False
 
+
+class ColorGuardJob(Job):
+    """
+    This represents a job for ColorGuard. It requires a testcase
+    as an input.
+    """
+
+    worker = CharField(default='colorguard')
+
+    @property
+    def input_test(self):
+        """Return input test case"""
+        from .test import Test
+        if not hasattr(self, '_input_test'):
+            self._input_test = None # pylint:disable=attribute-defined-outside-init
+        self._input_test = self._input_test or Test.get(id=self.payload['test_id']) # pylint:disable=attribute-defined-outside-init
+        return self._input_test
+
+    @classmethod
+    def queued(cls, job):
+        """Return true if job is already queued"""
+        try:
+            cls.get((cls.cbn == job.cbn) &
+                    (cls.worker == 'colorguard') &
+                    (cls.payload['test_id'] == str(job.payload['test_id'])))
+            return True
+        except cls.DoesNotExist: # pylint:disable=no-member
+            return False
 
 class AFLJob(Job):
     """This represents a job for AFL. It requires no extra input."""
