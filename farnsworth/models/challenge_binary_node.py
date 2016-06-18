@@ -7,6 +7,7 @@ from peewee import * #pylint:disable=wildcard-import,unused-wildcard-import
 
 from .base import BaseModel
 from .challenge_set import ChallengeSet
+from .round import Round
 
 class ChallengeBinaryNode(BaseModel):
     """ChallengeBinaryNode model"""
@@ -78,7 +79,6 @@ class ChallengeBinaryNode(BaseModel):
         os.chmod(prefixed_path, 0o777)
         return prefixed_path
 
-
     @property
     def undrilled_tests(self):
         """Rertun all undrilled test cases"""
@@ -122,3 +122,17 @@ class ChallengeBinaryNode(BaseModel):
     def all_descendants(cls):
         """Return all descendant nodes (patches)"""
         return cls.select().where(cls.root.is_null(False))
+
+    @property
+    def submissions(self):
+        """Return list of submissions"""
+        if self.submitted_at is not None:
+            round_ = Round.at_timestamp(self.submitted_at)
+            return [{
+                'id': self.id,
+                'round': round_.num,
+                'name': self.name,
+                'submitted_at': str(self.submitted_at),
+            }]
+        else:
+            return []
