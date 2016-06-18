@@ -27,10 +27,12 @@ class Crash(BaseModel):
                           to_field='id',
                           related_name='crashes')
     triaged = BooleanField()
-    kind = EnumField(choices=['unknown', 'partial_ip_overwrite',
-                              'ip_overwrite', 'arbitrary_read',
-                              'write_what_where'],
-                     default='unknown',
+    kind = EnumField(choices=['unclassified', 'unknown',
+                              'partial_ip_overwrite',
+                               'ip_overwrite', 'arbitrary_read',
+                              'write_what_where',
+                              'null_dereference'],
+                     default='unclassified',
                      null=False)
 
     class Meta:     # pylint: disable=no-init,too-few-public-methods,old-style-class

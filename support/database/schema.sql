@@ -82,9 +82,9 @@ create table tests (
 
 -- Crashes
 drop type if exists crash_kind;
-create type crash_kind as enum('unknown', 'partial_ip_overwrite',
+create type crash_kind as enum('unclassified', 'unknown', 'partial_ip_overwrite',
                                'ip_overwrite', 'arbitrary_read',
-                               'write_what_where');
+                               'write_what_where', 'null_dereference');
 
 drop table if exists crashes;
 create table crashes (
@@ -99,7 +99,7 @@ create table crashes (
     exploitable boolean null,
     exploited boolean null,
     blob bytea,
-    kind crash_kind not null default 'unknown'
+    kind crash_kind not null default 'unclassified'
 );
 
 -- Exploits
