@@ -106,6 +106,10 @@ create table crashes (
 drop type if exists pov_type;
 create type pov_type as enum('type1', 'type2');
 
+drop type if exists exploitation_method;
+create type exploitation_method as enum('unclassified', 'circumstantial',
+                                        'shellcode', 'rop');
+
 drop table if exists exploits;
 create table exploits (
     id bigserial primary key,
@@ -114,6 +118,7 @@ create table exploits (
     cbn_id bigint not null references challenge_binary_nodes (id),
     job_id bigint not null references jobs (id),
     pov_type pov_type not null,
+    exploitation_method exploitation_method not null default 'unclassified',
     submitted_at timestamp null,
     submitted_teams varchar(256) null,
     blob bytea
