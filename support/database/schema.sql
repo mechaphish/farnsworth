@@ -231,6 +231,7 @@ create table raw_round_traffics (
     id bigserial primary key,
     created_at timestamp not null default current_timestamp,
     updated_at timestamp not null default current_timestamp,
+    processed not null default false,
     round_id bigint not null references rounds (id),
     pickled_data bytea
 );
@@ -242,6 +243,7 @@ create table raw_round_polls (
     created_at timestamp not null default current_timestamp,
     updated_at timestamp not null default current_timestamp,
     cs_id bigint not null references challenge_sets (id),
+    sanitized not null default false,
     round_id bigint not null references rounds (id),
     is_crash boolean not null default false,
     is_failed boolean not null default false,

@@ -11,4 +11,5 @@ class RawRoundTraffic(BaseModel):
     Result corresponding to the network dude
     """
     round = ForeignKeyField(Round, related_name='raw_round_traffics')
+    processed = BooleanField()
     pickled_data = BlobField()

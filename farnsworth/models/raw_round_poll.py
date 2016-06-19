@@ -16,3 +16,4 @@ class RawRoundPoll(BaseModel):
     is_failed = BooleanField()
     cs = ForeignKeyField(ChallengeSet, db_column='cs_id', related_name='raw_round_polls')
     blob = BlobField()
+    sanitized = BooleanField()
