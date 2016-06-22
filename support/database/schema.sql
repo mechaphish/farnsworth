@@ -77,6 +77,7 @@ create table tests (
     job_id bigint not null references jobs (id),
     drilled boolean not null default false,
     colorguard_traced boolean not null default false,
+    poll_created boolean not null default false,
     blob bytea
 );
 

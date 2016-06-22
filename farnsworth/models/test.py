@@ -14,6 +14,7 @@ class Test(BaseModel):
     job = ForeignKeyField(Job, db_column='job_id', to_field='id', related_name='tests')
     drilled = BooleanField()
     colorguard_traced = BooleanField()
+    poll_created = BooleanField()
 
     @classmethod
     def unsynced_testcases(cls, worker, prev_sync_time):
