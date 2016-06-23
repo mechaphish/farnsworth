@@ -83,9 +83,18 @@ create table tests (
 
 -- Crashes
 drop type if exists crash_kind;
-create type crash_kind as enum('unclassified', 'unknown', 'partial_ip_overwrite',
-                               'ip_overwrite', 'arbitrary_read',
-                               'write_what_where', 'null_dereference');
+create type crash_kind as enum('unclassified',
+                               'unknown',
+                               'ip_overwrite',
+                               'partial_ip_overwrite',
+                               'uncontrolled_ip_overwrite',
+                               'bp_overwrite',
+                               'partial_bp_overwrite',
+                               'write_what_where',
+                               'write_x_where',
+                               'uncontrolled_write',
+                               'arbitrary_read',
+                               'null_dereference');
 
 drop table if exists crashes;
 create table crashes (

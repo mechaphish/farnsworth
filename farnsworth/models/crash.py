@@ -27,10 +27,17 @@ class Crash(BaseModel):
                           to_field='id',
                           related_name='crashes')
     triaged = BooleanField()
-    kind = EnumField(choices=['unclassified', 'unknown',
+    kind = EnumField(choices=['unclassified',
+                              'unknown',
+                              'ip_overwrite',
                               'partial_ip_overwrite',
-                               'ip_overwrite', 'arbitrary_read',
+                              'uncontrolled_ip_overwrite',
+                              'bp_overwrite',
+                              'partial_bp_overwrite',
                               'write_what_where',
+                              'write_x_where',
+                              'uncontrolled_write',
+                              'arbitrary_read',
                               'null_dereference'],
                      default='unclassified',
                      null=False)
