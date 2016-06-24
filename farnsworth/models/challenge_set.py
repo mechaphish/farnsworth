@@ -22,6 +22,7 @@ class ChallengeSet(BaseModel):
             for cs in getattr(fb, name):
                 if cs['csid'] == self.name:
                     cs['round'] = fb.round.num
+                    cs['updated_at'] = str(fb.updated_at)
                     yield cs
 
     def feedback_polls(self):
