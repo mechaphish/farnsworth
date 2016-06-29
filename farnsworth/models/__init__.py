@@ -16,6 +16,8 @@ from .job import (
     Job,
     PatcherexJob,
     RexJob,
+    PovFuzzer1Job,
+    PovFuzzer2Job,
     TesterJob,
     PollerJob,
     NetworkPollJob,
