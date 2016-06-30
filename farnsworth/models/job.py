@@ -34,6 +34,10 @@ def to_job_type(job):
         job.__class__ = WereRabbitJob
     elif job.worker == 'colorguard':
         job.__class__ = ColorGuardJob
+    elif job.worker == 'povfuzzer1':
+        job.__class__ = PovFuzzer1Job
+    elif job.worker == 'povfuzzer2':
+        job.__class__ = PovFuzzer2Job
 
     return job
 
@@ -203,69 +207,29 @@ class RexJob(Job):
         """Return true if job is already queued"""
         try:
             cls.get((cls.cbn == job.cbn) &
-                    (cls.worker == 'rex') &
+                    (cls.worker == cls.worker.default) &
                     (cls.payload['crash_id'] == str(job.payload['crash_id'])))
             return True
         except cls.DoesNotExist: # pylint:disable=no-member
             return False
 
-class PovFuzzer1Job(Job):
+class PovFuzzer1Job(RexJob):
     """
     This represents a job for rex. PovFuzzer1 requires a crashing testcase
     as an input. Here, we receive the testcase as a string in the
     `payload` field.
     """
 
-    worker = CharField(default='povfuzzer')
+    worker = CharField(default='povfuzzer1')
 
-    @property
-    def input_crash(self):
-        """Return input crash"""
-        from .crash import Crash
-        if not hasattr(self, '_input_crash'):
-            self._input_crash = None # pylint:disable=attribute-defined-outside-init
-        self._input_crash = self._input_crash or Crash.get(id=self.payload['crash_id']) # pylint:disable=attribute-defined-outside-init
-        return self._input_crash
-
-    @classmethod
-    def queued(cls, job):
-        """Return true if job is already queued"""
-        try:
-            cls.get((cls.cbn == job.cbn) &
-                    (cls.worker == 'rex') &
-                    (cls.payload['crash_id'] == str(job.payload['crash_id'])))
-            return True
-        except cls.DoesNotExist: # pylint:disable=no-member
-            return False
-
-class PovFuzzer2Job(Job):
+class PovFuzzer2Job(RexJob):
     """
     This represents a job for rex. PovFuzzer2 requires a crashing testcase
     as an input. Here, we receive the testcase as a string in the
     `payload` field.
     """
 
-    worker = CharField(default='povfuzzer')
-
-    @property
-    def input_crash(self):
-        """Return input crash"""
-        from .crash import Crash
-        if not hasattr(self, '_input_crash'):
-            self._input_crash = None # pylint:disable=attribute-defined-outside-init
-        self._input_crash = self._input_crash or Crash.get(id=self.payload['crash_id']) # pylint:disable=attribute-defined-outside-init
-        return self._input_crash
-
-    @classmethod
-    def queued(cls, job):
-        """Return true if job is already queued"""
-        try:
-            cls.get((cls.cbn == job.cbn) &
-                    (cls.worker == 'rex') &
-                    (cls.payload['crash_id'] == str(job.payload['crash_id'])))
-            return True
-        except cls.DoesNotExist: # pylint:disable=no-member
-            return False
+    worker = CharField(default='povfuzzer2')
 
 class PatcherexJob(Job):
     """A PatcherexJob."""
