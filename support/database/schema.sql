@@ -268,7 +268,7 @@ create table valid_polls (
     updated_at timestamp not null default current_timestamp,
     test_id bigint null references tests (id),
     cbn_id bigint not null references challenge_binary_nodes (id),
-    src_round_id bigint null references rounds (id),
+    round_id bigint null references rounds (id),
     blob bytea
 );
 

@@ -38,6 +38,10 @@ def to_job_type(job):
         job.__class__ = PovFuzzer1Job
     elif job.worker == 'povfuzzer2':
         job.__class__ = PovFuzzer2Job
+    elif job.worker == 'network_poll':
+        job.__class__ = NetworkPollJob
+    elif job.worker == 'pollsanitizer':
+        job.__class__ = PollSanitizerJob
 
     return job
 
@@ -356,8 +360,7 @@ class PollSanitizerJob(Job):
 class NetworkPollJob(Job):
     """ A Job to create polls from captured network traffic.
     """
-    worker_name = 'network_poll'
-    worker = CharField(default=worker_name)
+    worker = CharField(default='network_poll')
 
     @property
     def target_round_traffic(self):
@@ -373,7 +376,7 @@ class NetworkPollJob(Job):
     def queued(cls, job):
         """Return true if job is already queued"""
         try:
-            cls.get((cls.worker == NetworkPollJob.worker_name) &
+            cls.get((cls.worker == cls.worker.default) &
                     (cls.payload['rrt_id'] == str(job.payload['rrt_id'])))
             return True
         except cls.DoesNotExist: # pylint:disable=no-member
