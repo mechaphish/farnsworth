@@ -55,7 +55,7 @@ class Job(BaseModel):
     limit_memory = IntegerField(null=True)
     limit_time = IntegerField(null=True)
     payload = JSONField()
-    priority = IntegerField()
+    priority = IntegerField(null=False, default=0)
     produced_output = BooleanField(null=True)
     started_at = DateTimeField(null=True)
     worker = CharField()
