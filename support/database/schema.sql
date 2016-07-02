@@ -281,7 +281,8 @@ create table cb_poll_performances (
     updated_at timestamp not null default current_timestamp,
     cbn_id bigint not null references challenge_binary_nodes (id),
     poll_id bigint not null references valid_polls (id),
-    performances bytea
+    is_poll_ok boolean not null default false,
+    performances jsonb
 );
 
 -- IDS Rules

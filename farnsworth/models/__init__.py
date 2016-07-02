@@ -36,3 +36,4 @@ from .tester_result import TesterResult
 from .valid_polls import ValidPoll
 from .raw_round_traffic import RawRoundTraffic
 from .raw_round_poll import RawRoundPoll
+from .cb_poll_performance import CbPollPerformance

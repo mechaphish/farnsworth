@@ -3,6 +3,7 @@ from .test import Test
 from .challenge_binary_node import ChallengeBinaryNode
 from .round import Round
 from .base import BaseModel
+import os
 
 
 class ValidPoll(BaseModel):
@@ -14,3 +15,18 @@ class ValidPoll(BaseModel):
     round = ForeignKeyField(Round, related_name='valid_polls')
     is_perf_ready = BooleanField()
     blob = BlobField()
+
+    @property
+    def _path(self):
+        """Return path name"""
+        filename = "{}-{}".format(self.id, self.cbn.id)
+        return os.path.join(os.path.expanduser("~"), filename + '.xml')
+
+    @property
+    def path(self):
+        """Save poll blob to file and return path"""
+        if not os.path.isfile(self._path):
+            fp = open(self._path, 'wb')
+            fp.write(self.blob)
+            fp.close()
+        return self._path
