@@ -42,6 +42,8 @@ def to_job_type(job):
         job.__class__ = NetworkPollJob
     elif job.worker == 'pollsanitizer':
         job.__class__ = PollSanitizerJob
+    elif job.worker == 'cbtester':
+        job.__class__ = CBTesterJob
 
     return job
 
@@ -352,6 +354,37 @@ class PollSanitizerJob(Job):
         try:
             cls.get((cls.worker == PollSanitizerJob.worker_name) &
                     (cls.payload['rrp_id'] == str(job.payload['rrp_id'])))
+            return True
+        except cls.DoesNotExist:
+            return False
+
+
+class CBTesterJob(Job):
+    """
+    This represents a job for cb_tester. cb_tester requires a
+    cb and a poll as an input. Here, we receive the poll id as a strings in the
+    `payload` field.
+    """
+    worker_name = 'cbtester'
+    worker = CharField(default=worker_name)
+
+    @property
+    def poll(self):
+        """
+        Get the poll that needs to be tested.
+        :return: ValidPoll corresponding to this job.
+        """
+        from .valid_polls import ValidPoll
+        if not hasattr(self, '_poll'):
+            self._poll = None
+        self._poll = self._poll or ValidPoll.get(id=self.payload['poll_id'])
+        return self._poll
+
+    @classmethod
+    def queued(cls, job):
+        try:
+            cls.get((cls.worker == CBTesterJob.worker_name) &
+                    (cls.payload['poll_id'] == str(job.payload['poll_id'])))
             return True
         except cls.DoesNotExist:
             return False
