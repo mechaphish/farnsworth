@@ -10,13 +10,16 @@ import farnsworth.log
 
 from .bitmap import Bitmap
 from .challenge_binary_node import ChallengeBinaryNode
+from .challenge_binary_node_fielding import ChallengeBinaryNodeFielding
 from .challenge_set import ChallengeSet
 from .crash import Crash
 from .evaluation import Evaluation
 from .exploit import Exploit
+from .exploit_fielding import ExploitFielding
 from .feedback import Feedback
 from .fuzzer_stats import FuzzerStat
 from .ids_rule import IDSRule
+from .ids_rule_fielding import IDSRuleFielding
 from .job import (
     AFLJob,
     DrillerJob,

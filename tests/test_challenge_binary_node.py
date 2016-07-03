@@ -10,7 +10,8 @@ from nose.tools import *
 from peewee import IntegrityError
 
 from . import setup_each, teardown_each
-from farnsworth.models import AFLJob, ChallengeBinaryNode, ChallengeSet, FunctionIdentity
+from farnsworth.models import (AFLJob, ChallengeBinaryNode, ChallengeSet,
+                               FunctionIdentity, Round, Team)
 import farnsworth.models    # to avoid collisions between Test and nosetests
 
 BLOB = "blob data"
@@ -62,9 +63,9 @@ class TestChallengeBinaryNode:
 
     def test_roots(self):
         cs = ChallengeSet.create(name="foo")
-        cbn1 = ChallengeBinaryNode.create(name="root1", cs=cs, blob="data", sha256="sum1")
-        cbn2 = ChallengeBinaryNode.create(name="root2", cs=cs, blob="data", sha256="sum2")
-        cbn3 = ChallengeBinaryNode.create(name="child", cs=cs, blob="data", root=cbn1, sha256="sum3")
+        cbn1 = ChallengeBinaryNode.create(name="root1", cs=cs, blob=BLOB, sha256="sum1")
+        cbn2 = ChallengeBinaryNode.create(name="root2", cs=cs, blob=BLOB, sha256="sum2")
+        cbn3 = ChallengeBinaryNode.create(name="child", cs=cs, blob=BLOB, root=cbn1, sha256="sum3")
 
         assert_equals(len(ChallengeBinaryNode.roots()), 2)
         assert_in(cbn1, ChallengeBinaryNode.roots())
@@ -72,30 +73,53 @@ class TestChallengeBinaryNode:
 
     def test_all_descendants(self):
         cs = ChallengeSet.create(name="foo")
-        cbn1 = ChallengeBinaryNode.create(name="root1", cs=cs, blob="data", sha256="sum1")
-        cbn2 = ChallengeBinaryNode.create(name="root2", cs=cs, blob="data", sha256="sum2")
-        cbn3 = ChallengeBinaryNode.create(name="child", cs=cs, blob="data", root=cbn1, sha256="sum3")
+        cbn1 = ChallengeBinaryNode.create(name="root1", cs=cs, blob=BLOB, sha256="sum1")
+        cbn2 = ChallengeBinaryNode.create(name="root2", cs=cs, blob=BLOB, sha256="sum2")
+        cbn3 = ChallengeBinaryNode.create(name="child", cs=cs, blob=BLOB, root=cbn1, sha256="sum3")
 
         assert_equals(len(ChallengeBinaryNode.all_descendants()), 1)
         assert_in(cbn3, ChallengeBinaryNode.all_descendants())
 
-    def test_unsubmitted_patches(self):
+    def test_submit(self):
+        now = datetime.now()
+        Round.create(num=0, ends_at=now + timedelta(seconds=30))
+        Team.create(name=Team.OUR_NAME)
+        cs = ChallengeSet(name="foo")
+        cbn = ChallengeBinaryNode.create(name="foo", cs=cs, blob=BLOB)
+
+        assert_equals(len(cbn.fieldings), 0)
+        cbn.submit()
+        assert_equals(len(cbn.fieldings), 1)
+        assert_equals(cbn.fieldings.get().team, Team.get_our())
+        assert_equals(cbn.fieldings.get().submission_round, Round.get_current())
+        assert_is_none(cbn.fieldings.get().available_round)
+        assert_is_none(cbn.fieldings.get().fielded_round)
+
+    def test_submitted_and_unsubmitted_patches(self):
+        now = datetime.now()
+        Round.create(num=0, ends_at=now + timedelta(seconds=30))
+        Team.create(name=Team.OUR_NAME)
         cs = ChallengeSet.create(name="foo")
-        cbn = ChallengeBinaryNode.create(name="cbn", cs=cs, blob="data", sha256="sum1")
-        patch1 = ChallengeBinaryNode.create(name="patch1", cs=cs, blob="data", root=cbn, sha256="sum2")
-        patch2 = ChallengeBinaryNode.create(name="patch2", cs=cs, blob="data", root=cbn, sha256="sum3")
+        cbn = ChallengeBinaryNode.create(name="cbn", cs=cs, sha256="sum1")
+        patch1 = ChallengeBinaryNode.create(name="patch1", cs=cs, root=cbn, sha256="sum2")
+        patch2 = ChallengeBinaryNode.create(name="patch2", cs=cs, root=cbn, sha256="sum3")
 
         assert_equals(len(cbn.unsubmitted_patches), 2)
-        assert_equals(patch1, cbn.unsubmitted_patches[0])
-        assert_equals(patch2, cbn.unsubmitted_patches[1])
+        assert_in(patch1, cbn.unsubmitted_patches)
+        assert_in(patch2, cbn.unsubmitted_patches)
+        assert_equals(len(cbn.submitted_patches), 0)
 
         patch1.submit()
+        assert_equals(len(cbn.unsubmitted_patches), 1)
+        assert_equals(len(cbn.submitted_patches), 1)
+
         patch2.submit()
+        assert_equals(len(cbn.submitted_patches), 2)
         assert_equals(len(cbn.unsubmitted_patches), 0)
 
     def test_all_tests_for_this_cb(self):
         cs = ChallengeSet.create(name="foo")
-        cbn = ChallengeBinaryNode.create(name="cbn", cs=cs, blob="data", sha256="sum1")
+        cbn = ChallengeBinaryNode.create(name="cbn", cs=cs, blob=BLOB, sha256="sum1")
         patch1 = ChallengeBinaryNode.create(name="patch1", cs=cs, blob="data", root=cbn, sha256="sum2")
         job = AFLJob.create(cbn=cbn)
         test1 = farnsworth.models.Test.create(cbn=cbn, job=job, blob="test1")
@@ -106,12 +130,11 @@ class TestChallengeBinaryNode:
 
     def test_found_crash_for_cb(self):
         cs = ChallengeSet.create(name="foo")
-        cbn1 = ChallengeBinaryNode.create(name="cbn1", cs=cs, blob="data", sha256="sum1")
-        cbn2 = ChallengeBinaryNode.create(name="cbn2", cs=cs, blob="data", sha256="sum2")
+        cbn1 = ChallengeBinaryNode.create(name="cbn1", cs=cs, blob=BLOB, sha256="sum1")
+        cbn2 = ChallengeBinaryNode.create(name="cbn2", cs=cs, blob=BLOB, sha256="sum2")
 
-        job=AFLJob.create(cbn=cbn1)
-
-        crash=farnsworth.models.Crash.create(cbn=cbn1, job=job, blob="crash", crash_pc=0x41414141)
+        job = AFLJob.create(cbn=cbn1)
+        crash = farnsworth.models.Crash.create(cbn=cbn1, job=job, blob="crash", crash_pc=0x41414141)
 
         assert_true(cbn1.found_crash)
         assert_false(cbn2.found_crash)
