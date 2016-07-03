@@ -5,20 +5,23 @@ from . import setup_each, teardown_each
 from farnsworth.models import AFLJob, RexJob, ChallengeBinaryNode
 
 class TestAFLJob:
-    def setup(self): setup_each()
-    def teardown(self): teardown_each()
+    def setup(self):
+        setup_each()
 
-    def test_queued(self):
-        cbn = ChallengeBinaryNode.create(name = "foo", cs_id = "foo")
+    def teardown(self):
+        teardown_each()
+
+    def test_added_completed(self):
+        cbn = ChallengeBinaryNode.create(name="foo", cs_id="foo")
         job = AFLJob(cbn=cbn)
-        assert_false(AFLJob.queued(job))
+        assert_raises(AFLJob.DoesNotExist, AFLJob.get, cbn=cbn)
 
-        useless_job = RexJob.create(cbn=cbn)
-        assert_false(AFLJob.queued(job))
+        useless_job = RexJob(cbn=cbn)
+        assert_raises(AFLJob.DoesNotExist, AFLJob.get, cbn=cbn)
 
         job.save()
-        assert_true(AFLJob.queued(job))
+        job = AFLJob.get(cbn=cbn)
 
         job.completed_at = datetime.now()
         job.save()
-        assert_false(AFLJob.queued(job))
+        assert_raises(AFLJob.DoesNotExist, AFLJob.get, cbn=cbn, completed_at=None)
