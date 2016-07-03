@@ -7,9 +7,11 @@ from datetime import datetime
 import os
 
 from peewee import CharField
+from playhouse.postgres_ext import ArrayField
 
 from .base import BaseModel
 from .feedback import Feedback
+from .round import Round
 
 """ChallengeSet model"""
 
@@ -17,6 +19,18 @@ from .feedback import Feedback
 class ChallengeSet(BaseModel):
     """ChallengeSet model"""
     name = CharField()
+    rounds = ArrayField(IntegerField)
+
+    @classmethod
+    def fielded_in_round(cls, round_=None):
+        """Return all CS that are fielded in specified round.
+
+        Args:
+          round_: Round model instance. If none last round is used.
+        """
+        if round_ is None:
+            round_ = Round.get_current()
+        return cls.select().where(cls.rounds.contains_any(round_.id))
 
     @property
     def unsubmitted_ids_rules(self):

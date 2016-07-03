@@ -7,6 +7,7 @@ from __future__ import absolute_import, unicode_literals
 
 import os
 from datetime import datetime
+
 from peewee import CharField, BlobField, DateTimeField, ForeignKeyField
 
 from .base import BaseModel
@@ -14,13 +15,13 @@ from .challenge_set import ChallengeSet
 from .round import Round
 # Imports for Test and Exploit deferred to prevent circular imports.
 
+
 class ChallengeBinaryNode(BaseModel):
     """ChallengeBinaryNode model"""
     root = ForeignKeyField('self', null=True, related_name='descendants')
     blob = BlobField(null=True)
     name = CharField()
     cs = ForeignKeyField(ChallengeSet, db_column='cs_id', related_name='cbns')
-    submitted_at = DateTimeField(null=True)
     patch_type = CharField(null=True)
 
     def delete_binary(self):
@@ -30,11 +31,6 @@ class ChallengeBinaryNode(BaseModel):
 
     def __del__(self):
         self.delete_binary()
-
-    def submit(self):
-        """Save submission timestamp"""
-        self.submitted_at = datetime.now()
-        self.save()
 
     @property
     def fuzzer_stat(self):
@@ -85,6 +81,14 @@ class ChallengeBinaryNode(BaseModel):
         from .test import Test
         return self.tests.where(Test.colorguard_traced == False)
 
+    def submit(self):
+        """Save submission at current round"""
+        from .challenge_binary_node_fielding import ChallengeBinaryNodeFielding
+        from .team import Team
+        ChallengeBinaryNodeFielding.create(cbn=self,
+                                           submission_round=Round.get_current(),
+                                           team=Team.get_our())
+
     @property
     def symbols(self):
         symbols = dict()
@@ -108,13 +112,25 @@ class ChallengeBinaryNode(BaseModel):
     @property
     def unsubmitted_patches(self):
         """Rertun all unsubmitted patches"""
-        return self.descendants.where(self.__class__.submitted_at.is_null(True))
+        from .challenge_binary_node_fielding import ChallengeBinaryNodeFielding
+        CBNF = ChallengeBinaryNodeFielding
+        cbn_submitted_ids = [cbnf.cbn_id for cbnf in CBNF.all()]
+        if len(cbn_submitted_ids) == 0:
+            return self.descendants
+        else:
+            return self.descendants.where(self.__class__.id.not_in(cbn_submitted_ids))
 
     @property
     def submitted_patches(self):
         """Rertun all submitted patches"""
-        return self.descendants.where(self.__class__.submitted_at.is_null(False))
+        from .challenge_binary_node_fielding import ChallengeBinaryNodeFielding
+        from .team import Team
+        CBNF = ChallengeBinaryNodeFielding
+        return self.descendants.join(CBNF).where(
+            CBNF.submission_round.is_null(False) & (CBNF.team == Team.get_our())
+        )
 
+    # FIXME
     @property
     def unsubmitted_exploits(self):
         """Return exploits not submitted"""
@@ -136,17 +152,3 @@ class ChallengeBinaryNode(BaseModel):
     def all_descendants(cls):
         """Return all descendant nodes (patches)"""
         return cls.select().where(cls.root.is_null(False))
-
-    @property
-    def submissions(self):
-        """Return list of submissions"""
-        if self.submitted_at is not None:
-            round_ = Round.at_timestamp(self.submitted_at)
-            return [{
-                'id': self.id,
-                'round': round_.num,
-                'name': self.name,
-                'submitted_at': str(self.submitted_at),
-            }]
-        else:
-            return []
