@@ -289,15 +289,6 @@ class CBTesterJob(Job):
         self._poll = self._poll or ValidPoll.get(id=self.payload['poll_id'])
         return self._poll
 
-    @classmethod
-    def queued(cls, job):
-        try:
-            cls.get((cls.worker == CBTesterJob.worker_name) &
-                    (cls.payload['poll_id'] == str(job.payload['poll_id'])))
-            return True
-        except cls.DoesNotExist:
-            return False
-
 
 class NetworkPollJob(Job):
     """ A Job to create polls from captured network traffic.
