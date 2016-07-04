@@ -1,4 +1,5 @@
 from nose.tools import *
+import datetime
 
 from . import setup_each, teardown_each
 from farnsworth.models import ChallengeBinaryNode
@@ -24,3 +25,24 @@ class TestJob:
         assert_is_instance(to_job_type(jobs[2]), RexJob)
         assert_is_instance(to_job_type(jobs[3]), PatcherexJob)
         assert_is_instance(to_job_type(jobs[4]), TesterJob)
+
+
+    def test_added_completed(self):
+        class GenericJob(Job):
+            worker = CharField(default='generic_job')
+
+        cbn = ChallengeBinaryNode.create(name="foo", cs_id="foo")
+        job = GenericJob(cbn=cbn)
+        assert_raises(GenericJob.DoesNotExist, GenericJob.get, GenericJob.cbn == cbn)
+
+        useless_job = RexJob(cbn=cbn)
+        assert_raises(GenericJob.DoesNotExist, GenericJob.get, GenericJob.cbn == cbn)
+
+        job.save()
+        job = GenericJob.get(GenericJob.cbn == cbn)
+
+        job.completed_at = datetime.datetime.now()
+        job.save()
+        assert_raises(GenericJob.DoesNotExist, GenericJob.get,
+                      GenericJob.cbn == cbn,
+                      GenericJob.completed_at == None)

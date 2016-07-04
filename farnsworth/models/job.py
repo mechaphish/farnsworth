@@ -119,17 +119,6 @@ class DrillerJob(Job):
         self._input_test = self._input_test or Test.get(id=self.payload['test_id']) # pylint:disable=attribute-defined-outside-init
         return self._input_test
 
-    @classmethod
-    def queued(cls, job):
-        """Return true if job is already queued"""
-        try:
-            cls.get((cls.cbn == job.cbn) &
-                    (cls.worker == 'driller') &
-                    (cls.payload['test_id'] == str(job.payload['test_id'])))
-            return True
-        except cls.DoesNotExist: # pylint:disable=no-member
-            return False
-
 
 class ColorGuardJob(Job):
     """
@@ -148,47 +137,16 @@ class ColorGuardJob(Job):
         self._input_test = self._input_test or Test.get(id=self.payload['test_id']) # pylint:disable=attribute-defined-outside-init
         return self._input_test
 
-    @classmethod
-    def queued(cls, job):
-        """Return true if job is already queued"""
-        try:
-            cls.get((cls.cbn == job.cbn) &
-                    (cls.worker == 'colorguard') &
-                    (cls.payload['test_id'] == str(job.payload['test_id'])))
-            return True
-        except cls.DoesNotExist: # pylint:disable=no-member
-            return False
 
 class AFLJob(Job):
     """This represents a job for AFL. It requires no extra input."""
     worker = CharField(default='afl')
-
-    @classmethod
-    def queued(cls, job):
-        """Return true if job is already queued"""
-        try:
-            cls.get((cls.cbn == job.cbn) &
-                    (cls.worker == 'afl') &
-                    cls.completed_at.is_null(True))
-            return True
-        except cls.DoesNotExist: # pylint:disable=no-member
-            return False
 
 
 class WereRabbitJob(Job):
     """This represents a job for AFL's Were Rabbit crash exploration mode."""
     worker = CharField(default='were_rabbit')
 
-    @classmethod
-    def queued(cls, job):
-        """Return true if job is already queued"""
-        try:
-            cls.get((cls.cbn == job.cbn) &
-                    (cls.worker == 'were_rabbit') &
-                    cls.completed_at.is_null(True))
-            return True
-        except cls.DoesNotExist: # pylint:disable=no-member
-            return False
 
 class RexJob(Job):
     """
@@ -208,16 +166,6 @@ class RexJob(Job):
         self._input_crash = self._input_crash or Crash.get(id=self.payload['crash_id']) # pylint:disable=attribute-defined-outside-init
         return self._input_crash
 
-    @classmethod
-    def queued(cls, job):
-        """Return true if job is already queued"""
-        try:
-            cls.get((cls.cbn == job.cbn) &
-                    (cls.worker == cls.worker.default) &
-                    (cls.payload['crash_id'] == str(job.payload['crash_id'])))
-            return True
-        except cls.DoesNotExist: # pylint:disable=no-member
-            return False
 
 class PovFuzzer1Job(RexJob):
     """
@@ -240,16 +188,6 @@ class PovFuzzer2Job(RexJob):
 class PatcherexJob(Job):
     """A PatcherexJob."""
     worker = CharField(default='patcherex')
-
-    @classmethod
-    def queued(cls, job):
-        """Return true if job is already queued"""
-        try:
-            cls.get((cls.cbn == job.cbn) &
-                    (cls.worker == 'patcherex'))
-            return True
-        except cls.DoesNotExist: # pylint:disable=no-member
-            return False
 
 
 class TesterJob(Job):
@@ -286,17 +224,6 @@ class TesterJob(Job):
             return True
         return False
 
-    @classmethod
-    def queued(cls, job):
-        """Return true if job is already queued"""
-        try:
-            cls.get((cls.cbn == job.cbn) &
-                    (cls.worker == 'tester') &
-                    (cls.payload['test_id'] == str(job.payload['test_id'])))
-            return True
-        except cls.DoesNotExist: # pylint:disable=no-member
-            return False
-
 
 class PollerJob(Job):
     """
@@ -317,15 +244,6 @@ class PollerJob(Job):
             self._target_test = None
         self._target_test = self._target_test or Test.get(id=self.payload['test_id'])
         return self._target_test
-
-    @classmethod
-    def queued(cls, job):
-        try:
-            cls.get((cls.worker == 'poller') &
-                    (cls.payload['test_id'] == str(job.payload['test_id'])))
-            return True
-        except cls.DoesNotExist:
-            return False
 
 
 class PollSanitizerJob(Job):
@@ -349,15 +267,6 @@ class PollSanitizerJob(Job):
         self._round_poll = self._round_poll or RawRoundPoll.get(id=self.payload['rrp_id'])
         return self._round_poll
 
-    @classmethod
-    def queued(cls, job):
-        try:
-            cls.get((cls.worker == PollSanitizerJob.worker_name) &
-                    (cls.payload['rrp_id'] == str(job.payload['rrp_id'])))
-            return True
-        except cls.DoesNotExist:
-            return False
-
 
 class CBTesterJob(Job):
     """
@@ -380,15 +289,6 @@ class CBTesterJob(Job):
         self._poll = self._poll or ValidPoll.get(id=self.payload['poll_id'])
         return self._poll
 
-    @classmethod
-    def queued(cls, job):
-        try:
-            cls.get((cls.worker == CBTesterJob.worker_name) &
-                    (cls.payload['poll_id'] == str(job.payload['poll_id'])))
-            return True
-        except cls.DoesNotExist:
-            return False
-
 
 class NetworkPollJob(Job):
     """ A Job to create polls from captured network traffic.
@@ -405,16 +305,6 @@ class NetworkPollJob(Job):
         self._target_round_traffic = self._target_round_traffic or RawRoundTraffic.find(self.payload['rrt_id'])
         return self._target_round_traffic
 
-    @classmethod
-    def queued(cls, job):
-        """Return true if job is already queued"""
-        try:
-            cls.get((cls.worker == cls.worker.default) &
-                    (cls.payload['rrt_id'] == str(job.payload['rrt_id'])))
-            return True
-        except cls.DoesNotExist: # pylint:disable=no-member
-            return False
-
 
 class IDSJob(Job):
     """A IDSJob."""
@@ -428,13 +318,3 @@ class IDSJob(Job):
             self._cs = None # pylint:disable=attribute-defined-outside-init
         self._cs = self._cs or ChallengeSet.find(self.payload.get('cs_id')) # pylint:disable=attribute-defined-outside-init
         return self._cs
-
-    @classmethod
-    def queued(cls, job):
-        """Return true if job is already queued"""
-        try:
-            cls.get((cls.worker == 'ids') &
-                    (cls.payload['cs_id'] == str(job.payload['cs_id'])))
-            return True
-        except cls.DoesNotExist: # pylint:disable=no-member
-            return False

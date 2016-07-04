@@ -20,19 +20,3 @@ class TestDrillerJob:
         job.input_test.drilled = True
         job.input_test.save()
         assert_true(job.input_test.drilled)
-
-    def test_queued(self):
-        cbn = ChallengeBinaryNode.create(name = "foo", cs_id = "foo")
-        generating_job = AFLJob.create(cbn=cbn)
-        test = farnsworth.models.Test.create(job=generating_job, cbn=cbn)
-        job = DrillerJob(cbn=cbn, payload={'test_id': test.id})
-        assert_false(DrillerJob.queued(job))
-
-        useless_job = AFLJob(cbn=cbn, payload={'test_id': test.id})
-        assert_false(DrillerJob.queued(job))
-
-        job2 = DrillerJob.create(cbn=cbn, payload={'test_id': 'foo'})
-        assert_false(DrillerJob.queued(job))
-
-        job.save()
-        assert_true(DrillerJob.queued(job))
