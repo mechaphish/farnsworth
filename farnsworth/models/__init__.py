@@ -23,6 +23,7 @@ from .job import (
     NetworkPollJob,
     PollSanitizerJob,
     CBTesterJob,
+    CBRoundTesterJob,
     WereRabbitJob,
     ColorGuardJob,
     to_job_type,

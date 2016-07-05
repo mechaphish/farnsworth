@@ -44,6 +44,8 @@ def to_job_type(job):
         job.__class__ = PollSanitizerJob
     elif job.worker == 'cbtester':
         job.__class__ = CBTesterJob
+    elif job.worker == 'cb_round_tester':
+        job.__class__ = CBRoundTesterJob
 
     return job
 
@@ -288,6 +290,31 @@ class CBTesterJob(Job):
             self._poll = None
         self._poll = self._poll or ValidPoll.get(id=self.payload['poll_id'])
         return self._poll
+
+
+class CBRoundTesterJob(Job):
+    """
+    This represents a job for cb_round_tester. cb_round_tester a
+    a round as an input. Here, we receive the round id as a strings in the
+    `payload` field.
+
+    This job indicates that testing need to be performed for all binaries
+    against all network polls created from that round.
+    """
+    worker_name = 'cb_round_tester'
+    worker = CharField(default=worker_name)
+
+    @property
+    def target_round(self):
+        """
+        Get the round for which testing needs to be done.
+        :return: Target Round corresponding to this job.
+        """
+        from .round import Round
+        if not hasattr(self, '_target_round'):
+            self._target_round = None
+        self._target_round = self._target_round or Round.get(id=self.payload['round_id'])
+        return self._target_round
 
 
 class NetworkPollJob(Job):
