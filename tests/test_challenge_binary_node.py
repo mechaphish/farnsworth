@@ -85,3 +85,14 @@ class TestChallengeBinaryNode:
 
         assert_equals(len(patch1.tests), 0)
         assert_equals(len(patch1.all_tests_for_this_cb), 2)
+
+    def test_found_crash_for_cb(self):
+        cbn1 = ChallengeBinaryNode.create(name = "cbn1", cs_id = "foo", blob="data")
+        cbn2 = ChallengeBinaryNode.create(name = "cbn2", cs_id = "foo", blob="data")
+
+        job = AFLJob.create(cbn=cbn1)
+
+        crash = farnsworth.models.Crash.create(cbn=cbn1, job=job, blob="crash")
+
+        assert_true(cbn1.found_crash)
+        assert_false(cbn2.found_crash)

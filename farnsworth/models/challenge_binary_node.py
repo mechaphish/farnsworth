@@ -92,6 +92,10 @@ class ChallengeBinaryNode(BaseModel):
         return self.tests.where(Test.colorguard_traced == False)
 
     @property
+    def found_crash(self):
+        return bool(len(self.crashes))
+
+    @property
     def unsubmitted_patches(self):
         """Rertun all unsubmitted patches"""
         return self.descendants.where(self.__class__.submitted_at.is_null(True))
