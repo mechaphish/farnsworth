@@ -267,7 +267,7 @@ create table valid_polls (
     created_at timestamp not null default current_timestamp,
     updated_at timestamp not null default current_timestamp,
     test_id bigint null references tests (id),
-    cbn_id bigint not null references challenge_binary_nodes (id),
+    cs_id bigint not null references challenge_sets (id),
     is_perf_ready boolean not null default true,
     round_id bigint null references rounds (id),
     blob bytea
@@ -279,7 +279,8 @@ create table cb_poll_performances (
     id bigserial primary key,
     created_at timestamp not null default current_timestamp,
     updated_at timestamp not null default current_timestamp,
-    cbn_id bigint not null references challenge_binary_nodes (id),
+    cs_id bigint not null references challenge_sets (id),
+    patch_type varchar(256) null,
     poll_id bigint not null references valid_polls (id),
     is_poll_ok boolean not null default false,
     performances jsonb

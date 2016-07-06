@@ -273,8 +273,8 @@ class PollSanitizerJob(Job):
 class CBTesterJob(Job):
     """
     This represents a job for cb_tester. cb_tester requires a
-    cb and a poll as an input. Here, we receive the poll id as a strings in the
-    `payload` field.
+    cs, patch_type and a poll as an input. Here, we receive the poll id, cs id and patch_type
+    as a strings in the `payload` field.
     """
     worker_name = 'cbtester'
     worker = CharField(default=worker_name)
@@ -290,6 +290,29 @@ class CBTesterJob(Job):
             self._poll = None
         self._poll = self._poll or ValidPoll.get(id=self.payload['poll_id'])
         return self._poll
+
+    @property
+    def target_cs(self):
+        """
+            Get the target CS to which this tester job belongs to.
+        :return: ChallengeSet object
+        """
+        from .challenge_set import ChallengeSet
+        if not hasattr(self, '_target_cs'):
+            self._target_cs = None
+        self._target_cs = self._target_cs or ChallengeSet.get(id=self.payload['cs_id'])
+        return self._target_cs
+
+    @property
+    def patch_type(self):
+        """
+            Get the patch type of the cb_tester job.
+        :return: patch type as string.
+        """
+        if not hasattr(self, '_patch_type'):
+            self._patch_type = None
+        self._patch_type = self._patch_type or self.payload['patch_type']
+        return self._patch_type
 
 
 class CBRoundTesterJob(Job):

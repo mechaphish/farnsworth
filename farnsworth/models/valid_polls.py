@@ -1,6 +1,6 @@
 from peewee import *
 from .test import Test
-from .challenge_binary_node import ChallengeBinaryNode
+from .challenge_set import ChallengeSet
 from .round import Round
 from .base import BaseModel
 import os
@@ -11,7 +11,7 @@ class ValidPoll(BaseModel):
         Result corresponding to the TesterJob
     """
     test = ForeignKeyField(Test, db_column='test_id', to_field='id', related_name='valid_polls')
-    cbn = ForeignKeyField(ChallengeBinaryNode, db_column='cbn_id', related_name='valid_polls')
+    cs = ForeignKeyField(ChallengeSet, db_column='cs_id', related_name='valid_polls')
     round = ForeignKeyField(Round, related_name='valid_polls')
     is_perf_ready = BooleanField()
     blob = BlobField()
