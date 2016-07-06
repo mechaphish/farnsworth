@@ -181,6 +181,17 @@ create table fuzzer_stats (
     last_path timestamp null
 );
 
+-- Function Identities
+drop table if exists function_identities;
+create table function_identities (
+    id bigserial primary key,
+    cbn_id bigint not null references challenge_binary_nodes (id),
+    created_at timestamp not null default current_timestamp,
+    updated_at timestamp not null default current_timestamp,
+    address bigint not null,
+    symbol varchar(256) not null
+);
+
 -- PCAPs
 drop type if exists pcap_type;
 create type pcap_type as enum('unknown', 'test', 'crash', 'exploit');

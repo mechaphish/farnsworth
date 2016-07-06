@@ -26,6 +26,7 @@ from .job import (
     CBRoundTesterJob,
     WereRabbitJob,
     ColorGuardJob,
+    FunctionIdentifierJob,
     to_job_type,
 )
 from .pcap import Pcap
@@ -38,3 +39,4 @@ from .valid_polls import ValidPoll
 from .raw_round_traffic import RawRoundTraffic
 from .raw_round_poll import RawRoundPoll
 from .cb_poll_performance import CbPollPerformance
+from .function_identity import FunctionIdentity
