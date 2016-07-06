@@ -46,6 +46,8 @@ def to_job_type(job):
         job.__class__ = CBTesterJob
     elif job.worker == 'cb_round_tester':
         job.__class__ = CBRoundTesterJob
+    elif job.worker == 'function_identifier':
+        job.__class__ = FunctionIdentifierJob
 
     return job
 
@@ -345,3 +347,7 @@ class IDSJob(Job):
             self._cs = None # pylint:disable=attribute-defined-outside-init
         self._cs = self._cs or ChallengeSet.find(self.payload.get('cs_id')) # pylint:disable=attribute-defined-outside-init
         return self._cs
+
+class FunctionIdentifierJob(Job):
+    """A FunctionIdentifierJob."""
+    worker = CharField(default='function_identifier')
