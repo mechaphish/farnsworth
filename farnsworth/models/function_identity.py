@@ -2,10 +2,10 @@
 
 from peewee import ForeignKeyField, BigIntegerField, CharField
 
-from .bash import BaseModel
+from .base import BaseModel
 from .challenge_binary_node import ChallengeBinaryNode
 
-class FunctionIdentity(BaseModel):  # pylint: disable=no-init
+class FunctionIdentity(BaseModel):
     """ Function Identity model """
     cbn = ForeignKeyField(db_column='cbn_id',
             rel_model=ChallengeBinaryNode,

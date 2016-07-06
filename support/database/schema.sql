@@ -185,6 +185,8 @@ drop table if exists function_identities;
 create table function_identities (
     id bigserial primary key,
     cbn_id bigint not null references challenge_binary_nodes (id),
+    created_at timestamp not null default current_timestamp,
+    updated_at timestamp not null default current_timestamp,
     address bigint not null,
     function_name varchar(256) not null
 );
