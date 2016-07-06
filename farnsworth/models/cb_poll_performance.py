@@ -15,4 +15,4 @@ class CbPollPerformance(BaseModel):
     poll = ForeignKeyField(ValidPoll, db_column='poll_id', related_name='cb_poll_performances')
     performances = JSONField()
     is_poll_ok = BooleanField()
-    patch_type = CharField()
+    patch_type = CharField(null=True)
