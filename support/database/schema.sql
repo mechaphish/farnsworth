@@ -39,6 +39,7 @@ create table challenge_binary_nodes (
     name varchar(256) not null,
     cs_id bigint not null references challenge_sets (id),
     submitted_at timestamp null,
+    patch_type varchar(256) null,
     blob bytea
 );
 

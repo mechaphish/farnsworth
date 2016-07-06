@@ -18,6 +18,7 @@ class ChallengeBinaryNode(BaseModel):
     cs = ForeignKeyField(ChallengeSet, db_column='cs_id', to_field='id',
                          related_name='cbns')
     submitted_at = DateTimeField(null=True)
+    patch_type = CharField(null=True)
     # parent_path = UnknownField(null=True)  # FIXME
 
     def __init__(self, *args, **kwargs):
