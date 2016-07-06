@@ -13,7 +13,7 @@ class FunctionIdentity(BaseModel):
             related_name='function_identities')
 
     address = BigIntegerField(null=False)
-    function_name = CharField(null=False)
+    symbol = CharField(null=False)
 
     class Meta:  # pylint: disable=no-init,too-few-public-methods,old-style-class
         db_table = 'function_identities'

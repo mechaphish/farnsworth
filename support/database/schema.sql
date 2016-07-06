@@ -188,7 +188,7 @@ create table function_identities (
     created_at timestamp not null default current_timestamp,
     updated_at timestamp not null default current_timestamp,
     address bigint not null,
-    function_name varchar(256) not null
+    symbol varchar(256) not null
 );
 
 -- PCAPs
