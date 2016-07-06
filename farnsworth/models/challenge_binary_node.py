@@ -92,6 +92,14 @@ class ChallengeBinaryNode(BaseModel):
         return self.tests.where(Test.colorguard_traced == False)
 
     @property
+    def symbols(self):
+        symbols = dict()
+        for function in self.function_identities.select():
+            symbols[function.address] = function.symbol
+
+        return symbols
+
+    @property
     def found_crash(self):
         return bool(len(self.crashes))
 
