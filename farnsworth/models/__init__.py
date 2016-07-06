@@ -26,6 +26,7 @@ from .job import (
     CBRoundTesterJob,
     WereRabbitJob,
     ColorGuardJob,
+    FunctionIdentifierJob,
     to_job_type,
 )
 from .pcap import Pcap
