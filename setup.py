@@ -20,7 +20,8 @@ else:
 
 setup(name='farnsworth',
       version="0.0.1",
-      packages=["farnsworth", "farnsworth.actions", "farnsworth.models"],
+      packages=["farnsworth", "farnsworth.actions", "farnsworth.actions.common",
+                "farnsworth.models"],
       install_requires=requires,
       description="Knowledge base of the Shellphish CRS",
       url="https://git.seclab.cs.ucsb.edu/cgc/farnsworth")
