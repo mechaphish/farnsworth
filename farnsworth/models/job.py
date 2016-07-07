@@ -104,6 +104,10 @@ class Job(BaseModel):
         """Return all unstarted jobs"""
         return cls.select().where(cls.started_at.is_null(True) & (cls.worker == cls.worker.default))
 
+    @classmethod
+    def get_or_create(cls, **kwargs):
+        return super(Job, cls).get_or_create(worker=cls.worker.default, **kwargs)
+
 
 class DrillerJob(Job):
     """
@@ -180,6 +184,7 @@ class PovFuzzer1Job(RexJob):
 
     worker = CharField(default='povfuzzer1')
 
+
 class PovFuzzer2Job(RexJob):
     """
     This represents a job for rex. PovFuzzer2 requires a crashing testcase
@@ -188,6 +193,7 @@ class PovFuzzer2Job(RexJob):
     """
 
     worker = CharField(default='povfuzzer2')
+
 
 class PatcherexJob(Job):
     """A PatcherexJob."""

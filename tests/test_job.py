@@ -46,3 +46,15 @@ class TestJob:
         assert_raises(GenericJob.DoesNotExist, GenericJob.get,
                       GenericJob.cbn == cbn,
                       GenericJob.completed_at == None)
+
+    def test_get_or_create(self):
+        cbn = ChallengeBinaryNode.create(name="foo", cs_id="foo")
+        job1, job1_created = RexJob.get_or_create(cbn=cbn, payload={'something': 'xxx'})
+        job2, job2_created = AFLJob.get_or_create(cbn=cbn, payload={'something': 'xxx'})
+
+        assert_not_equal(job1.id, job2.id)
+        assert_true(job1_created)
+        assert_true(job2_created)
+        Job.delete().execute()
+        ChallengeBinaryNode.delete().execute()
+        Job._meta.database.commit()
