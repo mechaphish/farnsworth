@@ -17,10 +17,9 @@ class Test(BaseModel):
     poll_created = BooleanField()
 
     @classmethod
-    def unsynced_testcases(cls, worker, prev_sync_time):
+    def unsynced_testcases(cls, prev_sync_time):
         """Return test cases not synced"""
-        return cls.select().join(Job).where((Job.worker == worker) &
-                                            (cls.created_at > prev_sync_time))
+        return cls.select().where(cls.created_at > prev_sync_time)
 
     def to_cqe_pov_xml(self):
         """
