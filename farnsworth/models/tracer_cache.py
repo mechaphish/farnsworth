@@ -12,4 +12,3 @@ class TracerCache(BaseModel):
 
     class Meta: # pylint: disable=no-init,too-few-public-methods,old-style-class
         db_table = 'tracer_caches'
-
