@@ -192,6 +192,16 @@ create table function_identities (
     symbol varchar(256) not null
 );
 
+-- Tracer Caches
+drop table if exists tracer_caches;
+create table tracer_caches (
+    id bigserial primary key,
+    cbn_id bigint not null references challenge_binary_nodes (id),
+    created_at timestamp not null default current_timestamp,
+    updated_at timestamp not null default current_timestamp,
+    blob bytea
+);
+
 -- PCAPs
 drop type if exists pcap_type;
 create type pcap_type as enum('unknown', 'test', 'crash', 'exploit');
