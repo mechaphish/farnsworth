@@ -19,7 +19,7 @@ else:
     requires.append("psycopg2>=2.6.1")
 
 setup(name='farnsworth',
-      version="0.0.1",
+      version="0.0.2",
       packages=["farnsworth", "farnsworth.actions", "farnsworth.actions.common",
                 "farnsworth.models"],
       install_requires=requires,
