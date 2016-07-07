@@ -8,6 +8,8 @@ from peewee import BlobField
 from .base import BaseModel
 from .challenge_binary_node import ChallengeBinaryNode
 
+"""Tracer Cache model"""
+
 
 class TracerCache(BaseModel):
     """TracerCache model"""
