@@ -281,6 +281,7 @@ create table valid_polls (
     test_id bigint null references tests (id),
     cs_id bigint not null references challenge_sets (id),
     is_perf_ready boolean not null default true,
+    has_scores_computed boolean not null default false,
     round_id bigint null references rounds (id),
     blob bytea
 );
