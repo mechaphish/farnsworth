@@ -3,7 +3,7 @@ import time
 import os
 
 from . import setup_each, teardown_each
-from farnsworth.models import AFLJob, ChallengeBinaryNode, ChallengeSet
+from farnsworth.models import AFLJob, ChallengeBinaryNode, ChallengeSet, FunctionIdentity
 import farnsworth.models # to avoid collisions between Test and nosetests
 
 class TestChallengeBinaryNode:
@@ -97,3 +97,10 @@ class TestChallengeBinaryNode:
 
         assert_true(cbn1.found_crash)
         assert_false(cbn2.found_crash)
+
+    def test_symbols(self):
+        cbn = ChallengeBinaryNode.create(name = "cbn", cs_id = "foo")
+        identity1 = FunctionIdentity.create(cbn = cbn, address = 1, symbol = "aaa")
+        identity2 = FunctionIdentity.create(cbn = cbn, address = 2, symbol = "bbb")
+
+        assert_equals(cbn.symbols, {1: "aaa", 2: "bbb"})
