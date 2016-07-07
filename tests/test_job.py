@@ -13,18 +13,16 @@ class TestJob:
         cbn = ChallengeBinaryNode.create(name = "foo", cs_id = "foo")
         afl_job = AFLJob.create(cbn=cbn)
         driller_job = DrillerJob.create(cbn=cbn)
-        rex_job = RexJob.create(cbn=cbn)
         patcherex_job = PatcherexJob.create(cbn=cbn)
+        rex_job = RexJob.create(cbn=cbn)
         tester_job = TesterJob.create(cbn=cbn)
 
         jobs = Job.select().order_by(Job.id.asc())
-        for job in jobs:
-            print "{0.id}-{0.__class__}".format(job)
-        assert_is_instance(to_job_type(jobs[0]), AFLJob)
-        assert_is_instance(to_job_type(jobs[1]), DrillerJob)
-        assert_is_instance(to_job_type(jobs[2]), RexJob)
-        assert_is_instance(to_job_type(jobs[3]), PatcherexJob)
-        assert_is_instance(to_job_type(jobs[4]), TesterJob)
+        job_types = [AFLJob, DrillerJob, PatcherexJob, RexJob, TesterJob]
+        for i in range(len(job_types)):
+            job_type = to_job_type(jobs[i]).__class__
+            assert_in(job_type, job_types)
+            job_types.remove(job_type)
 
 
     def test_added_completed(self):
