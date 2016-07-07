@@ -1,14 +1,16 @@
-"""Tracer Cache model"""
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
 
-from peewee import * #pylint:disable=wildcard-import,unused-wildcard-import
+from __future__ import absolute_import, unicode_literals
+
+from peewee import BlobField
 
 from .base import BaseModel
 from .challenge_binary_node import ChallengeBinaryNode
 
+
 class TracerCache(BaseModel):
     """TracerCache model"""
-    cbn = ForeignKeyField(ChallengeBinaryNode, db_column='cbn_id', related_name='tracer_cache')
-    blob = BlobField()
-
-    class Meta: # pylint: disable=no-init,too-few-public-methods,old-style-class
-        db_table = 'tracer_caches'
+    cbn = ForeignKeyField(ChallengeBinaryNode, db_column='cbn_id',
+                          related_name='tracer_cache')
+    blob = BlobField(null=False)
