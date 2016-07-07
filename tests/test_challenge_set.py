@@ -25,8 +25,13 @@ class TestChallengeSet:
         cbn2 = ChallengeBinaryNode.create(name = "foo2", cs = cs, patch_type="patch0")
         cbn3 = ChallengeBinaryNode.create(name = "foo3", cs = cs, patch_type="patch1")
 
-        assert_equals(['original', 'patch0', 'patch1'], sorted(cs.cbns_by_patch_type().keys()))
-
-        assert_equals(cs.cbns_by_patch_type()['original'], [cbn])
+        assert_equals(['patch0', 'patch1'], sorted(cs.cbns_by_patch_type().keys()))
         assert_equals([cbn1, cbn2], cs.cbns_by_patch_type()['patch0'])
         assert_equals([cbn3], cs.cbns_by_patch_type()['patch1'])
+
+    def test_cbns_unpatched(self):
+        cs = ChallengeSet.create(name = "foo")
+        cbn = ChallengeBinaryNode.create(name = "foo", cs = cs)
+        cbn_extra = ChallengeBinaryNode.create(name = "foo1", cs = cs, patch_type="patch0")
+
+        assert_equals([cbn], cs.cbns_unpatched)

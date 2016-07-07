@@ -36,11 +36,18 @@ class ChallengeSet(BaseModel):
 
     def cbns_by_patch_type(self):
         """
-        Return all CBNs grouped by patch_type.
+        Return all patched CBNs grouped by patch_type.
         """
         from .challenge_binary_node import ChallengeBinaryNode
         groups = {}
-        for cbn in self.cbns:
-            key = 'original' if cbn.patch_type is None else cbn.patch_type
-            groups.setdefault(key, []).append(cbn)
+        for cbn in self.cbns.where(ChallengeBinaryNode.patch_type.is_null(False)):
+            groups.setdefault(cbn.patch_type, []).append(cbn)
         return groups
+
+    @property
+    def cbns_unpatched(self):
+        """
+        Return all unpatched CBNs in a list.
+        """
+        from .challenge_binary_node import ChallengeBinaryNode
+        return self.cbns.where(ChallengeBinaryNode.patch_type.is_null(True))
