@@ -127,15 +127,7 @@ class ChallengeBinaryNode(BaseModel):
         from .team import Team
         CBNF = ChallengeBinaryNodeFielding
         return self.descendants.join(CBNF).where(
-            CBNF.submission_round.is_null(False) & (CBNF.team == Team.get_our())
-        )
-
-    # FIXME
-    @property
-    def unsubmitted_exploits(self):
-        """Return exploits not submitted"""
-        from .exploit import Exploit    # Preventing circular import
-        return self.exploits.where(Exploit.submitted_at.is_null(True))
+            CBNF.submission_round.is_null(False) & (CBNF.team == Team.get_our()))
 
     @property
     def all_tests_for_this_cb(self):

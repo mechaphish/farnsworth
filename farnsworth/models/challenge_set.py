@@ -44,6 +44,22 @@ class ChallengeSet(BaseModel):
         else:
             return self.ids_rules.where(IDSRule.id.not_in(idsr_submitted_ids))
 
+    @property
+    def unsubmitted_exploits(self):
+        """Return exploits not submitted"""
+        from .exploit import Exploit
+        from .exploit_fielding import ExploitFielding
+        from .challenge_binary_node import ChallengeBinaryNode
+        exp_fielding_ids = [expf.exploit_id for expf in ExploitFielding.all()]
+        if len(exp_fielding_ids) == 0:
+            return Exploit.select().join(ChallengeBinaryNode).where(
+                ChallengeBinaryNode.cs == self)
+        else:
+            return Exploit.select().join(ChallengeBinaryNode).where(
+                (ChallengeBinaryNode.cs == self) &
+                Exploit.id.not_in(exp_fielding_ids))
+
+
     def _feedback(self, name):
         for fb in Feedback.all():
             for cs in getattr(fb, name):
