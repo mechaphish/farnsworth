@@ -19,7 +19,7 @@ class Test(BaseModel):
     @classmethod
     def unsynced_testcases(cls, prev_sync_time):
         """Return test cases not synced"""
-        return cls.select().join(Job).where(cls.created_at > prev_sync_time)
+        return cls.select().where(cls.created_at > prev_sync_time)
 
     def to_cqe_pov_xml(self):
         """
