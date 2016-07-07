@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-__author__ = "Kevin Borgolte <kevin@borgolte.me>"
+from __future__ import absolute_import
 
 import random
 
@@ -9,6 +9,8 @@ from xml.etree import ElementTree
 from xml.etree.ElementTree import Element
 
 from .common.helper import element_or_xml
+
+__author__ = "Kevin Borgolte <kevin@borgolte.me>"
 
 
 class Delay(object):

@@ -1,26 +1,26 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Wrapper to access POVs stored in the database.
-"""
-
-__author__ = "Kevin Borgolte <kevin@borgolte.me>"
+from __future__ import absolute_import
 
 import random
-
 from textwrap import dedent
 from xml.etree import ElementTree
 from xml.etree.ElementTree import Element
 
 # pylint: disable=unused-import
-from .decl import Decl, decl_from_xml
-from .write import Write, write_from_xml
-from .read import Read, Match, Slice, Assign, read_from_xml
-from .delay import Delay, delay_from_xml
-
 from .common import Value, Data, Var
 from .common.helper import random_string, element_or_xml
+
+from .decl import Decl, decl_from_xml
+from .delay import Delay, delay_from_xml
+from .read import Read, Match, Slice, Assign, read_from_xml
+from .write import Write, write_from_xml
 # pylint: enable=unused-import
+
+"""Wrapper to access POVs stored in the database."""
+
+__author__ = "Kevin Borgolte <kevin@borgolte.me>"
 
 
 class CFE_POLL(object):
