@@ -10,7 +10,7 @@ import os
 from nose.tools import *
 
 from . import setup_each, teardown_each
-from farnsworth.models import ChallengeBinaryNode, ChallengeSet, IDSRule, Round
+from farnsworth.models import ChallengeBinaryNode, ChallengeSet, IDSRule, Round, Team
 
 
 class TestChallengeSet:
@@ -57,3 +57,24 @@ class TestChallengeSet:
         assert_in(cbn, cs.cbns_unpatched)
         assert_not_in(cbn_extra, cs.cbns_unpatched)
         assert_not_in(cbn_extra_fixme_asap_please, cs.cbns_unpatched)
+
+    def test_unsubmitted_ids_rules(self):
+        Round.create(num = 0)
+        Team.create(name=Team.OUR_NAME)
+        cs = ChallengeSet.create(name = "foo")
+        ids1 = IDSRule.create(cs = cs, rules = "aaa")
+        ids2 = IDSRule.create(cs = cs, rules = "bbb")
+
+        assert_equals(len(cs.unsubmitted_ids_rules), 2)
+        assert_in(ids1, cs.unsubmitted_ids_rules)
+        assert_in(ids2, cs.unsubmitted_ids_rules)
+
+        ids1.submit()
+        assert_equals(len(cs.unsubmitted_ids_rules), 1)
+        assert_not_in(ids1, cs.unsubmitted_ids_rules)
+        assert_in(ids2, cs.unsubmitted_ids_rules)
+
+        ids2.submit()
+        assert_equals(len(cs.unsubmitted_ids_rules), 0)
+        assert_not_in(ids1, cs.unsubmitted_ids_rules)
+        assert_not_in(ids2, cs.unsubmitted_ids_rules)
