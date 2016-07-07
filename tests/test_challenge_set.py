@@ -10,7 +10,15 @@ import os
 from nose.tools import *
 
 from . import setup_each, teardown_each
-from farnsworth.models import ChallengeBinaryNode, ChallengeSet, IDSRule, Round, Team
+from farnsworth.models import (
+    ChallengeBinaryNode,
+    ChallengeSet,
+    Exploit,
+    IDSRule,
+    RexJob,
+    Round,
+    Team
+)
 
 
 class TestChallengeSet:
@@ -78,3 +86,26 @@ class TestChallengeSet:
         assert_equals(len(cs.unsubmitted_ids_rules), 0)
         assert_not_in(ids1, cs.unsubmitted_ids_rules)
         assert_not_in(ids2, cs.unsubmitted_ids_rules)
+
+    def test_unsubmitted_exploits(self):
+        Round.create(num=0)
+        team = Team.create(name=Team.OUR_NAME)
+        cs = ChallengeSet.create(name="foo")
+        cbn = ChallengeBinaryNode.create(name="cbn", cs=cs)
+        job = RexJob.create(cbn=cbn)
+        pov1 = Exploit.create(cbn=cbn, job=job, pov_type='type1', exploitation_method='rop')
+        pov2 = Exploit.create(cbn=cbn, job=job, pov_type='type2', exploitation_method='rop')
+
+        assert_equals(len(cs.unsubmitted_exploits), 2)
+        assert_in(pov1, cs.unsubmitted_exploits)
+        assert_in(pov2, cs.unsubmitted_exploits)
+
+        pov1.submit_to(team, 10)
+        assert_equals(len(cs.unsubmitted_exploits), 1)
+        assert_not_in(pov1, cs.unsubmitted_exploits)
+        assert_in(pov2, cs.unsubmitted_exploits)
+
+        pov2.submit_to(team, 10)
+        assert_equals(len(cs.unsubmitted_exploits), 0)
+        assert_not_in(pov1, cs.unsubmitted_exploits)
+        assert_not_in(pov2, cs.unsubmitted_exploits)
