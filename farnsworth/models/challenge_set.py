@@ -36,7 +36,13 @@ class ChallengeSet(BaseModel):
     def unsubmitted_ids_rules(self):
         """Return IDS rules not submitted"""
         from .ids_rule import IDSRule
-        return self.ids_rules.where(IDSRule.submitted_at.is_null(True))
+        from .ids_rule_fielding import IDSRuleFielding
+        IDSRF = IDSRuleFielding
+        idsr_submitted_ids = [idsrf.ids_rule_id for idsrf in IDSRF.all()]
+        if len(idsr_submitted_ids) == 0:
+            return self.ids_rules
+        else:
+            return self.ids_rules.where(IDSRule.id.not_in(idsr_submitted_ids))
 
     def _feedback(self, name):
         for fb in Feedback.all():
