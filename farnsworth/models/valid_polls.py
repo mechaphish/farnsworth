@@ -13,8 +13,8 @@ class ValidPoll(BaseModel):
     test = ForeignKeyField(Test, db_column='test_id', to_field='id', related_name='valid_polls')
     cs = ForeignKeyField(ChallengeSet, db_column='cs_id', related_name='valid_polls')
     round = ForeignKeyField(Round, related_name='valid_polls')
-    is_perf_ready = BooleanField(null=False)
-    has_scores_computed = BooleanField(null=False)
+    is_perf_ready = BooleanField(null=False, default=True)
+    has_scores_computed = BooleanField(null=False, default=False)
     blob = BlobField()
 
     @property

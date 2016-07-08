@@ -1,21 +1,22 @@
-""" Function Identity model """
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
 
-from peewee import ForeignKeyField, BigIntegerField, CharField
+from __future__ import absolute_import, unicode_literals
+
+from peewee import CharField, BigIntegerField, ForeignKeyField
 
 from .base import BaseModel
 from .challenge_binary_node import ChallengeBinaryNode
 
+""" Function Identity model """
+
+
 class FunctionIdentity(BaseModel):
     """ Function Identity model """
-    cbn = ForeignKeyField(db_column='cbn_id',
-            rel_model=ChallengeBinaryNode,
-            to_field='id',
-            related_name='function_identities')
-
+    cbn = ForeignKeyField(ChallengeBinaryNode, db_column='cbn_id',
+                          related_name='function_identities')
     address = BigIntegerField(null=False)
     symbol = CharField(null=False)
 
     class Meta:  # pylint: disable=no-init,too-few-public-methods,old-style-class
         db_table = 'function_identities'
-
-# pylint: enable=missing-docstring

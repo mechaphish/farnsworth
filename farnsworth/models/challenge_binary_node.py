@@ -1,32 +1,29 @@
-# pylint:disable=cyclic-import
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
+
+from __future__ import absolute_import, unicode_literals
+
 """ChallengeBinaryNode model"""
 
 import os
 from datetime import datetime
-from peewee import * #pylint:disable=wildcard-import,unused-wildcard-import
+from peewee import CharField, BlobField, DateTimeField, ForeignKeyField
 
 from .base import BaseModel
 from .challenge_set import ChallengeSet
 from .round import Round
+# Imports for Test and Exploit deferred to prevent circular imports.
 
 class ChallengeBinaryNode(BaseModel):
     """ChallengeBinaryNode model"""
-    parent = ForeignKeyField('self', related_name='children')
-    root = ForeignKeyField('self', related_name='descendants')
-    blob = BlobField()
+    parent = ForeignKeyField('self', null=True, related_name='children')
+    root = ForeignKeyField('self', null=True, related_name='descendants')
+    blob = BlobField(null=True)
     name = CharField()
-    cs = ForeignKeyField(ChallengeSet, db_column='cs_id', to_field='id',
-                         related_name='cbns')
+    cs = ForeignKeyField(ChallengeSet, db_column='cs_id', related_name='cbns')
     submitted_at = DateTimeField(null=True)
     patch_type = CharField(null=True)
     # parent_path = UnknownField(null=True)  # FIXME
-
-    def __init__(self, *args, **kwargs):
-        """Create CS on the fly if cs_id is a string"""
-        if isinstance(kwargs.get('cs_id'), basestring):
-            kwargs['cs'] = ChallengeSet.find_or_create(name = kwargs['cs_id'])
-            del(kwargs['cs_id'])
-        super(BaseModel, self).__init__(*args, **kwargs)
 
     def delete_binary(self):
         """Remove binary file"""
@@ -44,7 +41,7 @@ class ChallengeBinaryNode(BaseModel):
     @property
     def fuzzer_stat(self):
         """Return fuzzer stats"""
-        if len(self.fuzzer_stats_collection) == 0:
+        if not self.fuzzer_stats_collection:
             return None
         return self.fuzzer_stats_collection[0]
 
@@ -58,9 +55,8 @@ class ChallengeBinaryNode(BaseModel):
     def path(self):
         """Save binary blob to file and return path"""
         if not os.path.isfile(self._path):
-            fp = open(self._path, 'wb')
-            fp.write(self.blob)
-            fp.close()
+            with open(self._path, 'wb') as fp:
+                fp.write(self.blob)
             os.chmod(self._path, 0o777)
         return self._path
 
@@ -74,21 +70,20 @@ class ChallengeBinaryNode(BaseModel):
             return self.path
         new_fname = prefix_str + os.path.basename(self._path)
         prefixed_path = os.path.join(os.path.dirname(self._path), new_fname)
-        fp = open(prefixed_path, 'wb')
-        fp.write(self.blob)
-        fp.close()
+        with open(prefixed_path, 'wb') as fb:
+            fp.write(self.blob)
         os.chmod(prefixed_path, 0o777)
         return prefixed_path
 
     @property
     def undrilled_tests(self):
-        """Rertun all undrilled test cases"""
+        """Return all undrilled test cases."""
         from .test import Test
         return self.tests.where(Test.drilled == False)
 
     @property
     def not_colorguard_traced(self):
-        """Rertun all undrilled test cases"""
+        """Return all undrilled test cases."""
         from .test import Test
         return self.tests.where(Test.colorguard_traced == False)
 
@@ -117,7 +112,7 @@ class ChallengeBinaryNode(BaseModel):
     @property
     def unsubmitted_exploits(self):
         """Return exploits not submitted"""
-        from .exploit import Exploit
+        from .exploit import Exploit    # Preventing circular import
         return self.exploits.where(Exploit.submitted_at.is_null(True))
 
     @property

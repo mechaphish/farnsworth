@@ -1,7 +1,13 @@
-"""Database connection configurations."""
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
+
+from __future__ import absolute_import, unicode_literals
 
 import os
-from playhouse.postgres_ext import PostgresqlExtDatabase # for JSONB type
+
+from playhouse.postgres_ext import PostgresqlExtDatabase    # For JSONB type
+
+"""Database connection configurations."""
 
 master_db = PostgresqlExtDatabase( # pylint: disable=invalid-name
     os.environ['POSTGRES_DATABASE_NAME'],
