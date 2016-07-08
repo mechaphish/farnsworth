@@ -39,17 +39,6 @@ class TestChallengeBinaryNode:
         assert_in(cbn1, root_cbn.descendants)
         assert_in(cbn2, root_cbn.descendants)
 
-    def test_parent_association(self):
-        cs = ChallengeSet.create(name="foo")
-        parent_cbn = ChallengeBinaryNode.create(name="parent", cs=cs)
-        cbn1 = ChallengeBinaryNode.create(name="test1", cs=cs, parent=parent_cbn, blob=BLOB)
-        cbn2 = ChallengeBinaryNode.create(name="test2", cs=cs, parent=parent_cbn, blob=BLOB)
-
-        assert_equals(cbn1.parent, parent_cbn)
-        assert_equals(len(parent_cbn.children), 2)
-        assert_in(cbn1, parent_cbn.children)
-        assert_in(cbn2, parent_cbn.children)
-
     def test_binary_is_created_and_deleted_properly(self):
         cs = ChallengeSet.create(name=str(time.time()))
         cbn = ChallengeBinaryNode.create(name="mybin", cs=cs, blob="byte data")
