@@ -48,7 +48,7 @@ def to_job_type(job):
         job.__class__ = CBRoundTesterJob
     elif job.worker == 'function_identifier':
         job.__class__ = FunctionIdentifierJob
-    elif job.worker == 'cache_worker':
+    elif job.worker == 'cache':
         job.__class__ = CacheJob
 
     return job
