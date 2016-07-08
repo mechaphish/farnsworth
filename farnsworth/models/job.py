@@ -385,4 +385,4 @@ class FunctionIdentifierJob(Job):
 
 class CacheJob(Job):
     """A CacheJob."""
-    worker = CharField(default='cache_job')
+    worker = CharField(default='cache')
