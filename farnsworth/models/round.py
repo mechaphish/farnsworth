@@ -12,7 +12,7 @@ from .base import BaseModel
 
 class Round(BaseModel):
     """Round model."""
-    ends_at = DateTimeField()
+    ends_at = DateTimeField(null=True)
     num = IntegerField()
 
     @classmethod
