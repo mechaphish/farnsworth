@@ -12,9 +12,9 @@ class Test(BaseModel):
     blob = BlobField()
     cbn = ForeignKeyField(ChallengeBinaryNode, db_column='cbn_id', related_name='tests')
     job = ForeignKeyField(Job, db_column='job_id', to_field='id', related_name='tests')
-    drilled = BooleanField()
-    colorguard_traced = BooleanField()
-    poll_created = BooleanField()
+    drilled = BooleanField(null=False, default=False)
+    colorguard_traced = BooleanField(null=False, default=False)
+    poll_created = BooleanField(null=False, default=False)
 
     @classmethod
     def unsynced_testcases(cls, prev_sync_time):
