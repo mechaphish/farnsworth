@@ -291,6 +291,7 @@ create table valid_polls (
     test_id bigint null references tests (id),
     cs_id bigint not null references challenge_sets (id),
     is_perf_ready boolean not null default true,
+    has_scores_computed boolean not null default false,
     round_id bigint null references rounds (id),
     blob bytea
 );
@@ -306,6 +307,22 @@ create table cb_poll_performances (
     poll_id bigint not null references valid_polls (id),
     is_poll_ok boolean not null default false,
     performances jsonb
+);
+
+-- Table that stores the reputation of patched CBs
+drop table if exists patch_scores;
+create table patch_scores (
+    id bigserial primary key,
+    created_at timestamp not null default current_timestamp,
+    updated_at timestamp not null default current_timestamp,
+    cs_id bigint not null references challenge_sets (id),
+    patch_type varchar(256) null,
+    num_polls bigint not null,
+    polls_included json null,
+    has_failed_polls boolean not null default false,
+    failed_polls jsonb null,
+    round_id bigint not null references rounds (id),
+    perf_score jsonb
 );
 
 -- IDS Rules

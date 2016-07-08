@@ -1,14 +1,16 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-__author__ = "Kevin Borgolte <kevin@borgolte.me>"
+from __future__ import absolute_import
+
+from xml.etree import ElementTree
+from xml.etree.ElementTree import Element
 
 from .common.data import data_from_xml
 from .common.helper import element_or_xml
 from .common.var import var_from_xml
 
-from xml.etree import ElementTree
-from xml.etree.ElementTree import Element
+__author__ = "Kevin Borgolte <kevin@borgolte.me>"
 
 
 class Write(object):

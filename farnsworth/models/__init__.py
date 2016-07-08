@@ -39,5 +39,6 @@ from .valid_polls import ValidPoll
 from .raw_round_traffic import RawRoundTraffic
 from .raw_round_poll import RawRoundPoll
 from .cb_poll_performance import CbPollPerformance
+from .patch_score import PatchScore
 from .function_identity import FunctionIdentity
 from .tracer_cache import TracerCache

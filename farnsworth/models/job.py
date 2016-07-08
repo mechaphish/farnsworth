@@ -319,7 +319,8 @@ class CBTesterJob(Job):
         """
         if not hasattr(self, '_patch_type'):
             self._patch_type = None
-        self._patch_type = self._patch_type or self.payload['patch_type']
+        if 'patch_type' in self.payload:
+            self._patch_type = self._patch_type or self.payload['patch_type']
         return self._patch_type
 
 

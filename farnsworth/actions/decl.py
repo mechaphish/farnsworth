@@ -1,19 +1,19 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-__author__ = "Kevin Borgolte <kevin@borgolte.me>"
-
-from .common.helper import random_string, ALL_CHARS, element_or_xml
-
-from .common.value import Value, value_from_xml
-from .common.data import Data
-from .common.var import Var
+from __future__ import absolute_import
 
 import random
-
 from textwrap import dedent
 from xml.etree import ElementTree
 from xml.etree.ElementTree import Element
+
+from .common.helper import random_string, ALL_CHARS, element_or_xml
+from .common.data import Data
+from .common.value import Value, value_from_xml
+from .common.var import Var
+
+__author__ = "Kevin Borgolte <kevin@borgolte.me>"
 
 
 class Decl(object):
