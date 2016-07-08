@@ -16,14 +16,12 @@ from .round import Round
 
 class ChallengeBinaryNode(BaseModel):
     """ChallengeBinaryNode model"""
-    parent = ForeignKeyField('self', null=True, related_name='children')
     root = ForeignKeyField('self', null=True, related_name='descendants')
     blob = BlobField(null=True)
     name = CharField()
     cs = ForeignKeyField(ChallengeSet, db_column='cs_id', related_name='cbns')
     submitted_at = DateTimeField(null=True)
     patch_type = CharField(null=True)
-    # parent_path = UnknownField(null=True)  # FIXME
 
     def delete_binary(self):
         """Remove binary file"""
