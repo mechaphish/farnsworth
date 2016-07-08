@@ -26,7 +26,7 @@ class Crash(BaseModel):
                           rel_model=Job,
                           to_field='id',
                           related_name='crashes')
-    triaged = BooleanField()
+    triaged = BooleanField(null=False, default=False)
     kind = EnumField(choices=['unclassified',
                               'unknown',
                               'ip_overwrite',

@@ -13,8 +13,8 @@ create extension ltree;
 drop table if exists teams;
 create table teams (
     id bigserial primary key,
-    created_at timestamp not null default current_timestamp,
-    updated_at timestamp not null default current_timestamp,
+    created_at timestamp not null,
+    updated_at timestamp not null,
     name varchar(256) not null
 );
 
@@ -22,8 +22,8 @@ create table teams (
 drop table if exists challenge_sets;
 create table challenge_sets (
     id bigserial primary key,
-    created_at timestamp not null default current_timestamp,
-    updated_at timestamp not null default current_timestamp,
+    created_at timestamp not null,
+    updated_at timestamp not null,
     name varchar(256) not null
 );
 
@@ -31,8 +31,8 @@ create table challenge_sets (
 drop table if exists challenge_binary_nodes;
 create table challenge_binary_nodes (
     id bigserial primary key,
-    created_at timestamp not null default current_timestamp,
-    updated_at timestamp not null default current_timestamp,
+    created_at timestamp not null,
+    updated_at timestamp not null,
     root_id bigint null,
     parent_id bigint null,
     parent_path ltree null,
@@ -54,13 +54,13 @@ alter table challenge_binary_nodes add
 drop table if exists jobs;
 create table jobs (
     id bigserial primary key,
-    created_at timestamp not null default current_timestamp,
-    updated_at timestamp not null default current_timestamp,
-    priority int not null default 0,
+    created_at timestamp not null,
+    updated_at timestamp not null,
+    priority int not null,
     worker varchar(256) not null,
-    limit_cpu int null default 4,
-    limit_memory int null default 8192,  -- In MiB
-    limit_time int null,  -- In Seconds
+    limit_cpu int null,
+    limit_memory int null,  -- In MiB
+    limit_time int null,    -- In Seconds
     started_at timestamp null,
     completed_at timestamp null,
     cbn_id bigint null references challenge_binary_nodes (id),
@@ -72,13 +72,13 @@ create table jobs (
 drop table if exists tests;
 create table tests (
     id bigserial primary key,
-    created_at timestamp not null default current_timestamp,
-    updated_at timestamp not null default current_timestamp,
+    created_at timestamp not null,
+    updated_at timestamp not null,
     cbn_id bigint not null references challenge_binary_nodes (id),
     job_id bigint not null references jobs (id),
-    drilled boolean not null default false,
-    colorguard_traced boolean not null default false,
-    poll_created boolean not null default false,
+    drilled boolean not null,
+    colorguard_traced boolean not null,
+    poll_created boolean not null,
     blob bytea
 );
 
@@ -100,17 +100,17 @@ create type crash_kind as enum('unclassified',
 drop table if exists crashes;
 create table crashes (
     id bigserial primary key,
-    created_at timestamp not null default current_timestamp,
-    updated_at timestamp not null default current_timestamp,
+    created_at timestamp not null,
+    updated_at timestamp not null,
     cbn_id bigint not null references challenge_binary_nodes (id),
     job_id bigint not null references jobs (id),
-    triaged boolean not null default false,
+    triaged boolean not null,
     explorable boolean null,
     explored boolean null,
     exploitable boolean null,
     exploited boolean null,
     blob bytea,
-    kind crash_kind not null default 'unclassified'
+    kind crash_kind not null
 );
 
 -- Exploits
@@ -124,12 +124,12 @@ create type exploitation_method as enum('unclassified', 'circumstantial',
 drop table if exists exploits;
 create table exploits (
     id bigserial primary key,
-    created_at timestamp not null default current_timestamp,
-    updated_at timestamp not null default current_timestamp,
+    created_at timestamp not null,
+    updated_at timestamp not null,
     cbn_id bigint not null references challenge_binary_nodes (id),
     job_id bigint not null references jobs (id),
     pov_type pov_type not null,
-    exploitation_method exploitation_method not null default 'unclassified',
+    exploitation_method exploitation_method not null,
     submitted_at timestamp null,
     submitted_teams varchar(256) null,
     blob bytea
@@ -140,8 +140,8 @@ drop table if exists rounds;
 create table rounds (
     id bigserial primary key,
     num integer not null,
-    created_at timestamp not null default current_timestamp,
-    updated_at timestamp not null default current_timestamp,
+    created_at timestamp not null,
+    updated_at timestamp not null,
     ends_at timestamp null
 );
 
@@ -149,8 +149,8 @@ create table rounds (
 drop table if exists scores;
 create table scores (
     id bigserial primary key,
-    created_at timestamp not null default current_timestamp,
-    updated_at timestamp not null default current_timestamp,
+    created_at timestamp not null,
+    updated_at timestamp not null,
     round_id bigint not null references rounds (id),
     scores jsonb
     -- score_predicted float null,
@@ -161,8 +161,8 @@ create table scores (
 drop table if exists bitmaps;
 create table bitmaps (
     id bigserial primary key,
-    created_at timestamp not null default current_timestamp,
-    updated_at timestamp not null default current_timestamp,
+    created_at timestamp not null,
+    updated_at timestamp not null,
     cbn_id bigint not null references challenge_binary_nodes (id),
     blob bytea
 );
@@ -172,12 +172,12 @@ drop table if exists fuzzer_stats;
 create table fuzzer_stats (
     id bigserial primary key,
     cbn_id bigint not null references challenge_binary_nodes (id),
-    created_at timestamp not null default current_timestamp,
-    updated_at timestamp not null default current_timestamp,
-    pending_favs int null default 0,
-    pending_total int null default 0,
-    paths_total int null default 0,
-    paths_found int null default 0,
+    created_at timestamp not null,
+    updated_at timestamp not null,
+    pending_favs int not null,
+    pending_total int not null,
+    paths_total int null,
+    paths_found int null,
     last_path timestamp null
 );
 
@@ -186,8 +186,8 @@ drop table if exists function_identities;
 create table function_identities (
     id bigserial primary key,
     cbn_id bigint not null references challenge_binary_nodes (id),
-    created_at timestamp not null default current_timestamp,
-    updated_at timestamp not null default current_timestamp,
+    created_at timestamp not null,
+    updated_at timestamp not null,
     address bigint not null,
     symbol varchar(256) not null
 );
@@ -199,20 +199,20 @@ create type pcap_type as enum('unknown', 'test', 'crash', 'exploit');
 drop table if exists pcaps;
 create table pcaps (
     id bigserial primary key,
-    created_at timestamp not null default current_timestamp,
-    updated_at timestamp not null default current_timestamp,
+    created_at timestamp not null,
+    updated_at timestamp not null,
     cbn_id bigint not null references challenge_binary_nodes (id),
     team_id bigint not null references teams (id),
     round_id bigint not null references rounds (id),
-    type pcap_type not null default 'unknown'
+    type pcap_type not null
 );
 
 -- CGC Feedbacks
 drop table if exists feedbacks;
 create table feedbacks (
     id bigserial primary key,
-    created_at timestamp not null default current_timestamp,
-    updated_at timestamp not null default current_timestamp,
+    created_at timestamp not null,
+    updated_at timestamp not null,
     round_id bigint not null references rounds (id),
     polls jsonb,
     cbs jsonb,
@@ -224,8 +224,8 @@ create table feedbacks (
 drop table if exists evaluations;
 create table evaluations (
     id bigserial primary key,
-    created_at timestamp not null default current_timestamp,
-    updated_at timestamp not null default current_timestamp,
+    created_at timestamp not null,
+    updated_at timestamp not null,
     round_id bigint not null references rounds (id),
     team_id bigint not null references teams (id),
     cbs jsonb,
@@ -237,8 +237,8 @@ create table evaluations (
 drop table if exists tester_results;
 create table tester_results (
     id bigserial primary key,
-    created_at timestamp not null default current_timestamp,
-    updated_at timestamp not null default current_timestamp,
+    created_at timestamp not null,
+    updated_at timestamp not null,
     job_id bigint not null references jobs (id),
     error_code int,
     result varchar(256) null,
@@ -251,9 +251,9 @@ create table tester_results (
 drop table if exists raw_round_traffics;
 create table raw_round_traffics (
     id bigserial primary key,
-    created_at timestamp not null default current_timestamp,
-    updated_at timestamp not null default current_timestamp,
-    processed boolean not null default false,
+    created_at timestamp not null,
+    updated_at timestamp not null,
+    processed boolean not null,
     round_id bigint not null references rounds (id),
     pickled_data bytea
 );
@@ -262,13 +262,13 @@ create table raw_round_traffics (
 drop table if exists raw_round_polls;
 create table raw_round_polls (
     id bigserial primary key,
-    created_at timestamp not null default current_timestamp,
-    updated_at timestamp not null default current_timestamp,
+    created_at timestamp not null,
+    updated_at timestamp not null,
     cs_id bigint not null references challenge_sets (id),
-    sanitized boolean not null default false,
+    sanitized boolean not null,
     round_id bigint not null references rounds (id),
-    is_crash boolean not null default false,
-    is_failed boolean not null default false,
+    is_crash boolean not null,
+    is_failed boolean not null,
     blob bytea
 );
 
@@ -276,12 +276,12 @@ create table raw_round_polls (
 drop table if exists valid_polls;
 create table valid_polls (
     id bigserial primary key,
-    created_at timestamp not null default current_timestamp,
-    updated_at timestamp not null default current_timestamp,
+    created_at timestamp not null,
+    updated_at timestamp not null,
     test_id bigint null references tests (id),
     cs_id bigint not null references challenge_sets (id),
-    is_perf_ready boolean not null default true,
-    has_scores_computed boolean not null default false,
+    is_perf_ready boolean not null,
+    has_scores_computed boolean not null,
     round_id bigint null references rounds (id),
     blob bytea
 );
@@ -290,12 +290,12 @@ create table valid_polls (
 drop table if exists cb_poll_performances;
 create table cb_poll_performances (
     id bigserial primary key,
-    created_at timestamp not null default current_timestamp,
-    updated_at timestamp not null default current_timestamp,
+    created_at timestamp not null,
+    updated_at timestamp not null,
     cs_id bigint not null references challenge_sets (id),
     patch_type varchar(256) null,
     poll_id bigint not null references valid_polls (id),
-    is_poll_ok boolean not null default false,
+    is_poll_ok boolean not null,
     performances jsonb
 );
 
@@ -303,13 +303,13 @@ create table cb_poll_performances (
 drop table if exists patch_scores;
 create table patch_scores (
     id bigserial primary key,
-    created_at timestamp not null default current_timestamp,
-    updated_at timestamp not null default current_timestamp,
+    created_at timestamp not null,
+    updated_at timestamp not null,
     cs_id bigint not null references challenge_sets (id),
     patch_type varchar(256) null,
     num_polls bigint not null,
     polls_included json null,
-    has_failed_polls boolean not null default false,
+    has_failed_polls boolean not null,
     failed_polls jsonb null,
     round_id bigint not null references rounds (id),
     perf_score jsonb
@@ -319,8 +319,8 @@ create table patch_scores (
 drop table if exists ids_rules;
 create table ids_rules (
     id bigserial primary key,
-    created_at timestamp not null default current_timestamp,
-    updated_at timestamp not null default current_timestamp,
+    created_at timestamp not null,
+    updated_at timestamp not null,
     cs_id bigint not null references challenge_sets (id),
     submitted_at timestamp null,
     rules text

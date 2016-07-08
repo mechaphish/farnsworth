@@ -13,4 +13,5 @@ class Pcap(BaseModel):
     cbn = ForeignKeyField(ChallengeBinaryNode, db_column='cbn_id', related_name='pcaps')
     round = ForeignKeyField(Round, related_name='pcaps')
     team = ForeignKeyField(Team, related_name='pcaps')
-    type = EnumField(choices=['unknown', 'test', 'crash', 'exploit'])
+    type = EnumField(choices=['unknown', 'test', 'crash', 'exploit'],
+                     default='unknown')
