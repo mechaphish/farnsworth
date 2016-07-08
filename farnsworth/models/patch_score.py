@@ -15,7 +15,7 @@ class PatchScore(BaseModel):
     patch_type = CharField(null=True)
     num_polls = BigIntegerField(null=False)
     polls_included = JSONField(null=True)
-    has_failed_polls = BooleanField(null=False)
+    has_failed_polls = BooleanField(null=False, default=False)
     failed_polls = JSONField(null=True)
     round = ForeignKeyField(Round, db_column='round_id', related_name='patch_scores')
     perf_score = JSONField(null=False)

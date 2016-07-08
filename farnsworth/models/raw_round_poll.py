@@ -12,8 +12,8 @@ class RawRoundPoll(BaseModel):
     Poll created from network traffic.
     """
     round = ForeignKeyField(Round, related_name='raw_round_polls')
-    is_crash = BooleanField()
-    is_failed = BooleanField()
+    is_crash = BooleanField(null=False, default=False)
+    is_failed = BooleanField(null=False, defualt=False)
     cs = ForeignKeyField(ChallengeSet, db_column='cs_id', related_name='raw_round_polls')
-    blob = BlobField()
-    sanitized = BooleanField()
+    blob = BlobField(null=False)
+    sanitized = BooleanField(null=False, default=False)

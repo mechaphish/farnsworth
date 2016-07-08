@@ -14,5 +14,5 @@ class CbPollPerformance(BaseModel):
     cs = ForeignKeyField(ChallengeSet, db_column='cs_id', related_name='cb_poll_performances')
     poll = ForeignKeyField(ValidPoll, db_column='poll_id', related_name='cb_poll_performances')
     performances = JSONField()
-    is_poll_ok = BooleanField()
-    patch_type = CharField(null=True)
+    is_poll_ok = BooleanField(null=False, default=False)
+    patch_type = CharField(null=True) # THIS SHOULD NOT BE A CHARFIELD

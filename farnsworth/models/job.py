@@ -57,9 +57,9 @@ class Job(BaseModel):
     cbn = ForeignKeyField(ChallengeBinaryNode, db_column='cbn_id', to_field='id',
                           related_name='jobs')
     completed_at = DateTimeField(null=True)
-    limit_cpu = IntegerField(null=True)
-    limit_memory = IntegerField(null=True)
-    limit_time = IntegerField(null=True)
+    limit_cpu = IntegerField(null=True, default=2)
+    limit_memory = IntegerField(null=True, default=4096)    # MiB
+    limit_time = IntegerField(null=True)                    # Seconds
     payload = JSONField()
     priority = IntegerField(null=False, default=0)
     produced_output = BooleanField(null=True)
