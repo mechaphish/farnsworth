@@ -115,7 +115,7 @@ class ChallengeBinaryNode(BaseModel):
         from .challenge_binary_node_fielding import ChallengeBinaryNodeFielding
         CBNF = ChallengeBinaryNodeFielding
         cbn_submitted_ids = [cbnf.cbn_id for cbnf in CBNF.all()]
-        if len(cbn_submitted_ids) == 0:
+        if cbn_submitted_ids:
             return self.descendants
         else:
             return self.descendants.where(self.__class__.id.not_in(cbn_submitted_ids))
