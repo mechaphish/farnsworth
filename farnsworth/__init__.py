@@ -16,11 +16,11 @@ def tables():
                                    Score, Team, Test, TesterResult,
                                    ValidPoll, CbPollPerformance, PatchScore,
                                    RawRoundPoll, RawRoundTraffic,
-                                   FunctionIdentity)
+                                   FunctionIdentity, TracerCache)
     return [Round, Bitmap, ChallengeBinaryNode, ChallengeSet, Crash, Evaluation,
             Exploit, Feedback, FuzzerStat, IDSRule, Job, Pcap, Score, Team,
             Test, TesterResult, ValidPoll, CbPollPerformance, PatchScore,
-            RawRoundPoll, RawRoundTraffic, FunctionIdentity]
+            RawRoundPoll, RawRoundTraffic, FunctionIdentity, TracerCache]
 
 
 def create():
