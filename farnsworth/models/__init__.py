@@ -49,6 +49,7 @@ from .raw_round_poll import RawRoundPoll
 from .cb_poll_performance import CbPollPerformance
 from .patch_score import PatchScore
 from .function_identity import FunctionIdentity
+from .tracer_cache import TracerCache
 
 LOG = farnsworth.log.LOG.getChild('models')
 DeprecationWarning("Importing farnworth.models is deprecated. "
