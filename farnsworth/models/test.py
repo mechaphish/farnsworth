@@ -1,17 +1,23 @@
-"""Test model"""
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
 
-from peewee import * #pylint:disable=wildcard-import,unused-wildcard-import
+from __future__ import absolute_import, unicode_literals
+
+from peewee import BooleanField, BlobField, ForeignKeyField
+
+from ..actions import CQE_POV, Data, Write
 from .base import BaseModel
 from .challenge_binary_node import ChallengeBinaryNode
 from .job import Job
-from farnsworth.actions import CQE_POV, Data, Write
+
+"""Test model"""
 
 
 class Test(BaseModel):
     """Test model"""
     blob = BlobField()
     cbn = ForeignKeyField(ChallengeBinaryNode, db_column='cbn_id', related_name='tests')
-    job = ForeignKeyField(Job, db_column='job_id', to_field='id', related_name='tests')
+    job = ForeignKeyField(Job, db_column='job_id', related_name='tests')
     drilled = BooleanField(null=False, default=False)
     colorguard_traced = BooleanField(null=False, default=False)
     poll_created = BooleanField(null=False, default=False)
@@ -28,9 +34,8 @@ class Test(BaseModel):
         """
         pov_header = """<?xml version="1.0" standalone="no" ?>
                         <!DOCTYPE pov SYSTEM "/usr/share/cgc-docs/replay.dtd">
-                    """
-        pov = CQE_POV(str(self.cbn.id), []) # pylint:disable=no-member
-        # the Write
+                     """
+        pov = CQE_POV(str(self.cbn.id), [])     # pylint:disable=no-member
         pov.actions.append(Write([Data(self.blob)]))
 
         return pov_header + str(pov)

@@ -2,7 +2,7 @@
 
 from datetime import datetime
 from peewee import * #pylint:disable=wildcard-import,unused-wildcard-import
-from playhouse.postgres_ext import JSONField
+from playhouse.postgres_ext import BinaryJSONField
 
 from .base import BaseModel
 from .round import Round
@@ -12,8 +12,8 @@ class Evaluation(BaseModel):
     """Evaluation model"""
     round = ForeignKeyField(Round, related_name='feedbacks')
     team = ForeignKeyField(Team, related_name='feedbacks')
-    ids = JSONField()
-    cbs = JSONField()
+    ids = BinaryJSONField()
+    cbs = BinaryJSONField()
 
     @classmethod
     def update_or_create(cls, round_, team, **kwargs):

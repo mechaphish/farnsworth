@@ -1,16 +1,27 @@
-from nose.tools import *
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
+
+from __future__ import absolute_import, unicode_literals
+
 import datetime
 
+from nose.tools import *
+
 from . import setup_each, teardown_each
-from farnsworth.models import ChallengeBinaryNode
+from farnsworth.models import ChallengeBinaryNode, ChallengeSet
 from farnsworth.models.job import *
 
+
 class TestJob:
-    def setup(self): setup_each()
-    def teardown(self): teardown_each()
+    def setup(self):
+        setup_each()
+
+    def teardown(self):
+        teardown_each()
 
     def test_to_job_type(self):
-        cbn = ChallengeBinaryNode.create(name = "foo", cs_id = "foo")
+        cs = ChallengeSet.create(name="foo")
+        cbn = ChallengeBinaryNode.create(name="foo", cs=cs)
         afl_job = AFLJob.create(cbn=cbn)
         driller_job = DrillerJob.create(cbn=cbn)
         patcherex_job = PatcherexJob.create(cbn=cbn)
@@ -29,7 +40,8 @@ class TestJob:
         class GenericJob(Job):
             worker = CharField(default='generic_job')
 
-        cbn = ChallengeBinaryNode.create(name="foo", cs_id="foo")
+        cs = ChallengeSet.create(name="foo")
+        cbn = ChallengeBinaryNode.create(name="foo", cs=cs)
         job = GenericJob(cbn=cbn)
         assert_raises(GenericJob.DoesNotExist, GenericJob.get, GenericJob.cbn == cbn)
 
@@ -46,13 +58,16 @@ class TestJob:
                       GenericJob.completed_at == None)
 
     def test_get_or_create(self):
-        cbn = ChallengeBinaryNode.create(name="foo", cs_id="foo")
+        cs = ChallengeSet.create(name="foo")
+        cbn = ChallengeBinaryNode.create(name="foo", cs=cs)
         job1, job1_created = RexJob.get_or_create(cbn=cbn, payload={'something': 'xxx'})
         job2, job2_created = AFLJob.get_or_create(cbn=cbn, payload={'something': 'xxx'})
 
         assert_not_equal(job1.id, job2.id)
         assert_true(job1_created)
         assert_true(job2_created)
+
         Job.delete().execute()
         ChallengeBinaryNode.delete().execute()
+        ChallengeSet.delete().execute()
         Job._meta.database.commit()

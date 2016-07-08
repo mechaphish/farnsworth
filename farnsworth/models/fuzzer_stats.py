@@ -1,15 +1,20 @@
-"""FuzzerStat model"""
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
 
-from peewee import * #pylint:disable=wildcard-import,unused-wildcard-import
+from __future__ import absolute_import, unicode_literals
+
+from peewee import DateTimeField, IntegerField, ForeignKeyField
 
 from .base import BaseModel
 from .challenge_binary_node import ChallengeBinaryNode
 
+"""FuzzerStat model"""
+
 
 class FuzzerStat(BaseModel):
     """FuzzerStat model"""
-    cbn = ForeignKeyField(db_column='cbn_id', rel_model=ChallengeBinaryNode,
-                          to_field='id', related_name='fuzzer_stats_collection')
+    cbn = ForeignKeyField(ChallengeBinaryNode, db_column='cbn_id',
+                          related_name='fuzzer_stats_collection')
     pending_favs = IntegerField(null=False, default=0)
     pending_total = IntegerField(null=False, default=0)
     paths_total = IntegerField(null=False, default=0)

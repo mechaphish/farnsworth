@@ -9,9 +9,9 @@ from .round import Round
 from .team import Team
 
 class Pcap(BaseModel):
-    """Pcap model"""
+    """PCAP model"""
     cbn = ForeignKeyField(ChallengeBinaryNode, db_column='cbn_id', related_name='pcaps')
     round = ForeignKeyField(Round, related_name='pcaps')
     team = ForeignKeyField(Team, related_name='pcaps')
     type = EnumField(choices=['unknown', 'test', 'crash', 'exploit'],
-                     default='unknown')
+                     default='unknown', enum_name='enum_pcap_type')
