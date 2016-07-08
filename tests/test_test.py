@@ -1,15 +1,25 @@
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
+
+from __future__ import absolute_import, unicode_literals
+
 from nose.tools import *
 
 from . import setup_each, teardown_each
-from farnsworth.models import ChallengeBinaryNode, AFLJob
-import farnsworth.models # to avoid collisions between Test and nosetests
+from farnsworth.models import AFLJob, ChallengeBinaryNode, ChallengeSet
+import farnsworth.models    # to avoid collisions between Test and nosetests
+
 
 class TestTest:
-    def setup(self): setup_each()
-    def teardown(self): teardown_each()
+    def setup(self):
+        setup_each()
+
+    def teardown(self):
+        teardown_each()
 
     def test_cbn_association(self):
-        cbn = ChallengeBinaryNode.create(name="foo", cs_id="foo")
+        cs = ChallengeSet.create(name="foo")
+        cbn = ChallengeBinaryNode.create(name="foo", cs=cs, blob="blob data")
         job = AFLJob.create(cbn=cbn)
         test1 = farnsworth.models.Test.create(cbn=cbn, job=job, blob="testicolo sn")
         test2 = farnsworth.models.Test.create(cbn=cbn, job=job, blob="testicolo dx")
@@ -18,10 +28,11 @@ class TestTest:
         assert_in(test2, cbn.tests)
 
     def test_cqe_pov_xml(self):
-        cbn = ChallengeBinaryNode.create(name="foo", cs_id="foo")
+        cs = ChallengeSet.create(name="foo")
+        cbn = ChallengeBinaryNode.create(name="foo", cs=cs, blob="blob data")
         job = AFLJob.create(cbn=cbn)
         test = farnsworth.models.Test.create(cbn=cbn, job=job, blob="XXX")
         test_xml = '''<?xml version="1.0" standalone="no" ?>
                         <!DOCTYPE pov SYSTEM "/usr/share/cgc-docs/replay.dtd">
-                    <pov><cbid>{cbid}</cbid><replay><write><data>{data}</data></write></replay></pov>'''
+                     <pov><cbid>{cbid}</cbid><replay><write><data>{data}</data></write></replay></pov>'''
         assert_equals(test.to_cqe_pov_xml(), test_xml.format(cbid=test.cbn.id, data='XXX'))

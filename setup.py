@@ -22,6 +22,7 @@ setup(name='farnsworth',
       version="0.0.2",
       packages=["farnsworth", "farnsworth.actions", "farnsworth.actions.common",
                 "farnsworth.models"],
+      entry_points={'console_scripts': ["farnsworth=farnsworth.__main__:main"]},
       install_requires=requires,
       description="Knowledge base of the Shellphish CRS",
       url="https://git.seclab.cs.ucsb.edu/cgc/farnsworth")

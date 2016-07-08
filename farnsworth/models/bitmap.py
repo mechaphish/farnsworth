@@ -1,11 +1,17 @@
-"""Bitmap model"""
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
 
-from peewee import *            # pylint:disable=wildcard-import,unused-wildcard-import
+from __future__ import absolute_import, unicode_literals
+
+from peewee import BlobField, ForeignKeyField
 
 from .base import BaseModel
 from .challenge_binary_node import ChallengeBinaryNode
 
+"""Bitmap model"""
+
+
 class Bitmap(BaseModel):
     """Bitmap model"""
-    cbn = ForeignKeyField(db_column='cbn_id', rel_model=ChallengeBinaryNode, to_field='id', related_name='bitmap') # pylint:disable=line-too-long
+    cbn = ForeignKeyField(ChallengeBinaryNode, db_column='cbn_id', related_name='bitmap')
     blob = BlobField(null=True)

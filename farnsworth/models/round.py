@@ -1,11 +1,17 @@
-"""Round model"""
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
 
-from peewee import * # pylint:disable=wildcard-import,unused-wildcard-import
+from __future__ import absolute_import, unicode_literals
+
+from peewee import DateTimeField, IntegerField
 
 from .base import BaseModel
 
+"""Round model"""
+
+
 class Round(BaseModel):
-    """Round model"""
+    """Round model."""
     ends_at = DateTimeField()
     num = IntegerField()
 
@@ -15,8 +21,6 @@ class Round(BaseModel):
 
     @classmethod
     def at_timestamp(cls, timestamp):
-        rounds = cls.select().\
-                 where(cls.created_at < timestamp).\
-                 order_by(cls.created_at.desc())
-        if len(rounds) > 0:
+        rounds = cls.select().where(cls.created_at < timestamp).order_by(cls.created_at.desc())
+        if rounds:
             return rounds[0]

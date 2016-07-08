@@ -1,3 +1,11 @@
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
+
+from __future__ import absolute_import, unicode_literals
+
+import farnsworth.log
+
+
 """Farnsworth models"""
 
 from .bitmap import Bitmap
@@ -42,3 +50,7 @@ from .cb_poll_performance import CbPollPerformance
 from .patch_score import PatchScore
 from .function_identity import FunctionIdentity
 from .tracer_cache import TracerCache
+
+LOG = farnsworth.log.LOG.getChild('models')
+DeprecationWarning("Importing farnworth.models is deprecated. "
+                   "Please import the models you need directly.")

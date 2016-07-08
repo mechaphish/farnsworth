@@ -1,11 +1,18 @@
-"""ChallengeSet model"""
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
 
-import os
+from __future__ import absolute_import, unicode_literals
+
 from datetime import datetime
-from peewee import * #pylint:disable=wildcard-import,unused-wildcard-import
+import os
+
+from peewee import CharField
 
 from .base import BaseModel
 from .feedback import Feedback
+
+"""ChallengeSet model"""
+
 
 class ChallengeSet(BaseModel):
     """ChallengeSet model"""
