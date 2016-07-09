@@ -23,7 +23,7 @@ class TestDrillerJob:
         cs = ChallengeSet.create(name="foo")
         cbn = ChallengeBinaryNode.create(name="foo", cs=cs)
         generating_job = AFLJob.create(cbn=cbn)
-        test = farnsworth.models.Test.create(job=generating_job, cbn=cbn, blob="ciao")
+        test = farnsworth.models.Test.create(job=generating_job, cbn=cbn, blob=str("ciao"))
         job = DrillerJob(cbn=cbn, payload={'test_id': test.id})
 
         assert_equal(str(job.input_test.blob), "ciao")
