@@ -10,8 +10,7 @@ from peewee import CharField, BlobField, DateTimeField, ForeignKeyField
 
 from .base import BaseModel
 from .challenge_set import ChallengeSet
-from .round import Round
-# Imports for Test and Exploit deferred to prevent circular imports.
+# Imports for Exploit, Round, Exploit deferred to prevent circular imports.
 
 """ChallengeBinaryNode model"""
 
@@ -84,6 +83,7 @@ class ChallengeBinaryNode(BaseModel):
     def submit(self):
         """Save submission at current round"""
         from .challenge_binary_node_fielding import ChallengeBinaryNodeFielding
+        from .round import Round
         from .team import Team
         ChallengeBinaryNodeFielding.create(cbn=self,
                                            submission_round=Round.get_current(),
