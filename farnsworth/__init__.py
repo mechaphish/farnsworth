@@ -16,11 +16,32 @@ def tables():
                                    Score, Team, Test, TesterResult,
                                    ValidPoll, CbPollPerformance, PatchScore,
                                    RawRoundPoll, RawRoundTraffic,
-                                   FunctionIdentity, TracerCache)
-    return [Round, Bitmap, ChallengeBinaryNode, ChallengeSet, Crash, Evaluation,
-            Exploit, Feedback, FuzzerStat, IDSRule, Job, Pcap, Score, Team,
-            Test, TesterResult, ValidPoll, CbPollPerformance, PatchScore,
-            RawRoundPoll, RawRoundTraffic, FunctionIdentity, TracerCache]
+                                   FunctionIdentity, TracerCache,
+                                   ChallengeBinaryNodeFielding,
+                                   ExploitFielding, IDSRuleFielding)
+    models = [Round, Bitmap, ChallengeBinaryNode, ChallengeSet, Crash,
+              Evaluation, Exploit, Feedback, FuzzerStat, IDSRule, Job, Pcap,
+              Score, Team, Test, TesterResult, ValidPoll, CbPollPerformance,
+              PatchScore, RawRoundPoll, RawRoundTraffic, FunctionIdentity,
+              TracerCache, ChallengeBinaryNodeFielding, ExploitFielding,
+              IDSRuleFielding]
+    through_models = [ChallengeSet.rounds,
+                      Feedback.round,
+                      ChallengeBinaryNodeFielding.cbn,
+                      ChallengeBinaryNodeFielding.team,
+                      ChallengeBinaryNodeFielding.submission_round,
+                      ChallengeBinaryNodeFielding.available_round,
+                      ChallengeBinaryNodeFielding.fielded_round,
+                      IDSRuleFielding.ids_rule,
+                      IDSRuleFielding.team,
+                      IDSRuleFielding.submission_round,
+                      IDSRuleFielding.available_round,
+                      IDSRuleFielding.fielded_round,
+                      ExploitFielding.exploit,
+                      ExploitFielding.team,
+                      ExploitFielding.submission_round]
+
+    return models + [tm.get_through_model() for tm in through_models]
 
 
 def create_tables():

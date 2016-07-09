@@ -6,7 +6,7 @@ from __future__ import absolute_import, unicode_literals
 from datetime import datetime
 import os
 
-from peewee import ForeignKeyField
+from playhouse.fields import ManyToManyField
 
 from .base import BaseModel
 from .ids_rule import IDSRule
@@ -19,12 +19,8 @@ from .team import Team
 class IDSRuleFielding(BaseModel):
     """IDSRuleFielding model"""
 
-    ids_rule = ForeignKeyField(IDSRule, db_column='ids_rule_id', related_name='fieldings',
-                               null=False)
-    team = ForeignKeyField(Team, db_column='team_id', related_name='fieldings', null=False)
-    submission_round = ForeignKeyField(Round, db_column='submission_round_id',
-                                       related_name='fieldings', null=False)
-    available_round = ForeignKeyField(Round, db_column='available_round_id',
-                                      related_name='fieldings', null=True)
-    fielded_round = ForeignKeyField(Round, db_column='fielded_round_id', related_name='fieldings',
-                                    null=True)
+    ids_rule = ManyToManyField(IDSRule, related_name='fieldings')
+    team = ManyToManyField(Team, related_name='ids_fieldings')
+    submission_round = ManyToManyField(Round, related_name='ids_fieldings')
+    available_round = ManyToManyField(Round, related_name='ids_fieldings')
+    fielded_round = ManyToManyField(Round, related_name='ids_fieldings')
