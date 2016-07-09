@@ -3,8 +3,6 @@
 
 from __future__ import absolute_import, unicode_literals
 
-"""ChallengeBinaryNode model"""
-
 import os
 from datetime import datetime
 
@@ -14,6 +12,8 @@ from .base import BaseModel
 from .challenge_set import ChallengeSet
 from .round import Round
 # Imports for Test and Exploit deferred to prevent circular imports.
+
+"""ChallengeBinaryNode model"""
 
 
 class ChallengeBinaryNode(BaseModel):

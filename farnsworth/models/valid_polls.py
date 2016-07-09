@@ -1,16 +1,21 @@
-from peewee import *
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
+
+from __future__ import absolute_import, unicode_literals
+
+import os
+
+from peewee import BooleanField, BlobField, ForeignKeyField
+
 from .test import Test
 from .challenge_set import ChallengeSet
 from .round import Round
 from .base import BaseModel
-import os
 
 
 class ValidPoll(BaseModel):
-    """
-        Result corresponding to the TesterJob
-    """
-    test = ForeignKeyField(Test, db_column='test_id', to_field='id', related_name='valid_polls')
+    """Result corresponding to the TesterJob."""
+    test = ForeignKeyField(Test, db_column='test_id', related_name='valid_polls')
     cs = ForeignKeyField(ChallengeSet, db_column='cs_id', related_name='valid_polls')
     round = ForeignKeyField(Round, related_name='valid_polls', null=True)
     is_perf_ready = BooleanField(null=False, default=True)
@@ -27,7 +32,6 @@ class ValidPoll(BaseModel):
     def path(self):
         """Save poll blob to file and return path"""
         if not os.path.isfile(self._path):
-            fp = open(self._path, 'wb')
-            fp.write(self.blob)
-            fp.close()
+            with open(self._path, 'wb') as fp:
+                fp.write(self.blob)
         return self._path

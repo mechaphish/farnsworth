@@ -1,10 +1,16 @@
-"""patch_scores model"""
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
 
-from peewee import * # pylint:disable=wildcard-import,unused-wildcard-import
+from __future__ import absolute_import, unicode_literals
+
+from peewee import BooleanField, ForeignKeyField, CharField, BigIntegerField, BinaryJSONField
 from playhouse.postgres_ext import BinaryJSONField
+
 from .base import BaseModel
 from .round import Round
 from .challenge_set import ChallengeSet
+
+"""patch_scores model"""
 
 
 class PatchScore(BaseModel):

@@ -6,7 +6,7 @@ from __future__ import absolute_import, unicode_literals
 from datetime import datetime
 import os
 
-from peewee import CharField
+from peewee import CharField, IntegerField
 from playhouse.postgres_ext import ArrayField
 
 from .base import BaseModel
