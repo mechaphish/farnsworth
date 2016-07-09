@@ -10,7 +10,6 @@ from peewee import CharField, IntegerField
 from playhouse.postgres_ext import ArrayField
 
 from .base import BaseModel
-from .feedback import Feedback
 from .round import Round
 
 """ChallengeSet model"""
@@ -59,8 +58,8 @@ class ChallengeSet(BaseModel):
                 (ChallengeBinaryNode.cs == self) &
                 Exploit.id.not_in(exp_fielding_ids))
 
-
     def _feedback(self, name):
+        from .feedback import Feedback
         for fb in Feedback.all():
             for cs in getattr(fb, name):
                 if cs['csid'] == self.name:

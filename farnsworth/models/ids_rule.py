@@ -9,8 +9,6 @@ from peewee import ForeignKeyField, TextField
 
 from .base import BaseModel
 from .challenge_set import ChallengeSet
-from .round import Round
-from .team import Team
 
 """IDSRule model"""
 
@@ -23,5 +21,7 @@ class IDSRule(BaseModel):
     def submit(self):
         """Save submission at current round"""
         from .ids_rule_fielding import IDSRuleFielding
+        from .round import Round
+        from .team import Team
         IDSRuleFielding.create(ids_rule=self, submission_round=Round.get_current(),
                                team=Team.get_our())
