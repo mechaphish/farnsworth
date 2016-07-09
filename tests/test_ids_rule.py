@@ -12,6 +12,8 @@ from nose.tools import *
 from . import setup_each, teardown_each
 from farnsworth.models import ChallengeSet, IDSRule, Round, Team
 
+NOW = datetime.now()
+
 
 class TestIDSRule:
     def setup(self):
@@ -21,7 +23,7 @@ class TestIDSRule:
         teardown_each()
 
     def test_submit(self):
-        Round.create(num=0 ends_at=datetime.now() + timedelta(seconds=30))
+        Round.create(num=0, ends_at=NOW + timedelta(seconds=30))
         Team.create(name=Team.OUR_NAME)
         cs = ChallengeSet.create(name="foo")
         ids = IDSRule.create(cs=cs, rules="aaa")
