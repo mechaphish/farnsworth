@@ -48,6 +48,8 @@ def to_job_type(job):
         job.__class__ = CBRoundTesterJob
     elif job.worker == 'function_identifier':
         job.__class__ = FunctionIdentifierJob
+    elif job.worker == 'cache':
+        job.__class__ = CacheJob
 
     return job
 
@@ -380,3 +382,7 @@ class IDSJob(Job):
 class FunctionIdentifierJob(Job):
     """A FunctionIdentifierJob."""
     worker = CharField(default='function_identifier')
+
+class CacheJob(Job):
+    """A CacheJob."""
+    worker = CharField(default='cache')

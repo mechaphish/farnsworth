@@ -35,6 +35,7 @@ from .job import (
     WereRabbitJob,
     ColorGuardJob,
     FunctionIdentifierJob,
+    CacheJob,
     to_job_type,
 )
 from .pcap import Pcap
