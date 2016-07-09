@@ -1,12 +1,19 @@
-"""IDSRule model"""
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
+
+from __future__ import absolute_import, unicode_literals
 
 from datetime import datetime
-from peewee import * #pylint:disable=wildcard-import,unused-wildcard-import
+
+from peewee import ForeignKeyField, TextField
 
 from .base import BaseModel
 from .challenge_set import ChallengeSet
 from .round import Round
 from .team import Team
+
+"""IDSRule model"""
+
 
 class IDSRule(BaseModel):
     """IDSRule model"""
@@ -16,6 +23,5 @@ class IDSRule(BaseModel):
     def submit(self):
         """Save submission at current round"""
         from .ids_rule_fielding import IDSRuleFielding
-        IDSRuleFielding.create(ids_rule=self,
-                               submission_round=Round.get_current(),
+        IDSRuleFielding.create(ids_rule=self, submission_round=Round.get_current(),
                                team=Team.get_our())
