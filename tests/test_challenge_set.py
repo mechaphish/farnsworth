@@ -34,7 +34,7 @@ class TestChallengeSet:
         cbn1 = ChallengeBinaryNode.create(name="foo1", cs=cs, patch_type="patch0")
         cbn2 = ChallengeBinaryNode.create(name="foo2", cs=cs, patch_type="patch0")
         cbn3 = ChallengeBinaryNode.create(name="foo3", cs=cs, patch_type="patch1")
-
+        # FIXME: use assert_in
         assert_equals(['patch0', 'patch1'], sorted(cs.cbns_by_patch_type().keys()))
         assert_equals([cbn1, cbn2], cs.cbns_by_patch_type()['patch0'])
         assert_equals([cbn3], cs.cbns_by_patch_type()['patch1'])
@@ -43,5 +43,9 @@ class TestChallengeSet:
         cs = ChallengeSet.create(name="foo")
         cbn = ChallengeBinaryNode.create(name="foo", cs=cs)
         cbn_extra = ChallengeBinaryNode.create(name="foo1", cs=cs, patch_type="patch0")
+        cbn_extra_fixme_asap_please = ChallengeBinaryNode.create(name="foo1-team1", cs=cs)
 
-        assert_equals([cbn], cs.cbns_unpatched)
+        assert_equals(len(cs.cbns_unpatched), 1)
+        assert_in(cbn, cs.cbns_unpatched)
+        assert_not_in(cbn_extra, cs.cbns_unpatched)
+        assert_not_in(cbn_extra_fixme_asap_please, cs.cbns_unpatched)

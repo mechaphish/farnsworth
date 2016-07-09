@@ -57,4 +57,7 @@ class ChallengeSet(BaseModel):
         Return all unpatched CBNs in a list.
         """
         from .challenge_binary_node import ChallengeBinaryNode
-        return self.cbns.where(ChallengeBinaryNode.patch_type.is_null(True))
+        # FIXME: we are storing other teams' binaries with '-' in the filename,
+        # skip this files
+        return self.cbns.where(
+            ChallengeBinaryNode.patch_type.is_null(True) & ~(ChallengeBinaryNode.name ** "%-%"))
