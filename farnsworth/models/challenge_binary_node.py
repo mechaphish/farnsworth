@@ -20,7 +20,6 @@ class ChallengeBinaryNode(BaseModel):
     blob = BlobField(null=True)
     name = CharField()
     cs = ForeignKeyField(ChallengeSet, related_name='cbns')
-    submitted_at = DateTimeField(null=True)
     patch_type = CharField(null=True)
     sha256 = FixedCharField(max_length=64, unique=True)
 
@@ -86,9 +85,9 @@ class ChallengeBinaryNode(BaseModel):
         from .challenge_binary_node_fielding import ChallengeBinaryNodeFielding
         from .round import Round
         from .team import Team
-        ChallengeBinaryNodeFielding.create(cbn=self,
-                                           submission_round=Round.get_current(),
-                                           team=Team.get_our())
+        cbnf = ChallengeBinaryNodeFielding.create(cbn=self,
+                                                submission_round=Round.get_current())
+        cbnf.team = [Team.get_our()]
 
     @property
     def symbols(self):
@@ -116,7 +115,7 @@ class ChallengeBinaryNode(BaseModel):
         from .challenge_binary_node_fielding import ChallengeBinaryNodeFielding
         CBNF = ChallengeBinaryNodeFielding
         cbn_submitted_ids = [cbnf.cbn_id for cbnf in CBNF.all()]
-        if cbn_submitted_ids:
+        if not cbn_submitted_ids:
             return self.descendants
         else:
             return self.descendants.where(self.__class__.id.not_in(cbn_submitted_ids))

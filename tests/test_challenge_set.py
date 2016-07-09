@@ -37,8 +37,10 @@ class TestChallengeSet:
         now = datetime.now()
         r1 = Round.create(num=0, ends_at=now + timedelta(seconds=15))
         r2 = Round.create(num=1, ends_at=now + timedelta(seconds=30))
-        cs1 = ChallengeSet.create(name="foo", rounds=[r1.id, r2.id])
-        cs2 = ChallengeSet.create(name="bar", rounds=[r1.id])
+        cs1 = ChallengeSet.create(name="foo")
+        cs1.rounds = [r1, r2]
+        cs2 = ChallengeSet.create(name="bar")
+        cs2.rounds = [r1]
 
         assert_equals(len(ChallengeSet.fielded_in_round(r1)), 2)
         assert_in(cs1, ChallengeSet.fielded_in_round(r1))
@@ -67,11 +69,11 @@ class TestChallengeSet:
         assert_not_in(cbn_extra_fixme_asap_please, cs.cbns_unpatched)
 
     def test_unsubmitted_ids_rules(self):
-        Round.create(num = 0)
-        Team.create(name=Team.OUR_NAME)
-        cs = ChallengeSet.create(name = "foo")
-        ids1 = IDSRule.create(cs = cs, rules = "aaa")
-        ids2 = IDSRule.create(cs = cs, rules = "bbb")
+        r1 = Round.create(num=0)
+        team = Team.create(name=Team.OUR_NAME)
+        cs = ChallengeSet.create(name="foo")
+        ids1 = IDSRule.create(cs=cs, rules="aaa")
+        ids2 = IDSRule.create(cs=cs, rules="bbb")
 
         assert_equals(len(cs.unsubmitted_ids_rules), 2)
         assert_in(ids1, cs.unsubmitted_ids_rules)
@@ -88,13 +90,14 @@ class TestChallengeSet:
         assert_not_in(ids2, cs.unsubmitted_ids_rules)
 
     def test_unsubmitted_exploits(self):
-        Round.create(num=0)
+        r1 = Round.create(num=0)
         team = Team.create(name=Team.OUR_NAME)
         cs = ChallengeSet.create(name="foo")
+        cs.rounds = [r1]
         cbn = ChallengeBinaryNode.create(name="cbn", cs=cs)
         job = RexJob.create(cbn=cbn)
-        pov1 = Exploit.create(cbn=cbn, job=job, pov_type='type1', exploitation_method='rop')
-        pov2 = Exploit.create(cbn=cbn, job=job, pov_type='type2', exploitation_method='rop')
+        pov1 = Exploit.create(cbn=cbn, job=job, pov_type='type1', exploitation_method='rop', blob="exploit")
+        pov2 = Exploit.create(cbn=cbn, job=job, pov_type='type2', exploitation_method='rop', blob="exploit")
 
         assert_equals(len(cs.unsubmitted_exploits), 2)
         assert_in(pov1, cs.unsubmitted_exploits)

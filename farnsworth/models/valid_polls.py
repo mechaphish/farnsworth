@@ -15,8 +15,8 @@ from .base import BaseModel
 
 class ValidPoll(BaseModel):
     """Result corresponding to the TesterJob."""
-    test = ForeignKeyField(Test, db_column='test_id', related_name='valid_polls')
-    cs = ForeignKeyField(ChallengeSet, db_column='cs_id', related_name='valid_polls')
+    test = ForeignKeyField(Test, related_name='valid_polls')
+    cs = ForeignKeyField(ChallengeSet, related_name='valid_polls')
     round = ForeignKeyField(Round, related_name='valid_polls', null=True)
     is_perf_ready = BooleanField(null=False, default=True)
     has_scores_computed = BooleanField(null=False, default=False)

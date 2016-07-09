@@ -3,7 +3,7 @@
 
 from __future__ import absolute_import, unicode_literals
 
-from playhouse.fields import ManyToManyField
+from peewee import ForeignKeyField
 from playhouse.postgres_ext import BinaryJSONField
 
 from .base import BaseModel
@@ -15,7 +15,7 @@ from .round_related_model import RoundRelatedModel
 
 class Feedback(BaseModel, RoundRelatedModel):
     """Feedback model"""
-    round = ManyToManyField(Round, related_name='feedbacks')
+    round = ForeignKeyField(Round, related_name='feedbacks')
     polls = BinaryJSONField()
     cbs = BinaryJSONField()
     povs = BinaryJSONField()

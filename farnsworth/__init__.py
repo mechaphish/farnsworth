@@ -26,21 +26,9 @@ def tables():
               TracerCache, ChallengeBinaryNodeFielding, ExploitFielding,
               IDSRuleFielding]
     through_models = [ChallengeSet.rounds,
-                      Feedback.round,
-                      ChallengeBinaryNodeFielding.cbn,
                       ChallengeBinaryNodeFielding.team,
-                      ChallengeBinaryNodeFielding.submission_round,
-                      ChallengeBinaryNodeFielding.available_round,
-                      ChallengeBinaryNodeFielding.fielded_round,
-                      IDSRuleFielding.ids_rule,
                       IDSRuleFielding.team,
-                      IDSRuleFielding.submission_round,
-                      IDSRuleFielding.available_round,
-                      IDSRuleFielding.fielded_round,
-                      ExploitFielding.exploit,
-                      ExploitFielding.team,
-                      ExploitFielding.submission_round]
-
+                      ExploitFielding.team]
     return models + [tm.get_through_model() for tm in through_models]
 
 def create_tables():

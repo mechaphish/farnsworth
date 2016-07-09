@@ -22,7 +22,8 @@ class TestBaseModel:
 
     def test_save(self):
         r1 = Round.create(num=0, ends_at=NOW + timedelta(seconds=30))
-        cs = ChallengeSet.create(name="foo", rounds=[r1.id])
+        cs = ChallengeSet.create(name="foo")
+        cs.rounds = [r1]
         cbn = ChallengeBinaryNode.create(name="foo", cs=cs, sha256="sum")
         job = Job(cbn=cbn, worker='basemodel')
 
@@ -45,13 +46,15 @@ class TestBaseModel:
         assert_equals(cs2.id, cs1.id)
         assert_not_equals(cs3.id, cs1.id)
 
-        ChallengeSet.delete().execute()
-        Round.delete().execute()
+        cs3.delete_instance(recursive=True)
+        cs2.delete_instance(recursive=True)
+        cs1.delete_instance(recursive=True)
+        r1.delete_instance(recursive=True)
         ChallengeSet._meta.database.commit()
 
     def test_all(self):
-        r1 = Round.create(num=0, ends_at=NOW + timedelta(seconds=30))
-        cs = ChallengeSet.create(name="foo", rounds=[r1.id])
+        cs = ChallengeSet.create(name="foo")
+        cs.rounds = [r1]
         cbn1 = ChallengeBinaryNode.create(name="foo", cs=cs, sha256="sum1")
         cbn2 = ChallengeBinaryNode.create(name="bar", cs=cs, sha256="sum2")
 

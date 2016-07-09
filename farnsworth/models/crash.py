@@ -14,12 +14,12 @@ from .job import Job
 
 class Crash(BaseModel):
     blob = BlobField(null=True)
-    cbn = ForeignKeyField(ChallengeBinaryNode, db_column='cbn_id', related_name='crashes')
+    cbn = ForeignKeyField(ChallengeBinaryNode, related_name='crashes')
     exploitable = BooleanField(null=True)
     exploited = BooleanField(null=True)
     explorable = BooleanField(null=True)
     explored = BooleanField(null=True)
-    job = ForeignKeyField(Job, db_column='job_id', related_name='crashes')
+    job = ForeignKeyField(Job, related_name='crashes')
     triaged = BooleanField(null=False, default=False)
     kind = EnumField(choices=['unclassified',
                               'unknown',

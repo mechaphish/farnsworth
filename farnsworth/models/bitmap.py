@@ -13,5 +13,5 @@ from .challenge_binary_node import ChallengeBinaryNode
 
 class Bitmap(BaseModel):
     """Bitmap model"""
-    cbn = ForeignKeyField(ChallengeBinaryNode, db_column='cbn_id', related_name='bitmap')
+    cbn = ForeignKeyField(ChallengeBinaryNode, related_name='bitmap')
     blob = BlobField(null=True)

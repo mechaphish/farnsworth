@@ -13,6 +13,5 @@ from .challenge_binary_node import ChallengeBinaryNode
 
 class TracerCache(BaseModel):
     """TracerCache model"""
-    cbn = ForeignKeyField(ChallengeBinaryNode, db_column='cbn_id',
-                          related_name='tracer_cache')
+    cbn = ForeignKeyField(ChallengeBinaryNode, related_name='tracer_cache')
     blob = BlobField(null=False)

@@ -13,8 +13,7 @@ from .challenge_binary_node import ChallengeBinaryNode
 
 class FuzzerStat(BaseModel):
     """FuzzerStat model"""
-    cbn = ForeignKeyField(ChallengeBinaryNode, db_column='cbn_id',
-                          related_name='fuzzer_stats_collection')
+    cbn = ForeignKeyField(ChallengeBinaryNode, related_name='fuzzer_stats_collection')
     pending_favs = IntegerField(null=False, default=0)
     pending_total = IntegerField(null=False, default=0)
     paths_total = IntegerField(null=False, default=0)

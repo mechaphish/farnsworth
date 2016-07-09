@@ -16,7 +16,7 @@ from .team import Team
 
 class Pcap(BaseModel):
     """PCAP model"""
-    cbn = ForeignKeyField(ChallengeBinaryNode, db_column='cbn_id', related_name='pcaps')
+    cbn = ForeignKeyField(ChallengeBinaryNode, related_name='pcaps')
     round = ForeignKeyField(Round, related_name='pcaps')
     team = ForeignKeyField(Team, related_name='pcaps')
     type = EnumField(choices=['unknown', 'test', 'crash', 'exploit'],
