@@ -3,7 +3,7 @@
 
 from __future__ import absolute_import, unicode_literals
 
-from peewee import ForeignKeyField, BinaryJSONField
+from peewee import ForeignKeyField
 from playhouse.postgres_ext import BinaryJSONField
 
 from .base import BaseModel
