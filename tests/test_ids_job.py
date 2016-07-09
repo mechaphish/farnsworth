@@ -10,6 +10,7 @@ from nose.tools import *
 from . import setup_each, teardown_each
 from farnsworth.models import IDSJob, ChallengeSet
 
+
 class TestIDSJob:
     def setup(self):
         setup_each()
