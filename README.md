@@ -1,6 +1,7 @@
 # Farnsworth
 
 Farnsworth is the knowledge base of the Shellphish CRS.
+
 It provides a collection of models to access the PostgreSQL data store.
 
 
@@ -23,13 +24,16 @@ load_dotenv('.env')
 Then:
 
 ```
-from farnsworth.models import *
+from farnsworth.models.job import AFLJob
 
-job = Job.get(1)
+job = AFLJob.get(1)
 ```
 
-Please read [Peewee documentation](https://peewee.readthedocs.org/en/latest/peewee/querying.html)
-to see how you can query the db.
+Please note that importing any models directly from `farnsworth.models` is deprecated. Instead,
+you should be importing them explicitly by specifying the module they are contained in.
+
+Finally, please read [Peewee documentation](https://peewee.readthedocs.org/en/latest/peewee/querying.html)
+to see how you can query the database.
 
 
 ### Use with multi-process

@@ -54,4 +54,4 @@ from .tracer_cache import TracerCache
 
 LOG = farnsworth.log.LOG.getChild('models')
 DeprecationWarning("Importing farnworth.models is deprecated. "
-                   "Please import the models you need directly.")
+                   "Please import the models you need explicitly.")
