@@ -7,7 +7,7 @@ from datetime import datetime
 import os
 
 from peewee import CharField, IntegerField
-from playhouse.postgres_ext import ArrayField
+from playhouse.fields import ManyToManyField
 
 from .base import BaseModel
 from .round import Round
@@ -18,7 +18,7 @@ from .round import Round
 class ChallengeSet(BaseModel):
     """ChallengeSet model"""
     name = CharField()
-    rounds = ArrayField(IntegerField, null=True)
+    rounds = ManyToManyField(Round, related_name='cs')
 
     @classmethod
     def fielded_in_round(cls, round_=None):

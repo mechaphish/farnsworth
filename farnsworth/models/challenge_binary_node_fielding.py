@@ -6,7 +6,7 @@ from __future__ import absolute_import, unicode_literals
 from datetime import datetime
 import os
 
-from peewee import ForeignKeyField
+from playhouse.fields import ManyToManyField
 
 from .base import BaseModel
 from .challenge_binary_node import ChallengeBinaryNode
@@ -19,12 +19,8 @@ from .team import Team
 class ChallengeBinaryNodeFielding(BaseModel):
     """ChallengeBinaryNodeFielding model"""
 
-    cbn = ForeignKeyField(ChallengeBinaryNode, db_column='cbn_id', related_name='fieldings',
-                          null=False)
-    team = ForeignKeyField(Team, db_column='team_id', related_name='fieldings', null=False)
-    submission_round = ForeignKeyField(Round, db_column='submission_round_id',
-                                       related_name='fieldings', null=True)
-    available_round = ForeignKeyField(Round, db_column='available_round_id',
-                                      related_name='fieldings', null=True)
-    fielded_round = ForeignKeyField(Round, db_column='fielded_round_id', related_name='fieldings',
-                                    null=True)
+    cbn = ManyToManyField(ChallengeBinaryNode, related_name='fieldings')
+    team = ManyToManyField(Team, related_name='cbn_fieldings')
+    submission_round = ManyToManyField(Round, related_name='cbn_fieldings')
+    available_round = ManyToManyField(Round, related_name='cbn_fieldings')
+    fielded_round = ManyToManyField(Round, related_name='cbn_fieldings')
