@@ -18,7 +18,7 @@ from .round import Round
 class ChallengeSet(BaseModel):
     """ChallengeSet model"""
     name = CharField()
-    rounds = ArrayField(IntegerField)
+    rounds = ArrayField(IntegerField, null=True)
 
     @classmethod
     def fielded_in_round(cls, round_=None):
