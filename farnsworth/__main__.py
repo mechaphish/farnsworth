@@ -12,7 +12,7 @@ import farnsworth.log
 LOG = farnsworth.log.LOG.getChild('main')
 
 import farnsworth.config
-from . import create, drop
+from . import create_tables, drop_tables
 
 
 def main(args=None):
@@ -23,11 +23,11 @@ def main(args=None):
     if args[1:]:
         if args[1] == 'create':
             LOG.debug("Setting up the database")
-            create()
+            create_tables()
             return 0
         elif args[1] == 'drop':
             LOG.debug("Dropping the database")
-            drop()
+            drop_tables()
             return 0
 
 if __name__ == '__main__':

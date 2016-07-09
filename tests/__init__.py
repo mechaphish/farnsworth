@@ -15,8 +15,8 @@ import farnsworth
 
 def setup():
     """Wipe out the database and set it back up!"""
-    farnsworth.drop()
-    farnsworth.create()
+    farnsworth.drop_tables()
+    farnsworth.create_tables()
     farnsworth.config.master_db.set_autocommit(False)
 
 

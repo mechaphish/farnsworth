@@ -23,11 +23,11 @@ def tables():
             RawRoundPoll, RawRoundTraffic, FunctionIdentity, TracerCache]
 
 
-def create():
+def create_tables():
     LOG.debug("Creating tables...")
     master_db.create_tables(tables(), safe=True)
 
 
-def drop():
+def drop_tables():
     LOG.debug("Dropping tables...")
     master_db.drop_tables(tables(), safe=True, cascade=True)
