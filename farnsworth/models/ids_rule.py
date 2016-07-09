@@ -15,7 +15,7 @@ from .challenge_set import ChallengeSet
 
 class IDSRule(BaseModel):
     """IDSRule model"""
-    cs = ForeignKeyField(ChallengeSet, db_column='cs_id', related_name='ids_rules')
+    cs = ForeignKeyField(ChallengeSet, related_name='ids_rules')
     rules = TextField()
 
     def submit(self):
@@ -23,5 +23,5 @@ class IDSRule(BaseModel):
         from .ids_rule_fielding import IDSRuleFielding
         from .round import Round
         from .team import Team
-        IDSRuleFielding.create(ids_rule=self, submission_round=Round.get_current(),
-                               team=Team.get_our())
+        irf = IDSRuleFielding.create(ids_rule=self, submission_round=Round.get_current())
+        irf.team = [Team.get_our()]

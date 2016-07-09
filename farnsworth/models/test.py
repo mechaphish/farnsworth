@@ -16,8 +16,8 @@ from .job import Job
 class Test(BaseModel):
     """Test model"""
     blob = BlobField()
-    cbn = ForeignKeyField(ChallengeBinaryNode, db_column='cbn_id', related_name='tests')
-    job = ForeignKeyField(Job, db_column='job_id', related_name='tests')
+    cbn = ForeignKeyField(ChallengeBinaryNode, related_name='tests')
+    job = ForeignKeyField(Job, related_name='tests')
     drilled = BooleanField(null=False, default=False)
     colorguard_traced = BooleanField(null=False, default=False)
     poll_created = BooleanField(null=False, default=False)

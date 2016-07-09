@@ -3,6 +3,7 @@
 
 from __future__ import absolute_import, unicode_literals
 
+from datetime import datetime, timedelta
 import os
 import time
 
@@ -13,6 +14,7 @@ from farnsworth.models import (AFLJob, ChallengeBinaryNode, ChallengeSet,
                                FunctionIdentity, Round, Team)
 import farnsworth.models    # to avoid collisions between Test and nosetests
 
+NOW = datetime.now()
 BLOB = "blob data"
 
 
@@ -74,10 +76,9 @@ class TestChallengeBinaryNode:
         assert_in(cbn3, ChallengeBinaryNode.all_descendants())
 
     def test_submit(self):
-        now = datetime.now()
-        Round.create(num=0, ends_at=now + timedelta(seconds=30))
-        Team.create(name=Team.OUR_NAME)
-        cs = ChallengeSet(name="foo")
+        r1 = Round.create(num=0, ends_at=NOW + timedelta(seconds=30))
+        team = Team.create(name=Team.OUR_NAME)
+        cs = ChallengeSet.create(name="foo")
         cbn = ChallengeBinaryNode.create(name="foo", cs=cs, blob=BLOB)
 
         assert_equals(len(cbn.fieldings), 0)
@@ -88,11 +89,15 @@ class TestChallengeBinaryNode:
         assert_is_none(cbn.fieldings.get().available_round)
         assert_is_none(cbn.fieldings.get().fielded_round)
 
+        cbn.delete_instance(recursive=True)
+        cs.delete_instance(recursive=True)
+
+
     def test_submitted_and_unsubmitted_patches(self):
-        now = datetime.now()
-        Round.create(num=0, ends_at=now + timedelta(seconds=30))
-        Team.create(name=Team.OUR_NAME)
+        r0 = Round.create(num=0, ends_at=NOW + timedelta(seconds=30))
+        team = Team.create(name=Team.OUR_NAME)
         cs = ChallengeSet.create(name="foo")
+        cs.rounds = [r0]
         cbn = ChallengeBinaryNode.create(name="cbn", cs=cs)
         patch1 = ChallengeBinaryNode.create(name="patch1", cs=cs, root=cbn)
         patch2 = ChallengeBinaryNode.create(name="patch2", cs=cs, root=cbn)

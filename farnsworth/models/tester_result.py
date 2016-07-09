@@ -16,7 +16,7 @@ class TesterResult(BaseModel):
     """
     Result corresponding to the TesterJob
     """
-    job = ForeignKeyField(Job, db_column='job_id',  related_name='tester_results')
+    job = ForeignKeyField(Job, related_name='tester_results')
     error_code = IntegerField()
     performances = BinaryJSONField()
     result = CharField()

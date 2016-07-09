@@ -29,7 +29,8 @@ class ChallengeSet(BaseModel):
         """
         if round_ is None:
             round_ = Round.get_current()
-        return cls.select().where(cls.rounds.contains_any(round_.id))
+        tm = cls.rounds.get_through_model()
+        return cls.select().join(tm).where(tm.round == round_)
 
     @property
     def unsubmitted_ids_rules(self):
@@ -38,7 +39,7 @@ class ChallengeSet(BaseModel):
         from .ids_rule_fielding import IDSRuleFielding
         IDSRF = IDSRuleFielding
         idsr_submitted_ids = [idsrf.ids_rule_id for idsrf in IDSRF.all()]
-        if len(idsr_submitted_ids) == 0:
+        if not idsr_submitted_ids:
             return self.ids_rules
         else:
             return self.ids_rules.where(IDSRule.id.not_in(idsr_submitted_ids))
@@ -50,7 +51,7 @@ class ChallengeSet(BaseModel):
         from .exploit_fielding import ExploitFielding
         from .challenge_binary_node import ChallengeBinaryNode
         exp_fielding_ids = [expf.exploit_id for expf in ExploitFielding.all()]
-        if len(exp_fielding_ids) == 0:
+        if not exp_fielding_ids:
             return Exploit.select().join(ChallengeBinaryNode).where(
                 ChallengeBinaryNode.cs == self)
         else:

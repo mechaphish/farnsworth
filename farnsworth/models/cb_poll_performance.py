@@ -17,8 +17,8 @@ class CbPollPerformance(BaseModel):
     """
     Performance of a CB against a poll.
     """
-    cs = ForeignKeyField(ChallengeSet, db_column='cs_id', related_name='cb_poll_performances')
-    poll = ForeignKeyField(ValidPoll, db_column='poll_id', related_name='cb_poll_performances')
+    cs = ForeignKeyField(ChallengeSet, related_name='cb_poll_performances')
+    poll = ForeignKeyField(ValidPoll, related_name='cb_poll_performances')
     performances = BinaryJSONField()
     is_poll_ok = BooleanField(null=False, default=False)
     patch_type = CharField(null=True) # THIS SHOULD NOT BE A CHARFIELD

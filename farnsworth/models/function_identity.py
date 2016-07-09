@@ -13,8 +13,7 @@ from .challenge_binary_node import ChallengeBinaryNode
 
 class FunctionIdentity(BaseModel):
     """ Function Identity model """
-    cbn = ForeignKeyField(ChallengeBinaryNode, db_column='cbn_id',
-                          related_name='function_identities')
+    cbn = ForeignKeyField(ChallengeBinaryNode, related_name='function_identities')
     address = BigIntegerField(null=False)
     symbol = CharField(null=False)
 

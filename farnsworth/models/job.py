@@ -60,7 +60,7 @@ def to_job_type(job):
 
 class Job(BaseModel):
     """Base Job model"""
-    cbn = ForeignKeyField(ChallengeBinaryNode, null=True, db_column='cbn_id', related_name='jobs')
+    cbn = ForeignKeyField(ChallengeBinaryNode, null=True, related_name='jobs')
     completed_at = DateTimeField(null=True)
     limit_cpu = IntegerField(null=True, default=2)
     limit_memory = IntegerField(null=True, default=4096)    # MiB
