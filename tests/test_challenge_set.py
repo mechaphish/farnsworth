@@ -10,15 +10,8 @@ import os
 from nose.tools import *
 
 from . import setup_each, teardown_each
-from farnsworth.models import (
-    ChallengeBinaryNode,
-    ChallengeSet,
-    Exploit,
-    IDSRule,
-    RexJob,
-    Round,
-    Team
-)
+from farnsworth.models import (ChallengeBinaryNode, ChallengeSet, Exploit,
+                               IDSRule, RexJob, Round, Team)
 
 
 class TestChallengeSet:
