@@ -28,7 +28,7 @@ class ChallengeSet(BaseModel):
           round_: Round model instance. If none last round is used.
         """
         if round_ is None:
-            round_ = Round.get_current()
+            round_ = Round.current_round()
         tm = cls.rounds.get_through_model()
         return cls.select().join(tm).where(tm.round == round_)
 

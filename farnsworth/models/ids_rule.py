@@ -23,5 +23,5 @@ class IDSRule(BaseModel):
         from .ids_rule_fielding import IDSRuleFielding
         from .round import Round
         from .team import Team
-        irf = IDSRuleFielding.create(ids_rule=self, submission_round=Round.get_current(),
+        irf = IDSRuleFielding.create(ids_rule=self, submission_round=Round.current_round(),
                                      team=Team.get_our())
