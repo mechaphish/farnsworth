@@ -96,8 +96,10 @@ class TestChallengeSet:
         cs.rounds = [r1]
         cbn = ChallengeBinaryNode.create(name="cbn", cs=cs)
         job = RexJob.create(cbn=cbn)
-        pov1 = Exploit.create(cbn=cbn, job=job, pov_type='type1', exploitation_method='rop', blob="exploit")
-        pov2 = Exploit.create(cbn=cbn, job=job, pov_type='type2', exploitation_method='rop', blob="exploit")
+        pov1 = Exploit.create(cbn=cbn, job=job, pov_type='type1', exploitation_method='rop',
+                              blob="exploit", c_code="exploit it")
+        pov2 = Exploit.create(cbn=cbn, job=job, pov_type='type2', exploitation_method='rop',
+                              blob="exploit", c_code="exploit it")
 
         assert_equals(len(cs.unsubmitted_exploits), 2)
         assert_in(pov1, cs.unsubmitted_exploits)
