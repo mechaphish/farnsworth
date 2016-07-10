@@ -3,11 +3,15 @@
 
 from __future__ import absolute_import, unicode_literals
 
+from datetime import datetime
+
 from nose.tools import *
 
 from . import setup_each, teardown_each
-from farnsworth.models import AFLJob, ChallengeBinaryNode, ChallengeSet
+from farnsworth.models import AFLJob, ChallengeBinaryNode, ChallengeSet, Job
 import farnsworth.models    # to avoid collisions between Test and nosetests
+
+NOW = datetime.now()
 
 
 class TestTest:
@@ -36,3 +40,35 @@ class TestTest:
                         <!DOCTYPE pov SYSTEM "/usr/share/cgc-docs/replay.dtd">
                      <pov><cbid>{cbid}</cbid><replay><write><data>{data}</data></write></replay></pov>'''
         assert_equals(test.to_cqe_pov_xml(), test_xml.format(cbid=test.cbn.id, data='XXX'))
+
+    def test_unsynced_testcases(self):
+        cs1 = ChallengeSet.create(name="foo")
+        cs2 = ChallengeSet.create(name="foo")
+        cbn1 = ChallengeBinaryNode.create(name="foo", cs=cs1, blob="blob data")
+        cbn2 = ChallengeBinaryNode.create(name="bar", cs=cs2, blob="blob data")
+        job1 = AFLJob.create(cbn=cbn1)
+        job2 = AFLJob.create(cbn=cbn2)
+        job3 = AFLJob.create(cbn=cbn1)
+
+        assert_equal(len(farnsworth.models.Test.unsynced_testcases(NOW)), 0)
+
+        test1 = farnsworth.models.Test.create(cbn=cbn1, job=job1, blob="XXX")
+        assert_equal(len(farnsworth.models.Test.unsynced_testcases(NOW)), 1)
+
+        test2 = farnsworth.models.Test.create(cbn=cbn2, job=job2, blob="XXX")
+        assert_equal(len(farnsworth.models.Test.unsynced_testcases(NOW)), 2)
+
+        unsynced_cbn1 = farnsworth.models.Test.unsynced_testcases(NOW) \
+                                              .join(Job).where(Job.cbn == cbn1)
+        assert_equal(len(unsynced_cbn1), 1)
+
+        test3 = farnsworth.models.Test.create(cbn=cbn1, job=job3, blob="XXX")
+        assert_equal(len(farnsworth.models.Test.unsynced_testcases(NOW)), 3)
+        unsynced_cbn1 = farnsworth.models.Test.unsynced_testcases(NOW) \
+                                              .join(Job).where(Job.cbn == cbn1)
+        assert_equal(len(unsynced_cbn1), 2)
+
+        unsynced_cbn1_job1 = farnsworth.models.Test.unsynced_testcases(NOW) \
+                                                   .join(Job).where((Job.cbn == cbn1) \
+                                                                    & (job1.id != Job.id))
+        assert_equal(len(unsynced_cbn1_job1), 1)
