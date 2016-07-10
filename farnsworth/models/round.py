@@ -23,7 +23,8 @@ class Round(BaseModel):
 
     @classmethod
     def at_timestamp(cls, timestamp):
-        print "FIXME: useless method, will be removed soon!"
-        rounds = cls.select().where(cls.created_at < timestamp).order_by(cls.created_at.desc()).limit(1)
+        DeprecationWarning("This method is useless. It will be removed soon.")
+        rounds = cls.select().where(cls.created_at < timestamp) \
+                    .order_by(cls.created_at.desc()).limit(1)
         if rounds:
             return rounds[0]

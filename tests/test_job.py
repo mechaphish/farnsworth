@@ -67,8 +67,7 @@ class TestJob:
         assert_true(job1_created)
         assert_true(job2_created)
 
-        job2.delete_instance(recursive=True)
-        job1.delete_instance(recursive=True)
-        cbn.delete_instance(recursive=True)
-        cs.delete_instance(recursive=True)
+        Job.delete().execute()
+        ChallengeBinaryNode.delete().execute()
+        ChallengeSet.delete().execute()
         Job._meta.database.commit()

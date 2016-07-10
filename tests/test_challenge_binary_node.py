@@ -89,8 +89,10 @@ class TestChallengeBinaryNode:
         cbn = ChallengeBinaryNode.create(name="foo", cs=cs, blob=BLOB)
 
         assert_equals(len(cbn.fieldings), 0)
+
         cbn.submit()
         assert_equals(len(cbn.fieldings), 1)
+
         assert_equals(cbn.fieldings.get().team, Team.get_our())
         assert_equals(cbn.fieldings.get().submission_round, Round.get_current())
         assert_is_none(cbn.fieldings.get().available_round)
@@ -98,6 +100,8 @@ class TestChallengeBinaryNode:
 
         cbn.delete_instance(recursive=True)
         cs.delete_instance(recursive=True)
+        team.delete_instance(recursive=True)
+        r1.delete_instance(recursive=True)
 
 
     def test_submitted_and_unsubmitted_patches(self):
