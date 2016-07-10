@@ -85,9 +85,8 @@ class ChallengeBinaryNode(BaseModel):
         from .challenge_binary_node_fielding import ChallengeBinaryNodeFielding
         from .round import Round
         from .team import Team
-        cbnf = ChallengeBinaryNodeFielding.create(cbn=self,
-                                                submission_round=Round.get_current())
-        cbnf.team = [Team.get_our()]
+        cbnf = ChallengeBinaryNodeFielding.create(cbn=self, submission_round=Round.get_current(),
+                                                  team=Team.get_our())
 
     @property
     def symbols(self):
@@ -111,23 +110,20 @@ class ChallengeBinaryNode(BaseModel):
 
     @property
     def unsubmitted_patches(self):
-        """Rertun all unsubmitted patches"""
+        """All unsubmitted patches."""
         from .challenge_binary_node_fielding import ChallengeBinaryNodeFielding
-        CBNF = ChallengeBinaryNodeFielding
-        cbn_submitted_ids = [cbnf.cbn_id for cbnf in CBNF.all()]
-        if not cbn_submitted_ids:
-            return self.descendants
-        else:
-            return self.descendants.where(self.__class__.id.not_in(cbn_submitted_ids))
+        return self.descendants.where(self.__class__.id.not_in(
+            ChallengeBinaryNodeFielding.select(ChallengeBinaryNodeFielding.cbn)))
 
     @property
     def submitted_patches(self):
-        """Rertun all submitted patches"""
+        """All submitted patches."""
         from .challenge_binary_node_fielding import ChallengeBinaryNodeFielding
         from .team import Team
-        CBNF = ChallengeBinaryNodeFielding
-        return self.descendants.join(CBNF).where(
-            CBNF.submission_round.is_null(False) & (CBNF.team == Team.get_our()))
+        tm = ChallengeBinaryNodeFielding.team.get_through_model()
+        return self.descendants.join(ChallengeBinaryNodeFielding).join(tm).where(
+            (tm.team == Team.get_our()) &
+            (ChallengeBinaryNodeFielding.submission_round.is_null(False)))
 
     @property
     def all_tests_for_this_cb(self):
