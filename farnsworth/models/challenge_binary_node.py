@@ -85,7 +85,7 @@ class ChallengeBinaryNode(BaseModel):
         from .challenge_binary_node_fielding import ChallengeBinaryNodeFielding
         from .round import Round
         from .team import Team
-        cbnf = ChallengeBinaryNodeFielding.create(cbn=self, submission_round=Round.get_current(),
+        cbnf = ChallengeBinaryNodeFielding.create(cbn=self, submission_round=Round.current_round(),
                                                   team=Team.get_our())
 
     @property

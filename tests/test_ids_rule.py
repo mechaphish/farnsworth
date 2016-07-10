@@ -32,4 +32,4 @@ class TestIDSRule:
         ids.submit()
         assert_equals(len(ids.fieldings), 1)
         assert_equals(ids.fieldings.get().team, Team.get_our())
-        assert_equals(ids.fieldings.get().submission_round, Round.get_current())
+        assert_equals(ids.fieldings.get().submission_round, Round.current_round())

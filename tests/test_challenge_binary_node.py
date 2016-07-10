@@ -87,7 +87,7 @@ class TestChallengeBinaryNode:
         assert_equals(len(cbn.fieldings), 1)
 
         assert_equals(cbn.fieldings.get().team, Team.get_our())
-        assert_equals(cbn.fieldings.get().submission_round, Round.get_current())
+        assert_equals(cbn.fieldings.get().submission_round, Round.current_round())
         assert_is_none(cbn.fieldings.get().available_round)
         assert_is_none(cbn.fieldings.get().fielded_round)
 
