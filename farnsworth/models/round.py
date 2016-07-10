@@ -17,7 +17,9 @@ class Round(BaseModel):
 
     @classmethod
     def current_round(cls):
-        return cls.select().order_by(cls.created_at.desc())[0]
+        rounds = cls.select().order_by(cls.created_at.desc())
+        if len(rounds) > 0:
+            return rounds[0]
 
     @classmethod
     def at_timestamp(cls, timestamp):

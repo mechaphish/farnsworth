@@ -18,6 +18,8 @@ class TestRound:
         teardown_each()
 
     def test_current_round(self):
+        assert_equals(Round.current_round(), None)
+
         now = datetime.datetime.now()
         Round.create(num=0, ends_at=(now + datetime.timedelta(seconds=15)))
         Round.create(num=1, ends_at=(now + datetime.timedelta(seconds=25)))
