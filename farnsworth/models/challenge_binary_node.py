@@ -98,6 +98,14 @@ class ChallengeBinaryNode(BaseModel):
         return bool(len(self.crashes))
 
     @property
+    def completed_caching(self):
+        """Has the cache job on this binary completed"""
+        from .job import Job
+        return Job.select().where((Job.cbn == self) &\
+                (Job.worker == 'cache') &\
+                (Job.completed_at.is_null(False))).exists()
+
+    @property
     def unsubmitted_patches(self):
         """Rertun all unsubmitted patches"""
         return self.descendants.where(self.__class__.submitted_at.is_null(True))
