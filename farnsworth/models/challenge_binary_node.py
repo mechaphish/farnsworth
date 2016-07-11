@@ -100,7 +100,7 @@ class ChallengeBinaryNode(BaseModel):
     @property
     def completed_caching(self):
         """Has the cache job on this binary completed"""
-        from .job import Job, CacheJob
+        from .job import Job
         return Job.select().where((Job.cbn == self) &\
                 (Job.worker == 'cache') &\
                 (Job.completed_at.is_null(False))).exists()
