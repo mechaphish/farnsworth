@@ -19,7 +19,7 @@ class TestTest:
 
     def test_cbn_association(self):
         cs = ChallengeSet.create(name="foo")
-        cbn = ChallengeBinaryNode.create(name="foo", cs=cs, blob="blob data")
+        cbn = ChallengeBinaryNode.create(name="foo", cs=cs, blob="blob data", sha256="sum")
         job = AFLJob.create(cbn=cbn)
         test1 = farnsworth.models.Test.create(cbn=cbn, job=job, blob="testicolo sn")
         test2 = farnsworth.models.Test.create(cbn=cbn, job=job, blob="testicolo dx")
@@ -29,7 +29,7 @@ class TestTest:
 
     def test_cqe_pov_xml(self):
         cs = ChallengeSet.create(name="foo")
-        cbn = ChallengeBinaryNode.create(name="foo", cs=cs, blob="blob data")
+        cbn = ChallengeBinaryNode.create(name="foo", cs=cs, blob="blob data", sha256="sum")
         job = AFLJob.create(cbn=cbn)
         test = farnsworth.models.Test.create(cbn=cbn, job=job, blob="XXX")
         test_xml = '''<?xml version="1.0" standalone="no" ?>

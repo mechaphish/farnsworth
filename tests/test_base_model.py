@@ -19,7 +19,7 @@ class TestBaseModel:
 
     def test_save(self):
         cs = ChallengeSet.create(name="foo")
-        cbn = ChallengeBinaryNode.create(name="foo", cs=cs)
+        cbn = ChallengeBinaryNode.create(name="foo", cs=cs, sha256="sum")
         job = Job(cbn=cbn, worker='basemodel')
 
         updated_at = job.updated_at
@@ -43,8 +43,8 @@ class TestBaseModel:
 
     def test_all(self):
         cs = ChallengeSet.create(name="foo")
-        cbn1 = ChallengeBinaryNode.create(name="foo", cs=cs)
-        cbn2 = ChallengeBinaryNode.create(name="bar", cs=cs)
+        cbn1 = ChallengeBinaryNode.create(name="foo", cs=cs, sha256="sum")
+        cbn2 = ChallengeBinaryNode.create(name="bar", cs=cs, sha256="sum")
 
         assert_equals(len(ChallengeBinaryNode.all()), 2)
         assert_equals(ChallengeBinaryNode.all()[0], cbn1)

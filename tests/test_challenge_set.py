@@ -30,10 +30,10 @@ class TestChallengeSet:
 
     def test_cbns_by_patch_type(self):
         cs = ChallengeSet.create(name="foo")
-        cbn = ChallengeBinaryNode.create(name="foo", cs=cs)
-        cbn1 = ChallengeBinaryNode.create(name="foo1", cs=cs, patch_type="patch0")
-        cbn2 = ChallengeBinaryNode.create(name="foo2", cs=cs, patch_type="patch0")
-        cbn3 = ChallengeBinaryNode.create(name="foo3", cs=cs, patch_type="patch1")
+        cbn = ChallengeBinaryNode.create(name="foo", cs=cs, sha256="sum")
+        cbn1 = ChallengeBinaryNode.create(name="foo1", cs=cs, patch_type="patch0", sha256="sum")
+        cbn2 = ChallengeBinaryNode.create(name="foo2", cs=cs, patch_type="patch0", sha256="sum")
+        cbn3 = ChallengeBinaryNode.create(name="foo3", cs=cs, patch_type="patch1", sha256="sum")
         # FIXME: use assert_in
         assert_equals(['patch0', 'patch1'], sorted(cs.cbns_by_patch_type().keys()))
         assert_equals([cbn1, cbn2], cs.cbns_by_patch_type()['patch0'])
@@ -41,9 +41,9 @@ class TestChallengeSet:
 
     def test_cbns_unpatched(self):
         cs = ChallengeSet.create(name="foo")
-        cbn = ChallengeBinaryNode.create(name="foo", cs=cs)
-        cbn_extra = ChallengeBinaryNode.create(name="foo1", cs=cs, patch_type="patch0")
-        cbn_extra_fixme_asap_please = ChallengeBinaryNode.create(name="foo1-team1", cs=cs)
+        cbn = ChallengeBinaryNode.create(name="foo", cs=cs, sha256="sum")
+        cbn_extra = ChallengeBinaryNode.create(name="foo1", cs=cs, patch_type="patch0", sha256="sum")
+        cbn_extra_fixme_asap_please = ChallengeBinaryNode.create(name="foo1-team1", cs=cs, sha256="sum")
 
         assert_equals(len(cs.cbns_unpatched), 1)
         assert_in(cbn, cs.cbns_unpatched)
