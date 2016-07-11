@@ -22,11 +22,11 @@ def main(args=None):
 
     if args[1:]:
         if args[1] == 'create':
-            LOG.debug("Setting up the database")
+            LOG.debug("Setting up database tables")
             create_tables()
             return 0
         elif args[1] == 'drop':
-            LOG.debug("Dropping the database")
+            LOG.debug("Dropping database tables")
             drop_tables()
             return 0
 
