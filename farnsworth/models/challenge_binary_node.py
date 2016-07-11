@@ -7,7 +7,7 @@ from __future__ import absolute_import, unicode_literals
 
 import os
 from datetime import datetime
-from peewee import CharField, BlobField, DateTimeField, ForeignKeyField
+from peewee import CharField, BlobField, DateTimeField, ForeignKeyField, FixedCharField
 
 from .base import BaseModel
 from .challenge_set import ChallengeSet
@@ -19,9 +19,11 @@ class ChallengeBinaryNode(BaseModel):
     root = ForeignKeyField('self', null=True, related_name='descendants')
     blob = BlobField(null=True)
     name = CharField()
-    cs = ForeignKeyField(ChallengeSet, db_column='cs_id', related_name='cbns')
+    cs = ForeignKeyField(ChallengeSet, related_name='cbns')
     submitted_at = DateTimeField(null=True)
     patch_type = CharField(null=True)
+    sha256 = FixedCharField(max_length=64)
+
 
     def delete_binary(self):
         """Remove binary file"""
@@ -47,7 +49,7 @@ class ChallengeBinaryNode(BaseModel):
     def _path(self):
         """Return path name"""
         filename = "{}-{}-{}".format(self.id, self.cs_id, self.name)
-        return os.path.join(os.path.expanduser("~"), filename) # FIXME: afl doesn't like /tmp
+        return os.path.join(os.path.expanduser("~"), filename)  # FIXME: afl doesn't like /tmp
 
     @property
     def path(self):
