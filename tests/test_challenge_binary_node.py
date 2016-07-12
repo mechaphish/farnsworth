@@ -104,7 +104,7 @@ class TestChallengeBinaryNode:
 
         job=AFLJob.create(cbn=cbn1)
 
-        crash=farnsworth.models.Crash.create(cbn=cbn1, job=job, blob="crash")
+        crash=farnsworth.models.Crash.create(cbn=cbn1, job=job, blob="crash", crash_pc=0x41414141)
 
         assert_true(cbn1.found_crash)
         assert_false(cbn2.found_crash)
