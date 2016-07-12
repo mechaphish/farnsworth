@@ -366,6 +366,55 @@ class NetworkPollJob(Job):
         return self._target_round_traffic
 
 
+class PovTesterJob(Job):
+    """
+    This represents a job for PovTester. PovTester requires a
+    Exploit ID, CS Fielding ID, IDS Fielding ID as an input.
+    """
+    worker_name = 'povtester'
+    worker = CharField(default=worker_name)
+
+    @property
+    def target_exploit(self):
+        """
+        Get the Exploit that needs to be tested.
+        :return: Exploit corresponding to this job.
+        """
+        from .exploit import Exploit
+        if not hasattr(self, '_target_exploit'):
+            self._target_exploit = None
+        self._target_exploit = self._target_exploit or Exploit.get(id=self.payload['exploit_id'])
+        return self._target_exploit
+
+    @property
+    def target_cs_fielding(self):
+        """
+        Get the CS Fielding associated with this Job.
+        :return: CS Fielding object.
+        """
+        # TODO: Need to fix this after CS fielding is merged.
+        """
+        if not hasattr(self, '_target_cs_fielding'):
+            self._target_cs_fielding = None
+        self._target_cs_fielding = self._target_cs_fielding or CSFielding.get??
+        """
+        return None
+
+    @property
+    def target_ids_fielding(self):
+        """
+        Get the IDS Fielding associated with this Job.
+        :return: IDS Fielding object.
+        """
+        # TODO: Need to fix this after IDS fielding is merged.
+        """
+        if not hasattr(self, '_target_ids_fielding'):
+            self._target_ids_fielding = None
+        self._target_ids_fielding = self._target_ids_fielding or IDSFielding.get??
+        """
+        return None
+
+
 class IDSJob(Job):
     """A IDSJob."""
     worker = CharField(default='ids')
