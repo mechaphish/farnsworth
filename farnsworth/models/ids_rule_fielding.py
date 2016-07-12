@@ -21,6 +21,6 @@ class IDSRuleFielding(BaseModel):
 
     ids_rule = ForeignKeyField(IDSRule, related_name='fieldings')
     team = ForeignKeyField(Team, related_name='ids_fieldings')
-    submission_round = ForeignKeyField(Round, related_name='ids_fieldings')
+    submission_round = ForeignKeyField(Round, related_name='ids_fieldings', null=True)
     available_round = ForeignKeyField(Round, related_name='ids_fieldings', null=True)
     fielded_round = ForeignKeyField(Round, related_name='ids_fieldings', null=True)
