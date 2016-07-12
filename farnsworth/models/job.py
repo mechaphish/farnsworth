@@ -27,7 +27,8 @@ def to_job_type(job):
                  FunctionIdentifierJob, IDSJob, NetworkPollCreatorJob, PatcherexJob,
                  PovFuzzer1Job, PovFuzzer2Job, RexJob, WereRabbitJob,
                  # Tester jobs
-                 TesterJob, CBTesterJob, NetworkPollSanitizerJob, PollCreatorJob, PovTester]
+                 TesterJob, CBTesterJob, NetworkPollSanitizerJob, PollCreatorJob,
+                 PovTesterJob]
 
     for job_type in job_types:
         if job.worker == job_type.worker.default:
