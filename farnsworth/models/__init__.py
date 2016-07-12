@@ -42,9 +42,9 @@ from .job import (
 
     # Tester jobs, inside VM inside Docker
     TesterJob,
+    CBTesterJob
     NetworkPollSanitizerJob,
     PollCreatorJob,
-    CBTesterJob
 )
 
 from .patch_score import PatchScore

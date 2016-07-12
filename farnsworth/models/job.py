@@ -38,6 +38,8 @@ def to_job_type(job):
     #    job.__class__ = AFLJob
     #elif job.worker == 'cache':
     #    job.__class__ = CacheJob
+    #elif job.worker == 'cb_round_tester':
+    #    job.__class__ = CBRoundTesterJob
     #elif job.worker == 'colorguard':
     #    job.__class__ = ColorGuardJob
     #elif job.worker == 'driller':
@@ -46,6 +48,8 @@ def to_job_type(job):
     #    job.__class__ = FunctionIdentifierJob
     #elif job.worker == 'ids':
     #    job.__class__ = IDSJob
+    #elif job.worker == 'network_poll_creator':
+    #    job.__class__ = NetworkPollCreatorJob
     #elif job.worker == 'patcherex':
     #    job.__class__ = PatcherexJob
     #elif job.worker == 'povfuzzer1':
@@ -60,12 +64,8 @@ def to_job_type(job):
     ## Tester jobs
     #elif job.worker == 'tester':
     #    job.__class__ = TesterJob
-    #elif job.worker == 'cb_round_tester':
-    #    job.__class__ = CBRoundTesterJob
     #elif job.worker == 'cb_tester':
     #    job.__class__ = CBTesterJob
-    #elif job.worker == 'network_poll_creator':
-    #    job.__class__ = NetworkPollCreatorJob
     #elif job.worker == 'network_poll_sanitizer':
     #    job.__class__ = NetworkPollSanitizerJob
     #elif job.worker == 'poll_creator':
