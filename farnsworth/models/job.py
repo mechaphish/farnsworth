@@ -182,16 +182,17 @@ class RexJob(Job):
     as an input. Here, we receive the testcase as a string in the
     `payload` field.
     """
-
     worker = CharField(default='rex')
 
     @property
     def input_crash(self):
         """Return input crash"""
         from .crash import Crash
+        # pylint: disable=attribute-defined-outside-init
         if not hasattr(self, '_input_crash'):
-            self._input_crash = None # pylint:disable=attribute-defined-outside-init
-        self._input_crash = self._input_crash or Crash.get(id=self.payload['crash_id']) # pylint:disable=attribute-defined-outside-init
+            self._input_crash = None
+        self._input_crash = self._input_crash or Crash.get(id=self.payload['crash_id'])
+        # pylint: enable=attribute-defined-outside-init
         return self._input_crash
 
 
