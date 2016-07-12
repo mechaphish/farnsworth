@@ -399,9 +399,11 @@ class IDSJob(Job):
 
 class FunctionIdentifierJob(Job):
     """A FunctionIdentifierJob."""
+
     worker = CharField(default='function_identifier')
 
 
 class CacheJob(Job):
     """A CacheJob."""
+
     worker = CharField(default='cache')
