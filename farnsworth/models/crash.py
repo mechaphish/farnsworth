@@ -3,7 +3,7 @@
 
 from __future__ import absolute_import, unicode_literals
 
-from peewee import BlobField, BooleanField, ForeignKeyField
+from peewee import BlobField, BooleanField, ForeignKeyField, BigIntegerField
 from ..peewee_extensions import EnumField
 
 from .base import BaseModel
@@ -36,6 +36,8 @@ class Crash(BaseModel):
                      enum_name='enum_crash_kind',
                      default='unclassified',
                      null=False)
+
+    crash_pc = BigIntegerField(null=False)
 
     class Meta:     # pylint: disable=no-init,too-few-public-methods,old-style-class
         db_table = 'crashes'
