@@ -240,13 +240,13 @@ class TesterJob(Job):
         return False
 
 
-class PollerJob(Job):
+class PollCreatorJob(TesterJob):
     """
     This represents a job for Poller. Poller requires a testcase
     as an input. Here, we receive the testcase id as a string in the
     `payload` field.
     """
-    worker = CharField(default='poller')
+    worker = CharField(default='poll_creator')
 
     @property
     def target_test(self):
@@ -261,14 +261,13 @@ class PollerJob(Job):
         return self._target_test
 
 
-class PollSanitizerJob(Job):
+class NetworkPollSanitizerJob(TesterJob):
     """
     This represents a job for NetworkPollSanitizer. NetworkPollSanitizer requires a
     untested network poll as an input. Here, we receive the raw_round_poll id as a string in the
     `payload` field.
     """
-    worker_name = 'pollsanitizer'
-    worker = CharField(default=worker_name)
+    worker = CharField(default='network_poll_sanitizer')
 
     @property
     def raw_poll(self):
@@ -285,12 +284,11 @@ class PollSanitizerJob(Job):
 
 class CBTesterJob(Job):
     """
-    This represents a job for cb_tester. cb_tester requires a
-    cs, patch_type and a poll as an input. Here, we receive the poll id, cs id and patch_type
-    as a strings in the `payload` field.
+    This represents a job for cb_tester. cb_tester requires a cs, patch_type and a poll as an input.
+    Here, we receive the poll id, cs id and patch_type as a strings in the `payload` field.
     """
-    worker_name = 'cbtester'
-    worker = CharField(default=worker_name)
+
+    worker = CharField(default='cb_tester')
 
     @property
     def poll(self):
@@ -307,7 +305,7 @@ class CBTesterJob(Job):
     @property
     def target_cs(self):
         """
-            Get the target CS to which this tester job belongs to.
+        Get the target CS to which this tester job belongs to.
         :return: ChallengeSet object
         """
         from .challenge_set import ChallengeSet
@@ -319,7 +317,7 @@ class CBTesterJob(Job):
     @property
     def patch_type(self):
         """
-            Get the patch type of the cb_tester job.
+        Get the patch type of the cb_tester job.
         :return: patch type as string.
         """
         if not hasattr(self, '_patch_type'):
@@ -338,8 +336,7 @@ class CBRoundTesterJob(Job):
     This job indicates that testing need to be performed for all binaries
     against all network polls created from that round.
     """
-    worker_name = 'cb_round_tester'
-    worker = CharField(default=worker_name)
+    worker = CharField(default='cb_round_tester')
 
     @property
     def target_round(self):
@@ -354,19 +351,19 @@ class CBRoundTesterJob(Job):
         return self._target_round
 
 
-class NetworkPollJob(Job):
-    """ A Job to create polls from captured network traffic.
-    """
-    worker = CharField(default='network_poll')
+class NetworkPollCreatorJob(Job):
+    """Create polls from captured network traffic."""
+    worker = CharField(default='network_poll_creator')
 
     @property
     def target_round_traffic(self):
-        """Return RawRoundTraffic to be processed by this job"""
-        if not hasattr(self, '_target_round_traffic'):
-            self._target_round_traffic = None # pylint:disable=attribute-defined-outside-init
+        """RawRoundTraffic that needs to be processed by this job."""
         # pylint:disable=attribute-defined-outside-init
+        if not hasattr(self, '_target_round_traffic'):
+            self._target_round_traffic = None
         from .raw_round_traffic import RawRoundTraffic
         self._target_round_traffic = self._target_round_traffic or RawRoundTraffic.find(self.payload['rrt_id'])
+        # pylint: enable=attribute-defined-outside-init
         return self._target_round_traffic
 
 

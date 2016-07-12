@@ -13,7 +13,7 @@ from .challenge_set import ChallengeSet
 """cb_poll_performances model"""
 
 
-class CbPollPerformance(BaseModel):
+class CBPollPerformance(BaseModel):
     """
     Performance of a CB against a poll.
     """
