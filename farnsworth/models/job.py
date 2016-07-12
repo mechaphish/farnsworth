@@ -219,6 +219,7 @@ class PovFuzzer2Job(RexJob):
 
 class PatcherexJob(Job):
     """A PatcherexJob."""
+
     worker = CharField(default='patcherex')
 
 
