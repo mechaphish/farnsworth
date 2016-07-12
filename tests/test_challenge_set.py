@@ -87,7 +87,7 @@ class TestChallengeSet:
         team = Team.create(name=Team.OUR_NAME)
         cs = ChallengeSet.create(name="foo")
         cs.rounds = [r1]
-        cbn = ChallengeBinaryNode.create(name="cbn", cs=cs)
+        cbn = ChallengeBinaryNode.create(name="cbn", cs=cs, sha256="sum1")
         job = RexJob.create(cbn=cbn)
         pov1 = Exploit.create(cbn=cbn, job=job, pov_type='type1', exploitation_method='rop',
                               blob="exploit", c_code="exploit it")

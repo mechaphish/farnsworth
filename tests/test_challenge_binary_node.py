@@ -86,7 +86,7 @@ class TestChallengeBinaryNode:
         r1 = Round.create(num=0, ends_at=NOW + timedelta(seconds=30))
         team = Team.create(name=Team.OUR_NAME)
         cs = ChallengeSet.create(name="foo")
-        cbn = ChallengeBinaryNode.create(name="foo", cs=cs, blob=BLOB)
+        cbn = ChallengeBinaryNode.create(name="foo", cs=cs, blob=BLOB, sha256="sum1")
 
         assert_equals(len(cbn.fieldings), 0)
 

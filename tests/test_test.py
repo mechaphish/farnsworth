@@ -44,8 +44,8 @@ class TestTest:
     def test_unsynced_testcases(self):
         cs1 = ChallengeSet.create(name="foo")
         cs2 = ChallengeSet.create(name="foo")
-        cbn1 = ChallengeBinaryNode.create(name="foo", cs=cs1, blob="blob data")
-        cbn2 = ChallengeBinaryNode.create(name="bar", cs=cs2, blob="blob data")
+        cbn1 = ChallengeBinaryNode.create(name="foo", cs=cs1, blob="blob data", sha256="sum1")
+        cbn2 = ChallengeBinaryNode.create(name="bar", cs=cs2, blob="blob data", sha256="sum2")
         job1 = AFLJob.create(cbn=cbn1)
         job2 = AFLJob.create(cbn=cbn2)
         job3 = AFLJob.create(cbn=cbn1)
