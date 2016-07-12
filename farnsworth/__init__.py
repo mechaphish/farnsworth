@@ -14,14 +14,14 @@ def tables():
                                    ChallengeSet, Crash, Evaluation, Exploit,
                                    Feedback, FuzzerStat, IDSRule, Job, Pcap,
                                    Score, Team, Test, TesterResult,
-                                   ValidPoll, CbPollPerformance, PatchScore,
+                                   ValidPoll, CBPollPerformance, PatchScore,
                                    RawRoundPoll, RawRoundTraffic,
                                    FunctionIdentity, TracerCache,
                                    ChallengeBinaryNodeFielding,
                                    ExploitFielding, IDSRuleFielding)
     models = [Round, Bitmap, ChallengeBinaryNode, ChallengeSet, Crash,
               Evaluation, Exploit, Feedback, FuzzerStat, IDSRule, Job, Pcap,
-              Score, Team, Test, TesterResult, ValidPoll, CbPollPerformance,
+              Score, Team, Test, TesterResult, ValidPoll, CBPollPerformance,
               PatchScore, RawRoundPoll, RawRoundTraffic, FunctionIdentity,
               TracerCache, ChallengeBinaryNodeFielding, ExploitFielding,
               IDSRuleFielding]

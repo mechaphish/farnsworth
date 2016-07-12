@@ -42,7 +42,7 @@ from .job import (
 
     # Tester jobs, inside VM inside Docker
     TesterJob,
-    CBTesterJob
+    CBTesterJob,
     NetworkPollSanitizerJob,
     PollCreatorJob,
 )
