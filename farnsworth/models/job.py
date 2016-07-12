@@ -9,6 +9,7 @@ from peewee import ForeignKeyField, DateTimeField, IntegerField, BooleanField, C
 from playhouse.postgres_ext import BinaryJSONField
 
 from .base import BaseModel
+from .challenge_set import ChallengeSet     # ForeignKey on TesterJob
 from .challenge_binary_node import ChallengeBinaryNode
 
 """Job models"""
@@ -229,28 +230,17 @@ class TesterJob(Job):
     """
 
     worker = CharField(default='tester')
+    cs = ForeignKeyField(ChallengeSet, related_name='tests')
 
-    @property
-    def target_test(self):
+    def mark_test_not_completed(self):
         """
-        Get the target test corresponding to this tester job
-        :return: Test corresponding to this job.
-        """
-        from .test import Test
-        if not hasattr(self, '_target_test'):
-            self._target_test = None # pylint:disable=attribute-defined-outside-init
-        self._target_test = self._target_test or Test.get(id=self.payload['test_id']) # pylint:disable=attribute-defined-outside-init
-        return self._target_test
+        Mark the provided job as not completed, that is as Failed.
 
-    def mark_testjob_not_completed(self):
-        """
-        Mark the provided job as not completed.
-        i.e Failed
-        :return: True if successful else false
+        :return: True if successful else False
         """
         if self.is_started():
-            self.started_at = DateTimeField(null=True)
-            self.completed_at = DateTimeField(null=True)
+            self.started_at = None
+            self.completed_at = None
             self.save()
             return True
         return False
@@ -262,6 +252,7 @@ class PollCreatorJob(TesterJob):
     as an input. Here, we receive the testcase id as a string in the
     `payload` field.
     """
+
     worker = CharField(default='poll_creator')
 
     @property
@@ -298,7 +289,7 @@ class NetworkPollSanitizerJob(TesterJob):
         return self._round_poll
 
 
-class CBTesterJob(Job):
+class CBTesterJob(TesterJob):
     """
     This represents a job for cb_tester. cb_tester requires a cs, patch_type and a poll as an input.
     Here, we receive the poll id, cs id and patch_type as a strings in the `payload` field.
