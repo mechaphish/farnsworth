@@ -21,45 +21,60 @@ def to_job_type(job):
     Note: This function *modifies* the input job, but it also returns the
     modified one for convience.
     """
-    # FIXME: sort alphabetically
-    if job.worker == 'afl':
-        job.__class__ = AFLJob
-    elif job.worker == 'driller':
-        job.__class__ = DrillerJob
-    elif job.worker == 'rex':
-        job.__class__ = RexJob
-    elif job.worker == 'patcherex':
-        job.__class__ = PatcherexJob
-    elif job.worker == 'tester':
-        job.__class__ = TesterJob
-    elif job.worker == 'ids':
-        job.__class__ = IDSJob
-    elif job.worker == 'were_rabbit':
-        job.__class__ = WereRabbitJob
-    elif job.worker == 'colorguard':
-        job.__class__ = ColorGuardJob
-    elif job.worker == 'povfuzzer1':
-        job.__class__ = PovFuzzer1Job
-    elif job.worker == 'povfuzzer2':
-        job.__class__ = PovFuzzer2Job
-    elif job.worker == 'network_poll':
-        job.__class__ = NetworkPollJob
-    elif job.worker == 'pollsanitizer':
-        job.__class__ = PollSanitizerJob
-    elif job.worker == 'cbtester':
-        job.__class__ = CBTesterJob
-    elif job.worker == 'cb_round_tester':
-        job.__class__ = CBRoundTesterJob
-    elif job.worker == 'function_identifier':
-        job.__class__ = FunctionIdentifierJob
-    elif job.worker == 'cache':
-        job.__class__ = CacheJob
+    job_types = [# Worker jobs, directly on Kubernetes
+                 AFLJob, CacheJob, ColorGuardJob, DrillerJob, FunctionIdentifierJob, IDSJob,
+                 NetworkPollCreatorJob, PatcherexJob, PovFuzzer1Job, PovFuzzer2Job, RexJob,
+                 WereRabbitJob,
+                 # Tester jobs
+                 TesterJob, CBRoundTesterJob, CBTesterJob, NetworkPollSanitizerJob, PollCreatorJob]
 
+    for job_type in job_types:
+        if job.worker == job_type.worker.default:
+            job.__class__ = job_type
+            return job
+
+    # Worker jobs, directly on Kubernetes
+    #if job.worker == 'afl':
+    #    job.__class__ = AFLJob
+    #elif job.worker == 'cache':
+    #    job.__class__ = CacheJob
+    #elif job.worker == 'colorguard':
+    #    job.__class__ = ColorGuardJob
+    #elif job.worker == 'driller':
+    #    job.__class__ = DrillerJob
+    #elif job.worker == 'function_identifier':
+    #    job.__class__ = FunctionIdentifierJob
+    #elif job.worker == 'ids':
+    #    job.__class__ = IDSJob
+    #elif job.worker == 'patcherex':
+    #    job.__class__ = PatcherexJob
+    #elif job.worker == 'povfuzzer1':
+    #    job.__class__ = PovFuzzer1Job
+    #elif job.worker == 'povfuzzer2':
+    #    job.__class__ = PovFuzzer2Job
+    #elif job.worker == 'rex':
+    #    job.__class__ = RexJob
+    #elif job.worker == 'were_rabbit':
+    #    job.__class__ = WereRabbitJob
+
+    ## Tester jobs
+    #elif job.worker == 'tester':
+    #    job.__class__ = TesterJob
+    #elif job.worker == 'cb_round_tester':
+    #    job.__class__ = CBRoundTesterJob
+    #elif job.worker == 'cb_tester':
+    #    job.__class__ = CBTesterJob
+    #elif job.worker == 'network_poll_creator':
+    #    job.__class__ = NetworkPollCreatorJob
+    #elif job.worker == 'network_poll_sanitizer':
+    #    job.__class__ = NetworkPollSanitizerJob
+    #elif job.worker == 'poll_creator':
+    #    job.__class__ = PollCreatorJob
     return job
 
 
 class Job(BaseModel):
-    """Base Job model"""
+    """Base Job model."""
     cbn = ForeignKeyField(ChallengeBinaryNode, null=True, related_name='jobs')
     completed_at = DateTimeField(null=True)
     limit_cpu = IntegerField(null=True, default=2)
