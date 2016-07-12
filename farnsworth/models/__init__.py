@@ -45,10 +45,12 @@ from .job import (
     CBTesterJob,
     NetworkPollSanitizerJob,
     PollCreatorJob,
+    PovTesterJob
 )
 
 from .patch_score import PatchScore
 from .pcap import Pcap
+from .pov_test_result import PovTestResult
 from .raw_round_poll import RawRoundPoll
 from .raw_round_traffic import RawRoundTraffic
 from .round import Round

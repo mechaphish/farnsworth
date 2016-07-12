@@ -23,11 +23,11 @@ def to_job_type(job):
     modified one for convience.
     """
     job_types = [# Worker jobs, directly on Kubernetes
-                 AFLJob, CacheJob, ColorGuardJob, DrillerJob, FunctionIdentifierJob, IDSJob,
-                 NetworkPollCreatorJob, PatcherexJob, PovFuzzer1Job, PovFuzzer2Job, RexJob,
-                 WereRabbitJob,
+                 AFLJob, CacheJob, CBRoundTesterJob, ColorGuardJob, DrillerJob,
+                 FunctionIdentifierJob, IDSJob, NetworkPollCreatorJob, PatcherexJob,
+                 PovFuzzer1Job, PovFuzzer2Job, RexJob, WereRabbitJob,
                  # Tester jobs
-                 TesterJob, CBRoundTesterJob, CBTesterJob, NetworkPollSanitizerJob, PollCreatorJob]
+                 TesterJob, CBTesterJob, NetworkPollSanitizerJob, PollCreatorJob, PovTester]
 
     for job_type in job_types:
         if job.worker == job_type.worker.default:
@@ -366,13 +366,63 @@ class NetworkPollCreatorJob(Job):
     @property
     def target_round_traffic(self):
         """RawRoundTraffic that needs to be processed by this job."""
-        # pylint:disable=attribute-defined-outside-init
+        # pylint: disable=attribute-defined-outside-init
         if not hasattr(self, '_target_round_traffic'):
             self._target_round_traffic = None
         from .raw_round_traffic import RawRoundTraffic
         self._target_round_traffic = self._target_round_traffic or RawRoundTraffic.find(self.payload['rrt_id'])
         # pylint: enable=attribute-defined-outside-init
         return self._target_round_traffic
+
+
+class PovTesterJob(TesterJob):
+    """
+    This represents a job for PovTester. PovTester requires a
+    Exploit ID, CS Fielding ID, IDS Fielding ID as an input.
+    """
+    worker = CharField(default='pov_tester')
+
+    @property
+    def target_exploit(self):
+        """
+        Get the Exploit that needs to be tested.
+        :return: Exploit corresponding to this job.
+        """
+        from .exploit import Exploit
+        # pylint: disable=attribute-defined-outside-init
+        if not hasattr(self, '_target_exploit'):
+            self._target_exploit = None
+        self._target_exploit = self._target_exploit or Exploit.get(id=self.payload['exploit_id'])
+        # pylint: enable=attribute-defined-outside-init
+        return self._target_exploit
+
+    @property
+    def target_cs_fielding(self):
+        """
+        Get the CS Fielding associated with this Job.
+        :return: CS Fielding object.
+        """
+        # TODO: Need to fix this after CS fielding is merged.
+        """
+        if not hasattr(self, '_target_cs_fielding'):
+            self._target_cs_fielding = None
+        self._target_cs_fielding = self._target_cs_fielding or CSFielding.get??
+        """
+        return None
+
+    @property
+    def target_ids_fielding(self):
+        """
+        Get the IDS Fielding associated with this Job.
+        :return: IDS Fielding object.
+        """
+        # TODO: Need to fix this after IDS fielding is merged.
+        """
+        if not hasattr(self, '_target_ids_fielding'):
+            self._target_ids_fielding = None
+        self._target_ids_fielding = self._target_ids_fielding or IDSFielding.get??
+        """
+        return None
 
 
 class IDSJob(Job):
