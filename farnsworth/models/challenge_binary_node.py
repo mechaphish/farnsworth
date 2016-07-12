@@ -22,8 +22,7 @@ class ChallengeBinaryNode(BaseModel):
     cs = ForeignKeyField(ChallengeSet, related_name='cbns')
     submitted_at = DateTimeField(null=True)
     patch_type = CharField(null=True)
-    sha256 = FixedCharField(max_length=64)
-
+    sha256 = FixedCharField(max_length=64, unique=True)
 
     def delete_binary(self):
         """Remove binary file"""

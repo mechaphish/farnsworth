@@ -43,8 +43,8 @@ class TestBaseModel:
 
     def test_all(self):
         cs = ChallengeSet.create(name="foo")
-        cbn1 = ChallengeBinaryNode.create(name="foo", cs=cs, sha256="sum")
-        cbn2 = ChallengeBinaryNode.create(name="bar", cs=cs, sha256="sum")
+        cbn1 = ChallengeBinaryNode.create(name="foo", cs=cs, sha256="sum1")
+        cbn2 = ChallengeBinaryNode.create(name="bar", cs=cs, sha256="sum2")
 
         assert_equals(len(ChallengeBinaryNode.all()), 2)
         assert_equals(ChallengeBinaryNode.all()[0], cbn1)
