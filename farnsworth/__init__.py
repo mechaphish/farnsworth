@@ -25,10 +25,7 @@ def tables():
               PatchScore, RawRoundPoll, RawRoundTraffic, FunctionIdentity,
               TracerCache, ChallengeBinaryNodeFielding, ExploitFielding,
               IDSRuleFielding]
-    through_models = [ChallengeSet.rounds,
-                      ChallengeBinaryNodeFielding.team,
-                      IDSRuleFielding.team,
-                      ExploitFielding.team]
+    through_models = [ChallengeSet.rounds]
     return models + [tm.get_through_model() for tm in through_models]
 
 def create_tables():

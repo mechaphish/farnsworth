@@ -120,9 +120,8 @@ class ChallengeBinaryNode(BaseModel):
         """All submitted patches."""
         from .challenge_binary_node_fielding import ChallengeBinaryNodeFielding
         from .team import Team
-        tm = ChallengeBinaryNodeFielding.team.get_through_model()
-        return self.descendants.join(ChallengeBinaryNodeFielding).join(tm).where(
-            (tm.team == Team.get_our()) &
+        return self.descendants.join(ChallengeBinaryNodeFielding).where(
+            (ChallengeBinaryNodeFielding.team == Team.get_our()) &
             (ChallengeBinaryNodeFielding.submission_round.is_null(False)))
 
     @property
