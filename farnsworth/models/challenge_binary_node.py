@@ -4,17 +4,12 @@
 from __future__ import absolute_import, unicode_literals
 
 import os
-from datetime import datetime
-
-from peewee import CharField, BlobField, DateTimeField, ForeignKeyField, FixedCharField, BooleanField
+from peewee import CharField, BlobField, ForeignKeyField, FixedCharField, BooleanField
 
 from .base import BaseModel
 from .challenge_set import ChallengeSet
 from .ids_rule import IDSRule
 # Imports for Exploit, Round, Exploit deferred to prevent circular imports.
-
-"""ChallengeBinaryNode model"""
-
 
 class ChallengeBinaryNode(BaseModel):
     """ChallengeBinaryNode model"""
@@ -25,6 +20,7 @@ class ChallengeBinaryNode(BaseModel):
     patch_type = CharField(null=True)
     sha256 = FixedCharField(max_length=64)
     ids_rule = ForeignKeyField(IDSRule, related_name='cbn', null=True) # needed for submitting patch+related ids rules
+
     is_blacklisted = BooleanField(default=False)  # needed for patch submission decision making.
 
     def delete_binary(self):
