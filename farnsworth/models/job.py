@@ -9,7 +9,7 @@ from peewee import ForeignKeyField, DateTimeField, IntegerField, BooleanField, C
 from playhouse.postgres_ext import BinaryJSONField
 
 from .base import BaseModel
-from .challenge_set import ChallengeSet     # ForeignKey on TesterJob
+from .challenge_set import ChallengeSet
 from .challenge_binary_node import ChallengeBinaryNode
 
 """Job models"""
@@ -77,6 +77,7 @@ def to_job_type(job):
 
 class Job(BaseModel):
     """Base Job model."""
+    cs = ForeignKeyField(ChallengeSet, null=True, related_name='tests')
     cbn = ForeignKeyField(ChallengeBinaryNode, null=True, related_name='jobs')
     completed_at = DateTimeField(null=True)
     limit_cpu = IntegerField(null=True, default=2)
