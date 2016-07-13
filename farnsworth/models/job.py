@@ -87,6 +87,8 @@ class Job(BaseModel):
     produced_output = BooleanField(null=True)
     started_at = DateTimeField(null=True)
     worker = CharField()
+    kvm_access = False
+    data_access = False
 
     class Meta:     # pylint:disable=no-init,missing-docstring,old-style-class
         def db_table_func(self):   # pylint:disable=no-self-argument,no-self-use
@@ -232,7 +234,8 @@ class TesterJob(Job):
     """
 
     worker = CharField(default='tester')
-    cs = ForeignKeyField(ChallengeSet, related_name='tests')
+    kvm_access = True
+    data_access = True
 
     def mark_test_not_completed(self):
         """
