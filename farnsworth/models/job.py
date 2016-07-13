@@ -35,43 +35,6 @@ def to_job_type(job):
             job.__class__ = job_type
             return job
 
-    # Worker jobs, directly on Kubernetes
-    #if job.worker == 'afl':
-    #    job.__class__ = AFLJob
-    #elif job.worker == 'cache':
-    #    job.__class__ = CacheJob
-    #elif job.worker == 'cb_round_tester':
-    #    job.__class__ = CBRoundTesterJob
-    #elif job.worker == 'colorguard':
-    #    job.__class__ = ColorGuardJob
-    #elif job.worker == 'driller':
-    #    job.__class__ = DrillerJob
-    #elif job.worker == 'function_identifier':
-    #    job.__class__ = FunctionIdentifierJob
-    #elif job.worker == 'ids':
-    #    job.__class__ = IDSJob
-    #elif job.worker == 'network_poll_creator':
-    #    job.__class__ = NetworkPollCreatorJob
-    #elif job.worker == 'patcherex':
-    #    job.__class__ = PatcherexJob
-    #elif job.worker == 'povfuzzer1':
-    #    job.__class__ = PovFuzzer1Job
-    #elif job.worker == 'povfuzzer2':
-    #    job.__class__ = PovFuzzer2Job
-    #elif job.worker == 'rex':
-    #    job.__class__ = RexJob
-    #elif job.worker == 'were_rabbit':
-    #    job.__class__ = WereRabbitJob
-
-    ## Tester jobs
-    #elif job.worker == 'tester':
-    #    job.__class__ = TesterJob
-    #elif job.worker == 'cb_tester':
-    #    job.__class__ = CBTesterJob
-    #elif job.worker == 'network_poll_sanitizer':
-    #    job.__class__ = NetworkPollSanitizerJob
-    #elif job.worker == 'poll_creator':
-    #    job.__class__ = PollCreatorJob
     return job
 
 
