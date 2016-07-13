@@ -98,7 +98,7 @@ class ChallengeBinaryNode(BaseModel):
 
     @property
     def found_crash(self):
-        return bool(len(self.crashes))
+        return any(True for _ in self.crashes)
 
     @property
     def completed_caching(self):
