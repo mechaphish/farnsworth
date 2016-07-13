@@ -9,6 +9,7 @@ from playhouse.postgres_ext import PostgresqlExtDatabase    # For JSONB type
 
 """Database connection configurations."""
 
+
 master_db = PostgresqlExtDatabase( # pylint: disable=invalid-name
     os.environ['POSTGRES_DATABASE_NAME'],
     user=os.environ['POSTGRES_DATABASE_USER'],
@@ -19,6 +20,7 @@ master_db = PostgresqlExtDatabase( # pylint: disable=invalid-name
     autocommit=True,
     autorollback=True,
 )
+
 
 if os.environ.get('POSTGRES_USE_SLAVES') is not None:
     slave_db = PostgresqlExtDatabase( # pylint: disable=invalid-name
@@ -32,11 +34,13 @@ if os.environ.get('POSTGRES_USE_SLAVES') is not None:
 else:
     slave_db = None              # pylint: disable=invalid-name
 
+
 def connect_dbs():
     """Open connection to databases"""
     for database in (master_db, slave_db):
         if database is not None:
             database.connect()
+
 
 def close_dbs():
     """Close connection to databases"""

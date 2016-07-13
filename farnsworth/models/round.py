@@ -18,11 +18,13 @@ class Round(BaseModel):
     @classmethod
     def current_round(cls):
         rounds = cls.select().order_by(cls.created_at.desc())
-        if len(rounds) > 0:
+        if rounds:
             return rounds[0]
 
     @classmethod
     def at_timestamp(cls, timestamp):
-        rounds = cls.select().where(cls.created_at < timestamp).order_by(cls.created_at.desc())
+        DeprecationWarning("This method is useless. It will be removed soon.")
+        rounds = cls.select().where(cls.created_at < timestamp) \
+                    .order_by(cls.created_at.desc()).limit(1)
         if rounds:
             return rounds[0]

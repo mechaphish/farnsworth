@@ -15,7 +15,7 @@ from .round_related_model import RoundRelatedModel
 
 class Feedback(BaseModel, RoundRelatedModel):
     """Feedback model"""
-    round = ForeignKeyField(Round)
+    round = ForeignKeyField(Round, related_name='feedbacks')
     polls = BinaryJSONField()
     cbs = BinaryJSONField()
     povs = BinaryJSONField()

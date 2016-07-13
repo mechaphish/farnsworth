@@ -1,16 +1,22 @@
-"""Pcap model"""
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
 
-from peewee import * # pylint:disable=wildcard-import,unused-wildcard-import
+from __future__ import absolute_import, unicode_literals
 
-from ..peewee_extensions import EnumField
+from peewee import ForeignKeyField
+
 from .base import BaseModel
 from .challenge_binary_node import ChallengeBinaryNode
+from ..peewee_extensions import EnumField
 from .round import Round
 from .team import Team
 
+"""Pcap model"""
+
+
 class Pcap(BaseModel):
     """PCAP model"""
-    cbn = ForeignKeyField(ChallengeBinaryNode, db_column='cbn_id', related_name='pcaps')
+    cbn = ForeignKeyField(ChallengeBinaryNode, related_name='pcaps')
     round = ForeignKeyField(Round, related_name='pcaps')
     team = ForeignKeyField(Team, related_name='pcaps')
     type = EnumField(choices=['unknown', 'test', 'crash', 'exploit'],

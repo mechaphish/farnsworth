@@ -1,33 +1,27 @@
-"""IDSRule model"""
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
+
+from __future__ import absolute_import, unicode_literals
 
 from datetime import datetime
-from peewee import * #pylint:disable=wildcard-import,unused-wildcard-import
+
+from peewee import ForeignKeyField, TextField
 
 from .base import BaseModel
 from .challenge_set import ChallengeSet
-from .round import Round
+
+"""IDSRule model"""
+
 
 class IDSRule(BaseModel):
     """IDSRule model"""
-    cs = ForeignKeyField(ChallengeSet, db_column='cs_id', related_name='ids_rules')
+    cs = ForeignKeyField(ChallengeSet, related_name='ids_rules')
     rules = TextField()
-    submitted_at = DateTimeField(null=True)
 
     def submit(self):
-        """Save submission timestamp"""
-        self.submitted_at = datetime.now()
-        self.save()
-
-    @property
-    def submissions(self):
-        """Return list of submissions"""
-        if self.submitted_at is not None:
-            round_ = Round.at_timestamp(self.submitted_at)
-            return [{
-                'id': self.id,
-                'round': round_.num,
-                'name': self.rules[:80],
-                'submitted_at': str(self.submitted_at),
-            }]
-        else:
-            return []
+        """Save submission at current round"""
+        from .ids_rule_fielding import IDSRuleFielding
+        from .round import Round
+        from .team import Team
+        irf = IDSRuleFielding.create(ids_rule=self, submission_round=Round.current_round(),
+                                     team=Team.get_our())

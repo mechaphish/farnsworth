@@ -3,25 +3,25 @@
 
 from __future__ import absolute_import, unicode_literals
 
-"""ChallengeBinaryNode model"""
-
 import os
 from datetime import datetime
-from peewee import CharField, BlobField, DateTimeField, ForeignKeyField
+from peewee import CharField, BlobField, DateTimeField, ForeignKeyField, FixedCharField
 
 from .base import BaseModel
 from .challenge_set import ChallengeSet
-from .round import Round
-# Imports for Test and Exploit deferred to prevent circular imports.
+# Imports for Exploit, Round, Exploit deferred to prevent circular imports.
+
+"""ChallengeBinaryNode model"""
+
 
 class ChallengeBinaryNode(BaseModel):
     """ChallengeBinaryNode model"""
     root = ForeignKeyField('self', null=True, related_name='descendants')
     blob = BlobField(null=True)
     name = CharField()
-    cs = ForeignKeyField(ChallengeSet, db_column='cs_id', related_name='cbns')
-    submitted_at = DateTimeField(null=True)
+    cs = ForeignKeyField(ChallengeSet, related_name='cbns')
     patch_type = CharField(null=True)
+    sha256 = FixedCharField(max_length=64, unique=True)
 
     def delete_binary(self):
         """Remove binary file"""
@@ -30,11 +30,6 @@ class ChallengeBinaryNode(BaseModel):
 
     def __del__(self):
         self.delete_binary()
-
-    def submit(self):
-        """Save submission timestamp"""
-        self.submitted_at = datetime.now()
-        self.save()
 
     @property
     def fuzzer_stat(self):
@@ -47,7 +42,7 @@ class ChallengeBinaryNode(BaseModel):
     def _path(self):
         """Return path name"""
         filename = "{}-{}-{}".format(self.id, self.cs_id, self.name)
-        return os.path.join(os.path.expanduser("~"), filename) # FIXME: afl doesn't like /tmp
+        return os.path.join(os.path.expanduser("~"), filename)  # FIXME: afl doesn't like /tmp
 
     @property
     def path(self):
@@ -85,6 +80,14 @@ class ChallengeBinaryNode(BaseModel):
         from .test import Test
         return self.tests.where(Test.colorguard_traced == False)
 
+    def submit(self):
+        """Save submission at current round"""
+        from .challenge_binary_node_fielding import ChallengeBinaryNodeFielding
+        from .round import Round
+        from .team import Team
+        cbnf = ChallengeBinaryNodeFielding.create(cbn=self, submission_round=Round.current_round(),
+                                                  team=Team.get_our())
+
     @property
     def symbols(self):
         symbols = dict()
@@ -107,19 +110,19 @@ class ChallengeBinaryNode(BaseModel):
 
     @property
     def unsubmitted_patches(self):
-        """Rertun all unsubmitted patches"""
-        return self.descendants.where(self.__class__.submitted_at.is_null(True))
+        """All unsubmitted patches."""
+        from .challenge_binary_node_fielding import ChallengeBinaryNodeFielding
+        return self.descendants.where(self.__class__.id.not_in(
+            ChallengeBinaryNodeFielding.select(ChallengeBinaryNodeFielding.cbn)))
 
     @property
     def submitted_patches(self):
-        """Rertun all submitted patches"""
-        return self.descendants.where(self.__class__.submitted_at.is_null(False))
-
-    @property
-    def unsubmitted_exploits(self):
-        """Return exploits not submitted"""
-        from .exploit import Exploit    # Preventing circular import
-        return self.exploits.where(Exploit.submitted_at.is_null(True))
+        """All submitted patches."""
+        from .challenge_binary_node_fielding import ChallengeBinaryNodeFielding
+        from .team import Team
+        return self.descendants.join(ChallengeBinaryNodeFielding).where(
+            (ChallengeBinaryNodeFielding.team == Team.get_our()) &
+            (ChallengeBinaryNodeFielding.submission_round.is_null(False)))
 
     @property
     def all_tests_for_this_cb(self):
@@ -136,17 +139,3 @@ class ChallengeBinaryNode(BaseModel):
     def all_descendants(cls):
         """Return all descendant nodes (patches)"""
         return cls.select().where(cls.root.is_null(False))
-
-    @property
-    def submissions(self):
-        """Return list of submissions"""
-        if self.submitted_at is not None:
-            round_ = Round.at_timestamp(self.submitted_at)
-            return [{
-                'id': self.id,
-                'round': round_.num,
-                'name': self.name,
-                'submitted_at': str(self.submitted_at),
-            }]
-        else:
-            return []

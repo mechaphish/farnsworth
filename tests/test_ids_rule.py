@@ -3,14 +3,16 @@
 
 from __future__ import absolute_import, unicode_literals
 
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
 import time
 
 from nose.tools import *
 
 from . import setup_each, teardown_each
-from farnsworth.models import ChallengeSet, IDSRule
+from farnsworth.models import ChallengeSet, IDSRule, Round, Team
+
+NOW = datetime.now()
 
 
 class TestIDSRule:
@@ -21,9 +23,13 @@ class TestIDSRule:
         teardown_each()
 
     def test_submit(self):
-        cs = ChallengeSet.create(name = "foo")
-        ids = IDSRule.create(cs = cs, rules = "aaa")
+        Round.create(num=0, ends_at=NOW + timedelta(seconds=30))
+        Team.create(name=Team.OUR_NAME)
+        cs = ChallengeSet.create(name="foo")
+        ids = IDSRule.create(cs=cs, rules="aaa")
 
-        assert_is_none(ids.submitted_at)
+        assert_equals(len(ids.fieldings), 0)
         ids.submit()
-        assert_is_instance(ids.submitted_at, datetime)
+        assert_equals(len(ids.fieldings), 1)
+        assert_equals(ids.fieldings.get().team, Team.get_our())
+        assert_equals(ids.fieldings.get().submission_round, Round.current_round())

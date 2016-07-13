@@ -1,14 +1,17 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
-"""Job models"""
+
+from __future__ import absolute_import, unicode_literals
 
 import datetime
 
-from peewee import *    # pylint:disable=wildcard-import,unused-wildcard-import
+from peewee import ForeignKeyField, DateTimeField, IntegerField, BooleanField, CharField
 from playhouse.postgres_ext import BinaryJSONField
 
 from .base import BaseModel
 from .challenge_binary_node import ChallengeBinaryNode
+
+"""Job models"""
 
 
 def to_job_type(job):
@@ -18,6 +21,7 @@ def to_job_type(job):
     Note: This function *modifies* the input job, but it also returns the
     modified one for convience.
     """
+    # FIXME: sort alphabetically
     if job.worker == 'afl':
         job.__class__ = AFLJob
     elif job.worker == 'driller':
@@ -56,7 +60,7 @@ def to_job_type(job):
 
 class Job(BaseModel):
     """Base Job model"""
-    cbn = ForeignKeyField(ChallengeBinaryNode, null=True, db_column='cbn_id', related_name='jobs')
+    cbn = ForeignKeyField(ChallengeBinaryNode, null=True, related_name='jobs')
     completed_at = DateTimeField(null=True)
     limit_cpu = IntegerField(null=True, default=2)
     limit_memory = IntegerField(null=True, default=4096)    # MiB
@@ -379,9 +383,11 @@ class IDSJob(Job):
         self._cs = self._cs or ChallengeSet.find(self.payload.get('cs_id')) # pylint:disable=attribute-defined-outside-init
         return self._cs
 
+
 class FunctionIdentifierJob(Job):
     """A FunctionIdentifierJob."""
     worker = CharField(default='function_identifier')
+
 
 class CacheJob(Job):
     """A CacheJob."""

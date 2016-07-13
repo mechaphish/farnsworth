@@ -6,10 +6,11 @@ from __future__ import absolute_import, unicode_literals
 from datetime import datetime
 import os
 
-from peewee import CharField
+from peewee import CharField, IntegerField
+from playhouse.fields import ManyToManyField
 
 from .base import BaseModel
-from .feedback import Feedback
+from .round import Round
 
 """ChallengeSet model"""
 
@@ -17,14 +18,49 @@ from .feedback import Feedback
 class ChallengeSet(BaseModel):
     """ChallengeSet model"""
     name = CharField()
+    rounds = ManyToManyField(Round, related_name='cs')
+
+    @classmethod
+    def fielded_in_round(cls, round_=None):
+        """Return all CS that are fielded in specified round.
+
+        Args:
+          round_: Round model instance. If none last round is used.
+        """
+        if round_ is None:
+            round_ = Round.current_round()
+        tm = cls.rounds.get_through_model()
+        return cls.select().join(tm).where(tm.round == round_)
 
     @property
     def unsubmitted_ids_rules(self):
         """Return IDS rules not submitted"""
         from .ids_rule import IDSRule
-        return self.ids_rules.where(IDSRule.submitted_at.is_null(True))
+        from .ids_rule_fielding import IDSRuleFielding
+        IDSRF = IDSRuleFielding
+        idsr_submitted_ids = [idsrf.ids_rule_id for idsrf in IDSRF.all()]
+        if not idsr_submitted_ids:
+            return self.ids_rules
+        else:
+            return self.ids_rules.where(IDSRule.id.not_in(idsr_submitted_ids))
+
+    @property
+    def unsubmitted_exploits(self):
+        """Return exploits not submitted"""
+        from .exploit import Exploit
+        from .exploit_fielding import ExploitFielding
+        from .challenge_binary_node import ChallengeBinaryNode
+        exp_fielding_ids = [expf.exploit_id for expf in ExploitFielding.all()]
+        if not exp_fielding_ids:
+            return Exploit.select().join(ChallengeBinaryNode).where(
+                ChallengeBinaryNode.cs == self)
+        else:
+            return Exploit.select().join(ChallengeBinaryNode).where(
+                (ChallengeBinaryNode.cs == self) &
+                Exploit.id.not_in(exp_fielding_ids))
 
     def _feedback(self, name):
+        from .feedback import Feedback
         for fb in Feedback.all():
             for cs in getattr(fb, name):
                 if cs['csid'] == self.name:

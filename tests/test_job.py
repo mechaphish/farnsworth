@@ -21,7 +21,7 @@ class TestJob:
 
     def test_to_job_type(self):
         cs = ChallengeSet.create(name="foo")
-        cbn = ChallengeBinaryNode.create(name="foo", cs=cs)
+        cbn = ChallengeBinaryNode.create(name="foo", cs=cs, sha256="sum")
         afl_job = AFLJob.create(cbn=cbn)
         driller_job = DrillerJob.create(cbn=cbn)
         patcherex_job = PatcherexJob.create(cbn=cbn)
@@ -41,7 +41,7 @@ class TestJob:
             worker = CharField(default='generic_job')
 
         cs = ChallengeSet.create(name="foo")
-        cbn = ChallengeBinaryNode.create(name="foo", cs=cs)
+        cbn = ChallengeBinaryNode.create(name="foo", cs=cs, sha256="sum")
         job = GenericJob(cbn=cbn)
         assert_raises(GenericJob.DoesNotExist, GenericJob.get, GenericJob.cbn == cbn)
 
@@ -59,7 +59,7 @@ class TestJob:
 
     def test_get_or_create(self):
         cs = ChallengeSet.create(name="foo")
-        cbn = ChallengeBinaryNode.create(name="foo", cs=cs)
+        cbn = ChallengeBinaryNode.create(name="foo", cs=cs, sha256="sum")
         job1, job1_created = RexJob.get_or_create(cbn=cbn, payload={'something': 'xxx'})
         job2, job2_created = AFLJob.get_or_create(cbn=cbn, payload={'something': 'xxx'})
 
