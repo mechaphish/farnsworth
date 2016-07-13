@@ -102,3 +102,7 @@ class ChallengeSet(BaseModel):
             (CBNF.team == Team.get_our()) & \
             ((CBNF.available_round == first_round) | (CBNF.fielded_round == first_round))
         )
+
+    @property
+    def is_multi_cbn(self):
+        return len(self.cbns_unpatched) > 1

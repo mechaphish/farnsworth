@@ -115,3 +115,23 @@ class TestChallengeSet:
         assert_in(cbn, cs.cbns_unpatched)
         assert_not_in(cbn_patched, cs.cbns_unpatched)
         assert_not_in(cbn_other_team, cs.cbns_unpatched)
+
+    def test_is_multi_cbn(self):
+        r0 = Round.create(num=0)
+        our_team = Team.create(name=Team.OUR_NAME)
+        # CS single binary
+        cs = ChallengeSet.create(name="single")
+        cs.rounds = [r0]
+        cbn = ChallengeBinaryNode.create(name="foo", cs=cs, sha256="sum1")
+        # CS multi binary
+        cs_multi = ChallengeSet.create(name="multi")
+        cs_multi.rounds = [r0]
+        cbn1 = ChallengeBinaryNode.create(name="foo1", cs=cs_multi, sha256="sum2")
+        cbn2 = ChallengeBinaryNode.create(name="foo2", cs=cs_multi, sha256="sum3")
+        # create fielding entries
+        ChallengeBinaryNodeFielding.create(cbn=cbn, team=our_team, available_round=r0)
+        ChallengeBinaryNodeFielding.create(cbn=cbn1, team=our_team, available_round=r0)
+        ChallengeBinaryNodeFielding.create(cbn=cbn2, team=our_team, available_round=r0)
+
+        assert_false(cs.is_multi_cbn)
+        assert_true(cs_multi.is_multi_cbn)
