@@ -63,7 +63,7 @@ class ChallengeBinaryNode(BaseModel):
             return self.path
         new_fname = prefix_str + os.path.basename(self._path)
         prefixed_path = os.path.join(os.path.dirname(self._path), new_fname)
-        with open(prefixed_path, 'wb') as fb:
+        with open(prefixed_path, 'wb') as fp:
             fp.write(self.blob)
         os.chmod(prefixed_path, 0o777)
         return prefixed_path
