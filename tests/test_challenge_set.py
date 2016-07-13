@@ -10,8 +10,8 @@ import os
 from nose.tools import *
 
 from . import setup_each, teardown_each
-from farnsworth.models import (ChallengeBinaryNode, ChallengeSet, Exploit,
-                               IDSRule, RexJob, Round, Team)
+from farnsworth.models import (ChallengeBinaryNode, ChallengeBinaryNodeFielding,
+                               ChallengeSet, Exploit, IDSRule, RexJob, Round, Team)
 
 
 class TestChallengeSet:
@@ -49,17 +49,6 @@ class TestChallengeSet:
         assert_equals(['patch0', 'patch1'], sorted(cs.cbns_by_patch_type().keys()))
         assert_equals([cbn1, cbn2], cs.cbns_by_patch_type()['patch0'])
         assert_equals([cbn3], cs.cbns_by_patch_type()['patch1'])
-
-    def test_cbns_unpatched(self):
-        cs = ChallengeSet.create(name="foo")
-        cbn = ChallengeBinaryNode.create(name="foo", cs=cs, sha256="sum1")
-        cbn_extra = ChallengeBinaryNode.create(name="foo1", cs=cs, patch_type="patch0", sha256="sum2")
-        cbn_extra_fixme_asap_please = ChallengeBinaryNode.create(name="foo1-team1", cs=cs, sha256="sum3")
-
-        assert_equals(len(cs.cbns_unpatched), 1)
-        assert_in(cbn, cs.cbns_unpatched)
-        assert_not_in(cbn_extra, cs.cbns_unpatched)
-        assert_not_in(cbn_extra_fixme_asap_please, cs.cbns_unpatched)
 
     def test_unsubmitted_ids_rules(self):
         r1 = Round.create(num=0)
@@ -107,3 +96,22 @@ class TestChallengeSet:
         assert_equals(len(cs.unsubmitted_exploits), 0)
         assert_not_in(pov1, cs.unsubmitted_exploits)
         assert_not_in(pov2, cs.unsubmitted_exploits)
+
+    def test_cbns_unpatched(self):
+        r0 = Round.create(num=0)
+        r1 = Round.create(num=1)
+        our_team = Team.create(name=Team.OUR_NAME)
+        other_team = Team.create(name="opponent")
+        cs = ChallengeSet.create(name="foo")
+        cs.rounds = [r0, r1]
+        cbn = ChallengeBinaryNode.create(name="foo", cs=cs, sha256="sum1")
+        cbn_patched = ChallengeBinaryNode.create(name="foo", cs=cs, patch_type="patch0", sha256="sum2")
+        cbn_other_team = ChallengeBinaryNode.create(name="foo", cs=cs, sha256="sum3")
+        ChallengeBinaryNodeFielding.create(cbn=cbn, team=our_team, available_round=r0)
+        ChallengeBinaryNodeFielding.create(cbn=cbn_patched, team=our_team, submission_round=r0)
+        ChallengeBinaryNodeFielding.create(cbn=cbn_other_team, team=other_team, available_round=r0)
+
+        assert_equals(len(cs.cbns_unpatched), 1)
+        assert_in(cbn, cs.cbns_unpatched)
+        assert_not_in(cbn_patched, cs.cbns_unpatched)
+        assert_not_in(cbn_other_team, cs.cbns_unpatched)
