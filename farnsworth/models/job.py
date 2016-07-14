@@ -35,7 +35,7 @@ def to_job_type(job):
             job.__class__ = job_type
             return job
 
-    return job
+    raise TypeError("Invalid Job object passed")
 
 
 class Job(BaseModel):
