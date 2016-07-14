@@ -19,7 +19,7 @@ class PovTestResult(BaseModel):
     """
     exploit = ForeignKeyField(Exploit, related_name='pov_test_results')
     cs_fielding = ForeignKeyField(ChallengeSetFielding, related_name='cs_fielding')
-    ids_fielding = ForeignKeyField(IDSRuleFielding, related_name='ids_fielding')
+    ids_fielding = ForeignKeyField(IDSRuleFielding, related_name='ids_fielding', null=True)
     # Number of times Pov Succeeded out of 10 throws.
     num_success = IntegerField(default=0)
     # Feedback from Pov Testing, this could be used by Pov Fuzzer.
