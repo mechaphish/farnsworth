@@ -74,7 +74,8 @@ def create_tables():
     LOG.debug("Creating tables...")
     master_db.create_tables(tables(), safe=True)
 
-    from farnsworth.models import ChallengeBinaryNode
+    from farnsworth.models import (ChallengeBinaryNode,
+                                   ChallengeSetFielding)
     master_db.create_index(ChallengeBinaryNode, ['sha256'], unique=True)
     master_db.create_index(ChallengeSetFielding, ['cs', 'team', 'submission_round'], unique=True)
     master_db.create_index(ChallengeSetFielding, ['cs', 'team', 'available_round'], unique=True)
