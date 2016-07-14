@@ -22,7 +22,7 @@ class ChallengeBinaryNode(BaseModel):
     name = CharField()
     cs = ForeignKeyField(ChallengeSet, related_name='cbns')
     patch_type = CharField(null=True)
-    sha256 = FixedCharField(max_length=64, unique=True)
+    sha256 = FixedCharField(max_length=64, unique=True) # this index shit doesn't work, we create it manually
 
     def delete_binary(self):
         """Remove binary file"""
