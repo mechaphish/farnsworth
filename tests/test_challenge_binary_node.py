@@ -82,28 +82,6 @@ class TestChallengeBinaryNode:
         assert_equals(len(ChallengeBinaryNode.all_descendants()), 1)
         assert_in(cbn3, ChallengeBinaryNode.all_descendants())
 
-    def test_submit(self):
-        r1 = Round.create(num=0, ends_at=NOW + timedelta(seconds=30))
-        team = Team.create(name=Team.OUR_NAME)
-        cs = ChallengeSet.create(name="foo")
-        cbn = ChallengeBinaryNode.create(name="foo", cs=cs, blob=BLOB, sha256="sum1")
-
-        assert_equals(len(cbn.fieldings), 0)
-
-        cbn.submit()
-        assert_equals(len(cbn.fieldings), 1)
-
-        assert_equals(cbn.fieldings.get().team, Team.get_our())
-        assert_equals(cbn.fieldings.get().submission_round, Round.current_round())
-        assert_is_none(cbn.fieldings.get().available_round)
-        assert_is_none(cbn.fieldings.get().fielded_round)
-
-        cbn.delete_instance(recursive=True)
-        cs.delete_instance(recursive=True)
-        team.delete_instance(recursive=True)
-        r1.delete_instance(recursive=True)
-
-
     def test_submitted_and_unsubmitted_patches(self):
         r0 = Round.create(num=0, ends_at=NOW + timedelta(seconds=30))
         team = Team.create(name=Team.OUR_NAME)
@@ -118,11 +96,7 @@ class TestChallengeBinaryNode:
         assert_in(patch2, cbn.unsubmitted_patches)
         assert_equals(len(cbn.submitted_patches), 0)
 
-        patch1.submit()
-        assert_equals(len(cbn.unsubmitted_patches), 1)
-        assert_equals(len(cbn.submitted_patches), 1)
-
-        patch2.submit()
+        cs.submit_patches(patch1, patch2)
         assert_equals(len(cbn.submitted_patches), 2)
         assert_equals(len(cbn.unsubmitted_patches), 0)
 

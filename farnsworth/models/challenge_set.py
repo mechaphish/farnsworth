@@ -32,8 +32,8 @@ class ChallengeSet(BaseModel):
         tm = cls.rounds.get_through_model()
         return cls.select().join(tm).where(tm.round == round_)
 
-    def submit_cbns(self, *cbns):
-        """Save submission at current round"""
+    def submit_patches(self, *cbns):
+        """Save patches submission at current round"""
         from .challenge_set_fielding import ChallengeSetFielding
         from .team import Team
         if not cbns:
