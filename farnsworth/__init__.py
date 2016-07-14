@@ -31,6 +31,8 @@ def tables():
 def create_tables():
     LOG.debug("Creating tables...")
     master_db.create_tables(tables(), safe=True)
+
+    from farnsworth.models import ChallengeBinaryNode
     master_db.create_index(ChallengeBinaryNode, ['sha256'], unique=True)
 
 def drop_tables():
