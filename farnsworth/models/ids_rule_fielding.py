@@ -6,7 +6,7 @@ from __future__ import absolute_import, unicode_literals
 from datetime import datetime
 import os
 
-from peewee import ForeignKeyField
+from peewee import FixedCharField, ForeignKeyField
 
 from .base import BaseModel
 from .ids_rule import IDSRule
@@ -24,3 +24,4 @@ class IDSRuleFielding(BaseModel):
     submission_round = ForeignKeyField(Round, related_name='ids_fieldings', null=True)
     available_round = ForeignKeyField(Round, related_name='ids_fieldings', null=True)
     fielded_round = ForeignKeyField(Round, related_name='ids_fieldings', null=True)
+    sha256 = FixedCharField(max_length=64, null=True) # FIXME
