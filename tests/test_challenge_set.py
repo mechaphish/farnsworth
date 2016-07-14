@@ -135,4 +135,3 @@ class TestChallengeSet:
 
         assert_false(cs.is_multi_cbn)
         assert_true(cs_multi.is_multi_cbn)
->>>>>>> dacd9e93256294f75f3ab8c2053e89db4417903a
