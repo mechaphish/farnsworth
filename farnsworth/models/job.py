@@ -25,7 +25,7 @@ def to_job_type(job):
     job_types = [# Worker jobs, directly on Kubernetes
                  AFLJob, CacheJob, CBRoundTesterJob, ColorGuardJob, DrillerJob,
                  FunctionIdentifierJob, IDSJob, NetworkPollCreatorJob, PatcherexJob,
-                 PovFuzzer1Job, PovFuzzer2Job, RexJob, WereRabbitJob,
+                 PovFuzzer1Job, PovFuzzer2Job, RexJob, RopCacheJob, WereRabbitJob,
                  # Tester jobs
                  TesterJob, CBTesterJob, NetworkPollSanitizerJob, PollCreatorJob,
                  PovTesterJob]
@@ -417,3 +417,8 @@ class CacheJob(Job):
     """A CacheJob."""
 
     worker = CharField(default='cache')
+
+
+class RopCacheJob(Job):
+    """A RopCacheJob."""
+    worker = CharField(default='rop_cache')

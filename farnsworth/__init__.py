@@ -16,15 +16,15 @@ def tables():
                                    Score, Team, Test, TesterResult,
                                    ValidPoll, CBPollPerformance, PatchScore,
                                    RawRoundPoll, RawRoundTraffic,
-                                   FunctionIdentity, TracerCache,
+                                   FunctionIdentity, RopCache, TracerCache,
                                    ChallengeBinaryNodeFielding,
                                    ExploitFielding, IDSRuleFielding, PovTestResult)
     models = [Round, Bitmap, ChallengeBinaryNode, ChallengeSet, Crash,
               Evaluation, Exploit, Feedback, FuzzerStat, IDSRule, Job, Pcap,
               Score, Team, Test, TesterResult, ValidPoll, CBPollPerformance,
               PatchScore, RawRoundPoll, RawRoundTraffic, FunctionIdentity,
-              TracerCache, ChallengeBinaryNodeFielding, ExploitFielding,
-              IDSRuleFielding, PovTestResult]
+              RopCache, TracerCache, ChallengeBinaryNodeFielding,
+              ExploitFielding, IDSRuleFielding, PovTestResult]
     through_models = [ChallengeSet.rounds]
     return models + [tm.get_through_model() for tm in through_models]
 

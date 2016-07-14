@@ -41,6 +41,7 @@ from .job import (
     PovFuzzer1Job,
     PovFuzzer2Job,
     RexJob,
+    RopCacheJob,
     WereRabbitJob,
 
     # Tester jobs, inside VM inside Docker
@@ -56,6 +57,7 @@ from .pcap import Pcap
 from .pov_test_result import PovTestResult
 from .raw_round_poll import RawRoundPoll
 from .raw_round_traffic import RawRoundTraffic
+from .rop_cache import RopCache
 from .round import Round
 from .score import Score
 from .team import Team
