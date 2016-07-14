@@ -47,3 +47,12 @@ class ChallengeSetFielding(BaseModel):
         obj = super(cls, cls).create(*args, **kwargs)
         obj.cbns = cbns
         return obj
+
+    def add_cbns_if_missing(self, *cbns):
+        """Wrap manytomany.add() to recalculate sha256 sum"""
+        for cbn in cbns:
+            if cbn not in self.cbns:
+                self.cbns.add(cbns)
+                self.sha256 = _sha256sum(*[c.sha256 for c in self.cbns])
+        if self.is_dirty():
+            self.save()
