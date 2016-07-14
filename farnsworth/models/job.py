@@ -9,6 +9,7 @@ from peewee import ForeignKeyField, DateTimeField, IntegerField, BooleanField, C
 from playhouse.postgres_ext import BinaryJSONField
 
 from .base import BaseModel
+from .challenge_set import ChallengeSet
 from .challenge_binary_node import ChallengeBinaryNode
 
 """Job models"""
@@ -21,45 +22,25 @@ def to_job_type(job):
     Note: This function *modifies* the input job, but it also returns the
     modified one for convience.
     """
-    # FIXME: sort alphabetically
-    if job.worker == 'afl':
-        job.__class__ = AFLJob
-    elif job.worker == 'driller':
-        job.__class__ = DrillerJob
-    elif job.worker == 'rex':
-        job.__class__ = RexJob
-    elif job.worker == 'patcherex':
-        job.__class__ = PatcherexJob
-    elif job.worker == 'tester':
-        job.__class__ = TesterJob
-    elif job.worker == 'ids':
-        job.__class__ = IDSJob
-    elif job.worker == 'were_rabbit':
-        job.__class__ = WereRabbitJob
-    elif job.worker == 'colorguard':
-        job.__class__ = ColorGuardJob
-    elif job.worker == 'povfuzzer1':
-        job.__class__ = PovFuzzer1Job
-    elif job.worker == 'povfuzzer2':
-        job.__class__ = PovFuzzer2Job
-    elif job.worker == 'network_poll':
-        job.__class__ = NetworkPollJob
-    elif job.worker == 'pollsanitizer':
-        job.__class__ = PollSanitizerJob
-    elif job.worker == 'cbtester':
-        job.__class__ = CBTesterJob
-    elif job.worker == 'cb_round_tester':
-        job.__class__ = CBRoundTesterJob
-    elif job.worker == 'function_identifier':
-        job.__class__ = FunctionIdentifierJob
-    elif job.worker == 'cache':
-        job.__class__ = CacheJob
+    job_types = [# Worker jobs, directly on Kubernetes
+                 AFLJob, CacheJob, CBRoundTesterJob, ColorGuardJob, DrillerJob,
+                 FunctionIdentifierJob, IDSJob, NetworkPollCreatorJob, PatcherexJob,
+                 PovFuzzer1Job, PovFuzzer2Job, RexJob, WereRabbitJob,
+                 # Tester jobs
+                 TesterJob, CBTesterJob, NetworkPollSanitizerJob, PollCreatorJob,
+                 PovTesterJob]
+
+    for job_type in job_types:
+        if job.worker == job_type.worker.default:
+            job.__class__ = job_type
+            return job
 
     return job
 
 
 class Job(BaseModel):
-    """Base Job model"""
+    """Base Job model."""
+    cs = ForeignKeyField(ChallengeSet, null=True, related_name='tests')
     cbn = ForeignKeyField(ChallengeBinaryNode, null=True, related_name='jobs')
     completed_at = DateTimeField(null=True)
     limit_cpu = IntegerField(null=True, default=2)
@@ -70,6 +51,8 @@ class Job(BaseModel):
     produced_output = BooleanField(null=True)
     started_at = DateTimeField(null=True)
     worker = CharField()
+    kvm_access = False
+    data_access = False
 
     class Meta:     # pylint:disable=no-init,missing-docstring,old-style-class
         def db_table_func(self):   # pylint:disable=no-self-argument,no-self-use
@@ -167,16 +150,17 @@ class RexJob(Job):
     as an input. Here, we receive the testcase as a string in the
     `payload` field.
     """
-
     worker = CharField(default='rex')
 
     @property
     def input_crash(self):
         """Return input crash"""
         from .crash import Crash
+        # pylint: disable=attribute-defined-outside-init
         if not hasattr(self, '_input_crash'):
-            self._input_crash = None # pylint:disable=attribute-defined-outside-init
-        self._input_crash = self._input_crash or Crash.get(id=self.payload['crash_id']) # pylint:disable=attribute-defined-outside-init
+            self._input_crash = None
+        self._input_crash = self._input_crash or Crash.get(id=self.payload['crash_id'])
+        # pylint: enable=attribute-defined-outside-init
         return self._input_crash
 
 
@@ -202,6 +186,7 @@ class PovFuzzer2Job(RexJob):
 
 class PatcherexJob(Job):
     """A PatcherexJob."""
+
     worker = CharField(default='patcherex')
 
 
@@ -213,40 +198,31 @@ class TesterJob(Job):
     """
 
     worker = CharField(default='tester')
+    kvm_access = True
+    data_access = True
 
-    @property
-    def target_test(self):
+    def mark_test_not_completed(self):
         """
-        Get the target test corresponding to this tester job
-        :return: Test corresponding to this job.
-        """
-        from .test import Test
-        if not hasattr(self, '_target_test'):
-            self._target_test = None # pylint:disable=attribute-defined-outside-init
-        self._target_test = self._target_test or Test.get(id=self.payload['test_id']) # pylint:disable=attribute-defined-outside-init
-        return self._target_test
+        Mark the provided job as not completed, that is as Failed.
 
-    def mark_testjob_not_completed(self):
-        """
-        Mark the provided job as not completed.
-        i.e Failed
-        :return: True if successful else false
+        :return: True if successful else False
         """
         if self.is_started():
-            self.started_at = DateTimeField(null=True)
-            self.completed_at = DateTimeField(null=True)
+            self.started_at = None
+            self.completed_at = None
             self.save()
             return True
         return False
 
 
-class PollerJob(Job):
+class PollCreatorJob(TesterJob):
     """
     This represents a job for Poller. Poller requires a testcase
     as an input. Here, we receive the testcase id as a string in the
     `payload` field.
     """
-    worker = CharField(default='poller')
+
+    worker = CharField(default='poll_creator')
 
     @property
     def target_test(self):
@@ -261,14 +237,13 @@ class PollerJob(Job):
         return self._target_test
 
 
-class PollSanitizerJob(Job):
+class NetworkPollSanitizerJob(TesterJob):
     """
     This represents a job for NetworkPollSanitizer. NetworkPollSanitizer requires a
     untested network poll as an input. Here, we receive the raw_round_poll id as a string in the
     `payload` field.
     """
-    worker_name = 'pollsanitizer'
-    worker = CharField(default=worker_name)
+    worker = CharField(default='network_poll_sanitizer')
 
     @property
     def raw_poll(self):
@@ -283,14 +258,13 @@ class PollSanitizerJob(Job):
         return self._round_poll
 
 
-class CBTesterJob(Job):
+class CBTesterJob(TesterJob):
     """
-    This represents a job for cb_tester. cb_tester requires a
-    cs, patch_type and a poll as an input. Here, we receive the poll id, cs id and patch_type
-    as a strings in the `payload` field.
+    This represents a job for cb_tester. cb_tester requires a cs, patch_type and a poll as an input.
+    Here, we receive the poll id, cs id and patch_type as a strings in the `payload` field.
     """
-    worker_name = 'cbtester'
-    worker = CharField(default=worker_name)
+
+    worker = CharField(default='cb_tester')
 
     @property
     def poll(self):
@@ -307,7 +281,7 @@ class CBTesterJob(Job):
     @property
     def target_cs(self):
         """
-            Get the target CS to which this tester job belongs to.
+        Get the target CS to which this tester job belongs to.
         :return: ChallengeSet object
         """
         from .challenge_set import ChallengeSet
@@ -319,7 +293,7 @@ class CBTesterJob(Job):
     @property
     def patch_type(self):
         """
-            Get the patch type of the cb_tester job.
+        Get the patch type of the cb_tester job.
         :return: patch type as string.
         """
         if not hasattr(self, '_patch_type'):
@@ -338,8 +312,7 @@ class CBRoundTesterJob(Job):
     This job indicates that testing need to be performed for all binaries
     against all network polls created from that round.
     """
-    worker_name = 'cb_round_tester'
-    worker = CharField(default=worker_name)
+    worker = CharField(default='cb_round_tester')
 
     @property
     def target_round(self):
@@ -354,20 +327,70 @@ class CBRoundTesterJob(Job):
         return self._target_round
 
 
-class NetworkPollJob(Job):
-    """ A Job to create polls from captured network traffic.
-    """
-    worker = CharField(default='network_poll')
+class NetworkPollCreatorJob(Job):
+    """Create polls from captured network traffic."""
+    worker = CharField(default='network_poll_creator')
 
     @property
     def target_round_traffic(self):
-        """Return RawRoundTraffic to be processed by this job"""
+        """RawRoundTraffic that needs to be processed by this job."""
+        # pylint: disable=attribute-defined-outside-init
         if not hasattr(self, '_target_round_traffic'):
-            self._target_round_traffic = None # pylint:disable=attribute-defined-outside-init
-        # pylint:disable=attribute-defined-outside-init
+            self._target_round_traffic = None
         from .raw_round_traffic import RawRoundTraffic
         self._target_round_traffic = self._target_round_traffic or RawRoundTraffic.find(self.payload['rrt_id'])
+        # pylint: enable=attribute-defined-outside-init
         return self._target_round_traffic
+
+
+class PovTesterJob(TesterJob):
+    """
+    This represents a job for PovTester. PovTester requires a
+    Exploit ID, CS Fielding ID, IDS Fielding ID as an input.
+    """
+    worker = CharField(default='pov_tester')
+
+    @property
+    def target_exploit(self):
+        """
+        Get the Exploit that needs to be tested.
+        :return: Exploit corresponding to this job.
+        """
+        from .exploit import Exploit
+        # pylint: disable=attribute-defined-outside-init
+        if not hasattr(self, '_target_exploit'):
+            self._target_exploit = None
+        self._target_exploit = self._target_exploit or Exploit.get(id=self.payload['exploit_id'])
+        # pylint: enable=attribute-defined-outside-init
+        return self._target_exploit
+
+    @property
+    def target_cs_fielding(self):
+        """
+        Get the CS Fielding associated with this Job.
+        :return: CS Fielding object.
+        """
+        # TODO: Need to fix this after CS fielding is merged.
+        """
+        if not hasattr(self, '_target_cs_fielding'):
+            self._target_cs_fielding = None
+        self._target_cs_fielding = self._target_cs_fielding or CSFielding.get??
+        """
+        return None
+
+    @property
+    def target_ids_fielding(self):
+        """
+        Get the IDS Fielding associated with this Job.
+        :return: IDS Fielding object.
+        """
+        # TODO: Need to fix this after IDS fielding is merged.
+        """
+        if not hasattr(self, '_target_ids_fielding'):
+            self._target_ids_fielding = None
+        self._target_ids_fielding = self._target_ids_fielding or IDSFielding.get??
+        """
+        return None
 
 
 class IDSJob(Job):
@@ -386,9 +409,11 @@ class IDSJob(Job):
 
 class FunctionIdentifierJob(Job):
     """A FunctionIdentifierJob."""
+
     worker = CharField(default='function_identifier')
 
 
 class CacheJob(Job):
     """A CacheJob."""
+
     worker = CharField(default='cache')
