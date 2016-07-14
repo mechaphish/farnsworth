@@ -32,6 +32,16 @@ class ChallengeSet(BaseModel):
         tm = cls.rounds.get_through_model()
         return cls.select().join(tm).where(tm.round == round_)
 
+    def submit_patches(self, *cbns):
+        """Save patches submission at current round"""
+        from .challenge_set_fielding import ChallengeSetFielding
+        from .team import Team
+        if not cbns:
+            return False
+        csf = ChallengeSetFielding.create(cs=self,
+                                          cbns=cbns,
+                                          submission_round=Round.current_round(),
+                                          team=Team.get_our())
     @property
     def unsubmitted_ids_rules(self):
         """Return IDS rules not submitted"""
@@ -88,21 +98,23 @@ class ChallengeSet(BaseModel):
         return groups
 
     @property
-    def cbns_unpatched(self):
+    def cbns_original(self):
         """
-        Return all unpatched CBNs in this challenge set.
+        Return all original CBNs in this challenge set.
         """
-        from .challenge_binary_node_fielding import ChallengeBinaryNodeFielding
+        from .challenge_binary_node import ChallengeBinaryNode
+        from .challenge_set_fielding import ChallengeSetFielding
         from .round import Round
         from .team import Team
-        CBNF = ChallengeBinaryNodeFielding
-        first_round = self.rounds.order_by(Round.num)[0]
-        # unpatched CBs are CBs by our team available in the first round of this CS
-        return self.cbns.join(CBNF).where(
-            (CBNF.team == Team.get_our()) & \
-            ((CBNF.available_round == first_round) | (CBNF.fielded_round == first_round))
-        )
+        # original CBs are CBs by our team available in the first round of this CS
+        CSF = ChallengeSetFielding
+        first_fielding = self.fieldings\
+                             .where(CSF.team == Team.get_our())\
+                             .join(Round,
+                                   on=(Round.id == ChallengeSetFielding.available_round))\
+                             .order_by(Round.num).get()
+        return first_fielding.cbns
 
     @property
     def is_multi_cbn(self):
-        return len(self.cbns_unpatched) > 1
+        return len(self.cbns_original) > 1

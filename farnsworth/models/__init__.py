@@ -10,19 +10,16 @@ import farnsworth.log
 
 from .bitmap import Bitmap
 from .cb_poll_performance import CBPollPerformance
-from .challenge_binary_node_fielding import ChallengeBinaryNodeFielding
 from .challenge_binary_node import ChallengeBinaryNode
-from .challenge_binary_node_fielding import ChallengeBinaryNodeFielding
 from .challenge_set import ChallengeSet
+from .challenge_set_fielding import ChallengeSetFielding
 from .crash import Crash
 from .evaluation import Evaluation
-from .exploit_fielding import ExploitFielding
 from .exploit import Exploit
 from .exploit_fielding import ExploitFielding
 from .feedback import Feedback
 from .function_identity import FunctionIdentity
 from .fuzzer_stats import FuzzerStat
-from .ids_rule_fielding import IDSRuleFielding
 from .ids_rule import IDSRule
 from .ids_rule_fielding import IDSRuleFielding
 from .job import (
@@ -51,7 +48,6 @@ from .job import (
     PollCreatorJob,
     PovTesterJob
 )
-
 from .patch_score import PatchScore
 from .pcap import Pcap
 from .pov_test_result import PovTestResult
@@ -61,8 +57,8 @@ from .rop_cache import RopCache
 from .round import Round
 from .score import Score
 from .team import Team
-from .tester_result import TesterResult
 from .test import Test
+from .tester_result import TesterResult
 from .tracer_cache import TracerCache
 from .valid_polls import ValidPoll
 

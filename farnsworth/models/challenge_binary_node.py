@@ -22,7 +22,7 @@ class ChallengeBinaryNode(BaseModel):
     name = CharField()
     cs = ForeignKeyField(ChallengeSet, related_name='cbns')
     patch_type = CharField(null=True)
-    sha256 = FixedCharField(max_length=64, unique=True)
+    sha256 = FixedCharField(max_length=64, unique=True) # this index shit doesn't work, we create it manually
 
     def delete_binary(self):
         """Remove binary file"""
@@ -81,14 +81,6 @@ class ChallengeBinaryNode(BaseModel):
         from .test import Test
         return self.tests.where(Test.colorguard_traced == False)
 
-    def submit(self):
-        """Save submission at current round"""
-        from .challenge_binary_node_fielding import ChallengeBinaryNodeFielding
-        from .round import Round
-        from .team import Team
-        cbnf = ChallengeBinaryNodeFielding.create(cbn=self, submission_round=Round.current_round(),
-                                                  team=Team.get_our())
-
     @property
     def symbols(self):
         symbols = dict()
@@ -112,18 +104,23 @@ class ChallengeBinaryNode(BaseModel):
     @property
     def unsubmitted_patches(self):
         """All unsubmitted patches."""
-        from .challenge_binary_node_fielding import ChallengeBinaryNodeFielding
-        return self.descendants.where(self.__class__.id.not_in(
-            ChallengeBinaryNodeFielding.select(ChallengeBinaryNodeFielding.cbn)))
+        from .challenge_set_fielding import ChallengeSetFielding
+        tm = ChallengeSetFielding.cbns.get_through_model()
+        subquery = ChallengeSetFielding.select(tm.challengebinarynode).join(tm)
+        return self.descendants.where(self.__class__.id.not_in(subquery))
 
     @property
     def submitted_patches(self):
         """All submitted patches."""
-        from .challenge_binary_node_fielding import ChallengeBinaryNodeFielding
+        from .challenge_set_fielding import ChallengeSetFielding
         from .team import Team
-        return self.descendants.join(ChallengeBinaryNodeFielding).where(
-            (ChallengeBinaryNodeFielding.team == Team.get_our()) &
-            (ChallengeBinaryNodeFielding.submission_round.is_null(False)))
+        tm = ChallengeSetFielding.cbns.get_through_model()
+        return self.descendants\
+                   .join(tm, on=(tm.challengebinarynode == ChallengeBinaryNode.id))\
+                   .join(ChallengeSetFielding)\
+                   .where(
+                       (ChallengeSetFielding.team == Team.get_our()) &
+                       (ChallengeSetFielding.submission_round.is_null(False)))
 
     @property
     def all_tests_for_this_cb(self):
