@@ -25,11 +25,6 @@ class TestChallengeSet:
     def teardown(self):
         teardown_each()
 
-    def test_unsubmitted_ids_rules(self):
-        cs = ChallengeSet.create(name="foo")
-        ids1 = IDSRule.create(cs=cs, rules="aaa")
-        ids2 = IDSRule.create(cs=cs, rules="bbb", submitted_at=datetime.now())
-
     def test_fielded_in_round(self):
         now = datetime.now()
         r1 = Round.create(num=0, ends_at=now + timedelta(seconds=15))
