@@ -23,7 +23,7 @@ class TestTest:
 
     def test_cbn_association(self):
         cs = ChallengeSet.create(name="foo")
-        cbn = ChallengeBinaryNode.create(name="foo", cs=cs, blob="blob data")
+        cbn = ChallengeBinaryNode.create(name="foo", cs=cs, blob="blob data", sha256="sum")
         job = AFLJob.create(cbn=cbn)
         test1 = farnsworth.models.Test.create(cbn=cbn, job=job, blob="testicolo sn")
         test2 = farnsworth.models.Test.create(cbn=cbn, job=job, blob="testicolo dx")
@@ -33,7 +33,7 @@ class TestTest:
 
     def test_cqe_pov_xml(self):
         cs = ChallengeSet.create(name="foo")
-        cbn = ChallengeBinaryNode.create(name="foo", cs=cs, blob="blob data")
+        cbn = ChallengeBinaryNode.create(name="foo", cs=cs, blob="blob data", sha256="sum")
         job = AFLJob.create(cbn=cbn)
         test = farnsworth.models.Test.create(cbn=cbn, job=job, blob="XXX")
         test_xml = '''<?xml version="1.0" standalone="no" ?>
@@ -44,8 +44,8 @@ class TestTest:
     def test_unsynced_testcases(self):
         cs1 = ChallengeSet.create(name="foo")
         cs2 = ChallengeSet.create(name="foo")
-        cbn1 = ChallengeBinaryNode.create(name="foo", cs=cs1, blob="blob data")
-        cbn2 = ChallengeBinaryNode.create(name="bar", cs=cs2, blob="blob data")
+        cbn1 = ChallengeBinaryNode.create(name="foo", cs=cs1, blob="blob data", sha256="sum1")
+        cbn2 = ChallengeBinaryNode.create(name="bar", cs=cs2, blob="blob data", sha256="sum2")
         job1 = AFLJob.create(cbn=cbn1)
         job2 = AFLJob.create(cbn=cbn2)
         job3 = AFLJob.create(cbn=cbn1)

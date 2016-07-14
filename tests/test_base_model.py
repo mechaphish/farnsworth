@@ -24,7 +24,7 @@ class TestBaseModel:
         r1 = Round.create(num=0, ends_at=NOW + timedelta(seconds=30))
         cs = ChallengeSet.create(name="foo")
         cs.rounds = [r1]
-        cbn = ChallengeBinaryNode.create(name="foo", cs=cs)
+        cbn = ChallengeBinaryNode.create(name="foo", cs=cs, sha256="sum")
         job = Job(cbn=cbn, worker='basemodel')
 
         updated_at = job.updated_at
@@ -56,8 +56,8 @@ class TestBaseModel:
         r1 = Round.create(num=0, ends_at=NOW + timedelta(seconds=30))
         cs = ChallengeSet.create(name="foo")
         cs.rounds = [r1]
-        cbn1 = ChallengeBinaryNode.create(name="foo", cs=cs)
-        cbn2 = ChallengeBinaryNode.create(name="bar", cs=cs)
+        cbn1 = ChallengeBinaryNode.create(name="foo", cs=cs, sha256="sum1")
+        cbn2 = ChallengeBinaryNode.create(name="bar", cs=cs, sha256="sum2")
 
         assert_equals(len(ChallengeBinaryNode.all()), 2)
         assert_equals(ChallengeBinaryNode.all()[0], cbn1)

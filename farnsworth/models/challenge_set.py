@@ -90,10 +90,19 @@ class ChallengeSet(BaseModel):
     @property
     def cbns_unpatched(self):
         """
-        Return all unpatched CBNs in a list.
+        Return all unpatched CBNs in this challenge set.
         """
-        from .challenge_binary_node import ChallengeBinaryNode
-        # FIXME: we are storing other teams' binaries with '-' in the filename,
-        # skip this files
-        return self.cbns.where(
-            ChallengeBinaryNode.patch_type.is_null(True) & ~(ChallengeBinaryNode.name ** "%-%"))
+        from .challenge_binary_node_fielding import ChallengeBinaryNodeFielding
+        from .round import Round
+        from .team import Team
+        CBNF = ChallengeBinaryNodeFielding
+        first_round = self.rounds.order_by(Round.num)[0]
+        # unpatched CBs are CBs by our team available in the first round of this CS
+        return self.cbns.join(CBNF).where(
+            (CBNF.team == Team.get_our()) & \
+            ((CBNF.available_round == first_round) | (CBNF.fielded_round == first_round))
+        )
+
+    @property
+    def is_multi_cbn(self):
+        return len(self.cbns_unpatched) > 1

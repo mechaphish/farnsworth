@@ -6,7 +6,7 @@ from __future__ import absolute_import, unicode_literals
 import os
 from datetime import datetime
 
-from peewee import CharField, BlobField, DateTimeField, ForeignKeyField
+from peewee import CharField, BlobField, DateTimeField, ForeignKeyField, FixedCharField
 
 from .base import BaseModel
 from .challenge_set import ChallengeSet
@@ -22,6 +22,7 @@ class ChallengeBinaryNode(BaseModel):
     name = CharField()
     cs = ForeignKeyField(ChallengeSet, related_name='cbns')
     patch_type = CharField(null=True)
+    sha256 = FixedCharField(max_length=64, unique=True)
 
     def delete_binary(self):
         """Remove binary file"""
@@ -42,7 +43,7 @@ class ChallengeBinaryNode(BaseModel):
     def _path(self):
         """Return path name"""
         filename = "{}-{}-{}".format(self.id, self.cs_id, self.name)
-        return os.path.join(os.path.expanduser("~"), filename) # FIXME: afl doesn't like /tmp
+        return os.path.join(os.path.expanduser("~"), filename)  # FIXME: afl doesn't like /tmp
 
     @property
     def path(self):
@@ -63,7 +64,7 @@ class ChallengeBinaryNode(BaseModel):
             return self.path
         new_fname = prefix_str + os.path.basename(self._path)
         prefixed_path = os.path.join(os.path.dirname(self._path), new_fname)
-        with open(prefixed_path, 'wb') as fb:
+        with open(prefixed_path, 'wb') as fp:
             fp.write(self.blob)
         os.chmod(prefixed_path, 0o777)
         return prefixed_path
@@ -98,7 +99,7 @@ class ChallengeBinaryNode(BaseModel):
 
     @property
     def found_crash(self):
-        return bool(len(self.crashes))
+        return any(True for _ in self.crashes)
 
     @property
     def completed_caching(self):

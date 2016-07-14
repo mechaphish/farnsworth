@@ -28,11 +28,10 @@ def tables():
     through_models = [ChallengeSet.rounds]
     return models + [tm.get_through_model() for tm in through_models]
 
-
 def create_tables():
     LOG.debug("Creating tables...")
     master_db.create_tables(tables(), safe=True)
-
+    master_db.create_index(ChallengeBinaryNode, ['sha256'], unique=True)
 
 def drop_tables():
     LOG.debug("Dropping tables...")
