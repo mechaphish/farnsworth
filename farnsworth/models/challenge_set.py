@@ -132,6 +132,12 @@ class ChallengeSet(BaseModel):
                 (Job.completed_at.is_null(False))).exists()
 
     @property
+    def undrilled_tests(self):
+        """Return all undrilled test cases."""
+        from .test import Test
+        return self.tests.where(Test.drilled == False)
+
+    @property
     def symbols(self):
         symbols = dict()
         for function in self.function_identities.select():
