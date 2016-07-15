@@ -17,5 +17,3 @@ class Score(BaseModel, RoundRelatedModel):
     """Score model"""
     round = ForeignKeyField(Round, related_name='scores')
     scores = BinaryJSONField()
-    # score_actual = FloatField()
-    # score_predicted = FloatField()
