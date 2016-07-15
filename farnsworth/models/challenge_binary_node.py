@@ -63,18 +63,6 @@ class ChallengeBinaryNode(BaseModel):
         return prefixed_path
 
     @property
-    def undrilled_tests(self):
-        """Return all undrilled test cases."""
-        from .test import Test
-        return self.tests.where(Test.drilled == False)
-
-    @property
-    def not_colorguard_traced(self):
-        """Return all undrilled test cases."""
-        from .test import Test
-        return self.tests.where(Test.colorguard_traced == False)
-
-    @property
     def unsubmitted_patches(self):
         """All unsubmitted patches."""
         from .challenge_set_fielding import ChallengeSetFielding
