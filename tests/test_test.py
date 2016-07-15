@@ -54,17 +54,17 @@ class TestTest:
         test2 = farnsworth.models.Test.create(cs=cs2, job=job2, blob="XXX")
         assert_equal(len(farnsworth.models.Test.unsynced_testcases(NOW)), 2)
 
-        unsynced_cbn1 = farnsworth.models.Test.unsynced_testcases(NOW) \
+        unsynced_cs1 = farnsworth.models.Test.unsynced_testcases(NOW) \
                                               .join(Job).where(Job.cs == cs1)
-        assert_equal(len(unsynced_cbn1), 1)
+        assert_equal(len(unsynced_cs1), 1)
 
         test3 = farnsworth.models.Test.create(cs=cs1, job=job3, blob="XXX")
         assert_equal(len(farnsworth.models.Test.unsynced_testcases(NOW)), 3)
-        unsynced_cbn1 = farnsworth.models.Test.unsynced_testcases(NOW) \
-                                              .join(Job).where(Job.cs == cs1)
-        assert_equal(len(unsynced_cbn1), 2)
+        unsynced_cs2 = farnsworth.models.Test.unsynced_testcases(NOW) \
+                                              .join(Job).where(Job.cs == cs2)
+        assert_equal(len(unsynced_cs2), 2)
 
-        unsynced_cbn1_job1 = farnsworth.models.Test.unsynced_testcases(NOW) \
+        unsynced_cs2_job2 = farnsworth.models.Test.unsynced_testcases(NOW) \
                                                    .join(Job).where((Job.cs == cs2) \
-                                                                    & (job1.id != Job.id))
-        assert_equal(len(unsynced_cbn1_job1), 1)
+                                                                    & (job2.id != Job.id))
+        assert_equal(len(unsynced_cs2_job2), 1)
