@@ -11,6 +11,8 @@ from playhouse.postgres_ext import BinaryJSONField
 from .base import BaseModel
 from .challenge_set import ChallengeSet
 from .challenge_binary_node import ChallengeBinaryNode
+from .challenge_set_fielding import ChallengeSetFielding
+from .ids_rule_fielding import IDSRuleFielding
 
 """Job models"""
 
@@ -377,13 +379,11 @@ class PovTesterJob(TesterJob):
         Get the CS Fielding associated with this Job.
         :return: CS Fielding object.
         """
-        # TODO: Need to fix this after CS fielding is merged.
-        """
         if not hasattr(self, '_target_cs_fielding'):
             self._target_cs_fielding = None
-        self._target_cs_fielding = self._target_cs_fielding or CSFielding.get??
-        """
-        return None
+        self._target_cs_fielding = self._target_cs_fielding or \
+                                   ChallengeSetFielding.get(ChallengeSetFielding.sha256 == self.payload['cs_fld_hash'])
+        return self._target_cs_fielding
 
     @property
     def target_ids_fielding(self):
@@ -391,13 +391,12 @@ class PovTesterJob(TesterJob):
         Get the IDS Fielding associated with this Job.
         :return: IDS Fielding object.
         """
-        # TODO: Need to fix this after IDS fielding is merged.
-        """
         if not hasattr(self, '_target_ids_fielding'):
             self._target_ids_fielding = None
-        self._target_ids_fielding = self._target_ids_fielding or IDSFielding.get??
-        """
-        return None
+        if 'ids_fld_hash' in self.payload:
+            self._target_ids_fielding = self._target_ids_fielding or \
+                                        IDSRuleFielding.get(IDSRuleFielding.sha256 == self.payload['ids_fld_hash'])
+        return self._target_ids_fielding
 
 
 class IDSJob(Job):
