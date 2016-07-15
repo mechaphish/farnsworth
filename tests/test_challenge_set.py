@@ -14,7 +14,6 @@ from . import setup_each, teardown_each
 from farnsworth.models import (ChallengeBinaryNode, ChallengeSetFielding,
                                ChallengeSet, Exploit, FunctionIdentity, IDSRule,
                                AFLJob, RexJob, Round, Team)
-
 import farnsworth.models
 
 NOW = datetime.now()
@@ -168,7 +167,6 @@ class TestChallengeSet:
 
     def test_found_crash_for_cb(self):
         cs = ChallengeSet.create(name="foo")
-
         job = AFLJob.create(cs=cs)
         crash = farnsworth.models.Crash.create(cs=cs, job=job, blob="crash", crash_pc=0x41414141)
 

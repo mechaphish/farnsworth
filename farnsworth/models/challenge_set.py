@@ -136,7 +136,6 @@ class ChallengeSet(BaseModel):
         symbols = dict()
         for function in self.function_identities.select():
             symbols[function.address] = function.symbol
-
         return symbols
 
     @property
