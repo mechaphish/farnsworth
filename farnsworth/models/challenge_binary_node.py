@@ -33,13 +33,6 @@ class ChallengeBinaryNode(BaseModel):
         self.delete_binary()
 
     @property
-    def fuzzer_stat(self):
-        """Return fuzzer stats"""
-        if not self.fuzzer_stats_collection:
-            return None
-        return self.fuzzer_stats_collection[0]
-
-    @property
     def _path(self):
         """Return path name"""
         filename = "{}-{}-{}".format(self.id, self.cs_id, self.name)
@@ -82,24 +75,8 @@ class ChallengeBinaryNode(BaseModel):
         return self.tests.where(Test.colorguard_traced == False)
 
     @property
-    def symbols(self):
-        symbols = dict()
-        for function in self.function_identities.select():
-            symbols[function.address] = function.symbol
-
-        return symbols
-
-    @property
     def found_crash(self):
         return any(True for _ in self.crashes)
-
-    @property
-    def completed_caching(self):
-        """Has the cache job on this binary completed"""
-        from .job import Job
-        return Job.select().where((Job.cbn == self) &\
-                (Job.worker == 'cache') &\
-                (Job.completed_at.is_null(False))).exists()
 
     @property
     def unsubmitted_patches(self):

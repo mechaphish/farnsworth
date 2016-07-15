@@ -118,3 +118,26 @@ class ChallengeSet(BaseModel):
     @property
     def is_multi_cbn(self):
         return len(self.cbns_original) > 1
+
+    @property
+    def fuzzer_stat(self):
+        """Return fuzzer stats"""
+        if not self.fuzzer_stats_collection:
+            return None
+        return self.fuzzer_stats_collection[0]
+
+    @property
+    def completed_caching(self):
+        """Has the cache job on this binary completed"""
+        from .job import Job
+        return Job.select().where((Job.cs == self) &\
+                (Job.worker == 'cache') &\
+                (Job.completed_at.is_null(False))).exists()
+
+    @property
+    def symbols(self):
+        symbols = dict()
+        for function in self.function_identities.select():
+            symbols[function.address] = function.symbol
+
+        return symbols

@@ -40,7 +40,7 @@ def to_job_type(job):
 
 class Job(BaseModel):
     """Base Job model."""
-    cs = ForeignKeyField(ChallengeSet, null=True, related_name='tests')
+    cs = ForeignKeyField(ChallengeSet, null=True, related_name='jobs')
     cbn = ForeignKeyField(ChallengeBinaryNode, null=True, related_name='jobs')
     completed_at = DateTimeField(null=True)
     limit_cpu = IntegerField(null=True, default=2)
@@ -138,6 +138,13 @@ class AFLJob(Job):
     """This represents a job for AFL. It requires no extra input."""
     worker = CharField(default='afl')
 
+    @property
+    def challenge_set(self):
+        """Return challenge set to fuzz"""
+        if not hasattr(self, '_challenge_set'):
+            self._challenge_set = None # pylint:disable=attribute-defined-outside-init
+        self._challenge_set = self._challenge_set or ChallengeSet.get(id=self.payload['cs_id']) # pylint:disable=attribute-defined-outside-init
+        return self._challenge_set
 
 class WereRabbitJob(Job):
     """This represents a job for AFL's Were Rabbit crash exploration mode."""

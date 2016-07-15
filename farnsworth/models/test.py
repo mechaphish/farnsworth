@@ -7,7 +7,7 @@ from peewee import BooleanField, BlobField, ForeignKeyField
 
 from ..actions import CQE_POV, Data, Write
 from .base import BaseModel
-from .challenge_binary_node import ChallengeBinaryNode
+from .challenge_set import ChallengeSet
 from .job import Job
 
 """Test model"""
@@ -16,7 +16,7 @@ from .job import Job
 class Test(BaseModel):
     """Test model"""
     blob = BlobField()
-    cbn = ForeignKeyField(ChallengeBinaryNode, related_name='tests')
+    cs = ForeignKeyField(ChallengeSet, related_name='tests')
     job = ForeignKeyField(Job, related_name='tests')
     drilled = BooleanField(null=False, default=False)
     colorguard_traced = BooleanField(null=False, default=False)
@@ -35,7 +35,7 @@ class Test(BaseModel):
         pov_header = """<?xml version="1.0" standalone="no" ?>
                         <!DOCTYPE pov SYSTEM "/usr/share/cgc-docs/replay.dtd">
                      """
-        pov = CQE_POV(str(self.cbn.id), [])     # pylint:disable=no-member
+        pov = CQE_POV(str(self.cs.id), [])     # pylint:disable=no-member
         pov.actions.append(Write([Data(self.blob)]))
 
         return pov_header + str(pov)
