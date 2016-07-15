@@ -32,12 +32,6 @@ class TestChallengeBinaryNode:
         assert_raises(IntegrityError, ChallengeBinaryNode.create,
                       name="test1", cs=cs, blob=BLOB, sha256="same-sum")
 
-    def test_init(self):
-        cs = ChallengeSet.create(name="foo")
-        cbn1 = ChallengeBinaryNode.create(name="test1", cs=cs, blob=BLOB, sha256="sum1")
-        cbn2 = ChallengeBinaryNode.create(name="test1", cs=cs, blob=BLOB, sha256="sum2")
-        assert_equals(cbn1.cs, cs)
-
     def test_root_association(self):
         cs = ChallengeSet.create(name="foo")
         root_cbn = ChallengeBinaryNode.create(name="root", cs=cs, blob=BLOB, sha256="sum1")
@@ -99,4 +93,3 @@ class TestChallengeBinaryNode:
         cs.submit_patches(patch1, patch2)
         assert_equals(len(cbn.submitted_patches), 2)
         assert_equals(len(cbn.unsubmitted_patches), 0)
-
