@@ -141,3 +141,7 @@ class ChallengeSet(BaseModel):
             symbols[function.address] = function.symbol
 
         return symbols
+
+    @property
+    def found_crash(self):
+        return self.crashes.count()

@@ -75,10 +75,6 @@ class ChallengeBinaryNode(BaseModel):
         return self.tests.where(Test.colorguard_traced == False)
 
     @property
-    def found_crash(self):
-        return any(True for _ in self.crashes)
-
-    @property
     def unsubmitted_patches(self):
         """All unsubmitted patches."""
         from .challenge_set_fielding import ChallengeSetFielding
