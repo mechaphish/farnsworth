@@ -35,6 +35,7 @@ from .job import (
     IDSJob,
     PatcherexJob,
     NetworkPollCreatorJob,
+    PatchPerformanceJob,
     PovFuzzer1Job,
     PovFuzzer2Job,
     RexJob,

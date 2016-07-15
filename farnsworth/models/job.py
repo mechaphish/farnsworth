@@ -26,8 +26,9 @@ def to_job_type(job):
     """
     job_types = [# Worker jobs, directly on Kubernetes
                  AFLJob, CacheJob, CBRoundTesterJob, ColorGuardJob, DrillerJob,
-                 FunctionIdentifierJob, IDSJob, NetworkPollCreatorJob, PatcherexJob,
-                 PovFuzzer1Job, PovFuzzer2Job, RexJob, RopCacheJob, WereRabbitJob,
+                 FunctionIdentifierJob, IDSJob, NetworkPollCreatorJob, PatchPerformanceJob,
+                 PatcherexJob, PovFuzzer1Job, PovFuzzer2Job, RexJob, RopCacheJob,
+                 WereRabbitJob,
                  # Tester jobs
                  TesterJob, CBTesterJob, NetworkPollSanitizerJob, PollCreatorJob,
                  PovTesterJob]
@@ -310,6 +311,26 @@ class CBTesterJob(TesterJob):
         if 'patch_type' in self.payload:
             self._patch_type = self._patch_type or self.payload['patch_type']
         return self._patch_type
+
+
+class PatchPerformanceJob(Job):
+    """
+        This represents a Job for aggregating all performance
+        measurements for all patched binaries for a specific round.
+    """
+    worker = CharField(default='patch_performance')
+
+    @property
+    def target_round(self):
+        """
+        Get the round number for until which performance need to be computed..
+        :return: Round for which patch performance need to be computed.
+        """
+        from .round import Round
+        if not hasattr(self, '_target_round'):
+            self._target_round = None
+        self._target_round = self._target_round or Round.get(id=self.payload['round_id'])
+        return self._target_round
 
 
 class CBRoundTesterJob(Job):
