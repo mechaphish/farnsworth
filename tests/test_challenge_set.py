@@ -154,3 +154,26 @@ class TestChallengeSet:
 
         assert_false(cs.is_multi_cbn)
         assert_true(cs_multi.is_multi_cbn)
+
+    def test_all_tests_for_this_cs(self):
+        cs = ChallengeSet.create(name="foo")
+        job = AFLJob.create(cs=cs)
+        test1 = farnsworth.models.Test.create(cs=cs, job=job, blob="test1")
+        test2 = farnsworth.models.Test.create(cs=cs, job=job, blob="test2")
+
+        assert_equals(len(cs.tests), 2)
+
+    def test_found_crash_for_cb(self):
+        cs = ChallengeSet.create(name="foo")
+
+        job = AFLJob.create(cs=cs)
+        crash = farnsworth.models.Crash.create(cs=cs, job=job, blob="crash", crash_pc=0x41414141)
+
+        assert_true(cs.found_crash)
+
+    def test_symbols(self):
+        cs = ChallengeSet.create(name="foo")
+        identity1 = FunctionIdentity.create(cs=cs, address=1, symbol="aaa")
+        identity2 = FunctionIdentity.create(cs=cs, address=2, symbol="bbb")
+
+        assert_equals(cs.symbols, {1: "aaa", 2: "bbb"})
