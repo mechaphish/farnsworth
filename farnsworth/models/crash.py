@@ -7,14 +7,14 @@ from peewee import BlobField, BooleanField, ForeignKeyField, BigIntegerField
 from ..peewee_extensions import EnumField
 
 from .base import BaseModel
-from .challenge_binary_node import ChallengeBinaryNode
+from .challenge_set import ChallengeSet
 from .job import Job
 
 """Crash model module."""
 
 class Crash(BaseModel):
     blob = BlobField(null=True)
-    cbn = ForeignKeyField(ChallengeBinaryNode, related_name='crashes')
+    cs = ForeignKeyField(ChallengeSet, related_name='crashes')
     exploitable = BooleanField(null=True)
     exploited = BooleanField(null=True)
     explorable = BooleanField(null=True)

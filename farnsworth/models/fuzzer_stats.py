@@ -6,14 +6,14 @@ from __future__ import absolute_import, unicode_literals
 from peewee import DateTimeField, IntegerField, ForeignKeyField
 
 from .base import BaseModel
-from .challenge_binary_node import ChallengeBinaryNode
+from .challenge_set import ChallengeSet
 
 """FuzzerStat model"""
 
 
 class FuzzerStat(BaseModel):
     """FuzzerStat model"""
-    cbn = ForeignKeyField(ChallengeBinaryNode, related_name='fuzzer_stats_collection')
+    cs = ForeignKeyField(ChallengeSet, related_name='fuzzer_stats_collection')
     pending_favs = IntegerField(null=False, default=0)
     pending_total = IntegerField(null=False, default=0)
     paths_total = IntegerField(null=False, default=0)

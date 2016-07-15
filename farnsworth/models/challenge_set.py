@@ -62,12 +62,9 @@ class ChallengeSet(BaseModel):
         from .challenge_binary_node import ChallengeBinaryNode
         exp_fielding_ids = [expf.exploit_id for expf in ExploitFielding.all()]
         if not exp_fielding_ids:
-            return Exploit.select().join(ChallengeBinaryNode).where(
-                ChallengeBinaryNode.cs == self)
+            return self.exploits
         else:
-            return Exploit.select().join(ChallengeBinaryNode).where(
-                (ChallengeBinaryNode.cs == self) &
-                Exploit.id.not_in(exp_fielding_ids))
+            return self.exploits.where(Exploit.id.not_in(exp_fielding_ids))
 
     def _feedback(self, name):
         from .feedback import Feedback
@@ -118,3 +115,29 @@ class ChallengeSet(BaseModel):
     @property
     def is_multi_cbn(self):
         return len(self.cbns_original) > 1
+
+    @property
+    def fuzzer_stat(self):
+        """Return fuzzer stats"""
+        if not self.fuzzer_stats_collection:
+            return None
+        return self.fuzzer_stats_collection[0]
+
+    @property
+    def completed_caching(self):
+        """Has the cache job on this binary completed"""
+        from .job import Job
+        return Job.select().where((Job.cs == self) &\
+                (Job.worker == 'cache') &\
+                (Job.completed_at.is_null(False))).exists()
+
+    @property
+    def symbols(self):
+        symbols = dict()
+        for function in self.function_identities.select():
+            symbols[function.address] = function.symbol
+        return symbols
+
+    @property
+    def found_crash(self):
+        return self.crashes.count()

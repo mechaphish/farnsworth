@@ -6,14 +6,14 @@ from __future__ import absolute_import, unicode_literals
 from peewee import CharField, BigIntegerField, ForeignKeyField
 
 from .base import BaseModel
-from .challenge_binary_node import ChallengeBinaryNode
+from .challenge_set import ChallengeSet
 
 """ Function Identity model """
 
 
 class FunctionIdentity(BaseModel):
     """ Function Identity model """
-    cbn = ForeignKeyField(ChallengeBinaryNode, related_name='function_identities')
+    cs = ForeignKeyField(ChallengeSet, related_name='function_identities')
     address = BigIntegerField(null=False)
     symbol = CharField(null=False)
 

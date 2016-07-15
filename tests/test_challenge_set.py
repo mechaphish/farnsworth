@@ -12,7 +12,9 @@ from peewee import IntegrityError
 
 from . import setup_each, teardown_each
 from farnsworth.models import (ChallengeBinaryNode, ChallengeSetFielding,
-                               ChallengeSet, Exploit, IDSRule, RexJob, Round, Team)
+                               ChallengeSet, Exploit, FunctionIdentity, IDSRule,
+                               AFLJob, RexJob, Round, Team)
+import farnsworth.models
 
 NOW = datetime.now()
 BLOB = "blob data"
@@ -97,11 +99,10 @@ class TestChallengeSet:
         team = Team.create(name=Team.OUR_NAME)
         cs = ChallengeSet.create(name="foo")
         cs.rounds = [r1]
-        cbn = ChallengeBinaryNode.create(name="cbn", cs=cs, sha256="sum1")
-        job = RexJob.create(cbn=cbn)
-        pov1 = Exploit.create(cbn=cbn, job=job, pov_type='type1', exploitation_method='rop',
+        job = RexJob.create(cs=cs)
+        pov1 = Exploit.create(cs=cs, job=job, pov_type='type1', exploitation_method='rop',
                               blob="exploit", c_code="exploit it")
-        pov2 = Exploit.create(cbn=cbn, job=job, pov_type='type2', exploitation_method='rop',
+        pov2 = Exploit.create(cs=cs, job=job, pov_type='type2', exploitation_method='rop',
                               blob="exploit", c_code="exploit it")
 
         assert_equals(len(cs.unsubmitted_exploits), 2)
@@ -155,3 +156,25 @@ class TestChallengeSet:
 
         assert_false(cs.is_multi_cbn)
         assert_true(cs_multi.is_multi_cbn)
+
+    def test_all_tests_for_this_cs(self):
+        cs = ChallengeSet.create(name="foo")
+        job = AFLJob.create(cs=cs)
+        test1 = farnsworth.models.Test.create(cs=cs, job=job, blob="test1")
+        test2 = farnsworth.models.Test.create(cs=cs, job=job, blob="test2")
+
+        assert_equals(len(cs.tests), 2)
+
+    def test_found_crash_for_cb(self):
+        cs = ChallengeSet.create(name="foo")
+        job = AFLJob.create(cs=cs)
+        crash = farnsworth.models.Crash.create(cs=cs, job=job, blob="crash", crash_pc=0x41414141)
+
+        assert_true(cs.found_crash)
+
+    def test_symbols(self):
+        cs = ChallengeSet.create(name="foo")
+        identity1 = FunctionIdentity.create(cs=cs, address=1, symbol="aaa")
+        identity2 = FunctionIdentity.create(cs=cs, address=2, symbol="bbb")
+
+        assert_equals(cs.symbols, {1: "aaa", 2: "bbb"})
