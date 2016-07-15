@@ -62,12 +62,9 @@ class ChallengeSet(BaseModel):
         from .challenge_binary_node import ChallengeBinaryNode
         exp_fielding_ids = [expf.exploit_id for expf in ExploitFielding.all()]
         if not exp_fielding_ids:
-            return Exploit.select().join(ChallengeBinaryNode).where(
-                ChallengeBinaryNode.cs == self)
+            return self.exploits
         else:
-            return Exploit.select().join(ChallengeBinaryNode).where(
-                (ChallengeBinaryNode.cs == self) &
-                Exploit.id.not_in(exp_fielding_ids))
+            return self.exploits.where(Exploit.id.not_in(exp_fielding_ids))
 
     def _feedback(self, name):
         from .feedback import Feedback
