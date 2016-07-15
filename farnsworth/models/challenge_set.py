@@ -20,6 +20,11 @@ class ChallengeSet(BaseModel):
     name = CharField()
     rounds = ManyToManyField(Round, related_name='cs')
 
+    def seen_in_round(self, round_):
+        """Wrap manytomany.add() to add round without duplicates"""
+        if round_ not in self.rounds:
+            self.rounds.add(round_)
+
     @classmethod
     def fielded_in_round(cls, round_=None):
         """Return all CS that are fielded in specified round.

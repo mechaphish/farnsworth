@@ -27,6 +27,20 @@ class TestChallengeSet:
     def teardown(self):
         teardown_each()
 
+    def test_seen_in_round(self):
+        r0 = Round.create(num=0)
+        r1 = Round.create(num=1)
+        cs = ChallengeSet.create(name="foo")
+
+        cs.seen_in_round(r0)
+        assert_equals(len(cs.rounds), 1)
+
+        cs.seen_in_round(r0)
+        assert_equals(len(cs.rounds), 1)
+
+        cs.seen_in_round(r1)
+        assert_equals(len(cs.rounds), 2)
+
     def test_fielded_in_round(self):
         now = datetime.now()
         r1 = Round.create(num=0, ends_at=now + timedelta(seconds=15))
