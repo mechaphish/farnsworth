@@ -11,8 +11,8 @@ from nose.tools import *
 from peewee import IntegrityError
 
 from . import setup_each, teardown_each
-from farnsworth.models import (AFLJob, ChallengeBinaryNode, ChallengeSet,
-                               FunctionIdentity, Round, Team)
+from farnsworth.models import (ChallengeBinaryNode, ChallengeSet,
+                               Round, Team)
 import farnsworth.models    # to avoid collisions between Test and nosetests
 
 NOW = datetime.now()

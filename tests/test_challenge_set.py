@@ -12,7 +12,10 @@ from peewee import IntegrityError
 
 from . import setup_each, teardown_each
 from farnsworth.models import (ChallengeBinaryNode, ChallengeSetFielding,
-                               ChallengeSet, Exploit, IDSRule, RexJob, Round, Team)
+                               ChallengeSet, Exploit, FunctionIdentity, IDSRule,
+                               AFLJob, RexJob, Round, Team)
+
+import farnsworth.models
 
 NOW = datetime.now()
 BLOB = "blob data"
