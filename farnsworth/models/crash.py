@@ -36,7 +36,6 @@ class Crash(BaseModel):
                      enum_name='enum_crash_kind',
                      default='unclassified',
                      null=True)
-
     crash_pc = BigIntegerField(null=True)
 
     class Meta:     # pylint: disable=no-init,too-few-public-methods,old-style-class
