@@ -29,9 +29,6 @@ class ChallengeBinaryNode(BaseModel):
         if os.path.isfile(self._path):
             os.remove(self._path)
 
-    def __del__(self):
-        self.delete_binary()
-
     @property
     def _path(self):
         """Return path name"""
@@ -82,12 +79,6 @@ class ChallengeBinaryNode(BaseModel):
                    .where(
                        (ChallengeSetFielding.team == Team.get_our()) &
                        (ChallengeSetFielding.submission_round.is_null(False)))
-
-    @property
-    def all_tests_for_this_cb(self):
-        """Return all tests for this CB and its descendants"""
-        from .test import Test
-        return Test.select().where(Test.cbn == self.root)
 
     @classmethod
     def roots(cls):
