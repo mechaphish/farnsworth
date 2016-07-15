@@ -97,11 +97,10 @@ class TestChallengeSet:
         team = Team.create(name=Team.OUR_NAME)
         cs = ChallengeSet.create(name="foo")
         cs.rounds = [r1]
-        cbn = ChallengeBinaryNode.create(name="cbn", cs=cs, sha256="sum1")
-        job = RexJob.create(cbn=cbn)
-        pov1 = Exploit.create(cbn=cbn, job=job, pov_type='type1', exploitation_method='rop',
+        job = RexJob.create(cs=cs)
+        pov1 = Exploit.create(cs=cs, job=job, pov_type='type1', exploitation_method='rop',
                               blob="exploit", c_code="exploit it")
-        pov2 = Exploit.create(cbn=cbn, job=job, pov_type='type2', exploitation_method='rop',
+        pov2 = Exploit.create(cs=cs, job=job, pov_type='type2', exploitation_method='rop',
                               blob="exploit", c_code="exploit it")
 
         assert_equals(len(cs.unsubmitted_exploits), 2)

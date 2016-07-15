@@ -102,30 +102,23 @@ class TestChallengeBinaryNode:
 
     def test_all_tests_for_this_cb(self):
         cs = ChallengeSet.create(name="foo")
-        cbn = ChallengeBinaryNode.create(name="cbn", cs=cs, blob=BLOB, sha256="sum1")
-        patch1 = ChallengeBinaryNode.create(name="patch1", cs=cs, blob="data", root=cbn, sha256="sum2")
-        job = AFLJob.create(cbn=cbn)
-        test1 = farnsworth.models.Test.create(cbn=cbn, job=job, blob="test1")
-        test2 = farnsworth.models.Test.create(cbn=cbn, job=job, blob="test2")
+        job = AFLJob.create(cs=cs)
+        test1 = farnsworth.models.Test.create(cs=cs, job=job, blob="test1")
+        test2 = farnsworth.models.Test.create(cs=cs, job=job, blob="test2")
 
-        assert_equals(len(patch1.tests), 0)
-        assert_equals(len(patch1.all_tests_for_this_cb), 2)
+        assert_equals(len(cs.tests), 2)
 
     def test_found_crash_for_cb(self):
         cs = ChallengeSet.create(name="foo")
-        cbn1 = ChallengeBinaryNode.create(name="cbn1", cs=cs, blob=BLOB, sha256="sum1")
-        cbn2 = ChallengeBinaryNode.create(name="cbn2", cs=cs, blob=BLOB, sha256="sum2")
 
-        job = AFLJob.create(cbn=cbn1)
-        crash = farnsworth.models.Crash.create(cbn=cbn1, job=job, blob="crash", crash_pc=0x41414141)
+        job = AFLJob.create(cs=cs)
+        crash = farnsworth.models.Crash.create(cs=cs, job=job, blob="crash", crash_pc=0x41414141)
 
-        assert_true(cbn1.found_crash)
-        assert_false(cbn2.found_crash)
+        assert_true(cs.found_crash)
 
     def test_symbols(self):
         cs = ChallengeSet.create(name="foo")
-        cbn = ChallengeBinaryNode.create(name="cbn", cs=cs, sha256="sum1")
-        identity1 = FunctionIdentity.create(cbn=cbn, address=1, symbol="aaa")
-        identity2 = FunctionIdentity.create(cbn=cbn, address=2, symbol="bbb")
+        identity1 = FunctionIdentity.create(cs=cs, address=1, symbol="aaa")
+        identity2 = FunctionIdentity.create(cs=cs, address=2, symbol="bbb")
 
-        assert_equals(cbn.symbols, {1: "aaa", 2: "bbb"})
+        assert_equals(cs.symbols, {1: "aaa", 2: "bbb"})
