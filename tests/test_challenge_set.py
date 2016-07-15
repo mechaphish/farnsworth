@@ -179,7 +179,15 @@ class TestChallengeSet:
 
         assert_equals(len(cs.tests), 2)
 
-    def test_found_crash_for_cb(self):
+
+    def test_undrilled_tests_for_cs(self):
+        cs = ChallengeSet.create(name="foo")
+        job = AFLJob.create(cs=cs)
+        new_test = farnsworth.models.Test.create(cs=cs, job=job, blob="crash", drilled=False)
+
+        assert_true(len(cs.undrilled_tests), 1)
+
+    def test_found_crash_for_cs(self):
         cs = ChallengeSet.create(name="foo")
         job = AFLJob.create(cs=cs)
         crash = farnsworth.models.Crash.create(cs=cs, job=job, blob="crash", crash_pc=0x41414141)
