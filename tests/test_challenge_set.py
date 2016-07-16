@@ -75,7 +75,7 @@ class TestChallengeSet:
         assert_equals(len(cs.fieldings), 0)
 
         # Submit 2 patches at once
-        cs.submit_patches(cbn1, cbn2)
+        cs.submit_patches(r1, cbn1, cbn2)
         assert_equals(len(cs.fieldings), 1)
 
         assert_equals(len(cs.fieldings.get().cbns), 2)
@@ -85,7 +85,7 @@ class TestChallengeSet:
         assert_is_none(cs.fieldings.get().fielded_round)
 
         # Submit again fails
-        assert_raises(IntegrityError, cs.submit_patches, cbn1, cbn2)
+        assert_raises(IntegrityError, cs.submit_patches, r1, cbn1, cbn2)
 
     def test_unsubmitted_ids_rules(self):
         r1 = Round.create(num=0)
