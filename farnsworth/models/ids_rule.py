@@ -32,3 +32,12 @@ class IDSRule(BaseModel):
         if self.sha256 is None:
             self.sha256 = hashlib.sha256(self.rules).hexdigest()
         return super(IDSRule, self).save(**kwargs)
+
+    @classmethod
+    def get_by_sha256_or_create(cls, **kwargs):
+        sha256 = hashlib.sha256(kwargs['rules']).hexdigest()
+        try:
+            return cls.get(cls.sha256 == sha256)
+        except cls.DoesNotExist:
+            kwargs['sha256'] = sha256
+            return cls.create(**kwargs)

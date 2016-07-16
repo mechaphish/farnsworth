@@ -46,3 +46,12 @@ class TestIDSRule:
 
         ids_set = IDSRule.create(cs=cs, rules="ccc", sha256="ddd")
         assert_equals(ids_set.sha256, "ddd")
+
+    def test_get_by_sha256_or_create(self):
+        cs = ChallengeSet.create(name="foo")
+
+        assert_equals(len(IDSRule.all()), 0)
+        ids1 = IDSRule.get_by_sha256_or_create(rules="aaa", cs=cs)
+        ids2 = IDSRule.get_by_sha256_or_create(rules="aaa", cs=cs)
+        assert_equals(ids1, ids2)
+        assert_equals(len(IDSRule.all()), 1)
