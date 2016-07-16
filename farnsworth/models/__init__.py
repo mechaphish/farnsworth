@@ -17,6 +17,7 @@ from .crash import Crash
 from .evaluation import Evaluation
 from .exploit import Exploit
 from .exploit_fielding import ExploitFielding
+from .exploit_submission_cable import ExploitSubmissionCable
 from .feedback import Feedback
 from .function_identity import FunctionIdentity
 from .fuzzer_stats import FuzzerStat
