@@ -13,6 +13,7 @@ from .cb_poll_performance import CBPollPerformance
 from .challenge_binary_node import ChallengeBinaryNode
 from .challenge_set import ChallengeSet
 from .challenge_set_fielding import ChallengeSetFielding
+from .challenge_set_submission_cable import ChallengeSetSubmissionCable
 from .crash import Crash
 from .evaluation import Evaluation
 from .exploit import Exploit
