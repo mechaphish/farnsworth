@@ -198,6 +198,7 @@ class PatcherexJob(Job):
     """A PatcherexJob."""
 
     worker = CharField(default='patcherex')
+    patch_types = ["bitflip","light","medium","heavy"]
 
 
 class TesterJob(Job):
