@@ -32,7 +32,9 @@ class Crash(BaseModel):
                               'write_x_where',
                               'uncontrolled_write',
                               'arbitrary_read',
-                              'null_dereference'],
+                              'null_dereference',
+                              'arbitrary_transmit',
+                              'arbitrary_receive'],
                      enum_name='enum_crash_kind',
                      default='unclassified',
                      null=True)
