@@ -197,7 +197,7 @@ class PovFuzzer2Job(RexJob):
 class PatcherexJob(Job):
     """A PatcherexJob."""
 
-    PATCH_TYPES = ["bitflip", "light", "medium", "heavy"]
+    PATCH_TYPES = ["bitflip","light","medium","heavy","stackshiftreassembler","fidget"]
 
     worker = CharField(default='patcherex')
 
