@@ -10,6 +10,7 @@ from peewee import CharField, BlobField, DateTimeField, ForeignKeyField, FixedCh
 
 from .base import BaseModel
 from .challenge_set import ChallengeSet
+from .ids_rule import IDSRule
 # Imports for Exploit, Round, Exploit deferred to prevent circular imports.
 
 """ChallengeBinaryNode model"""
@@ -23,6 +24,7 @@ class ChallengeBinaryNode(BaseModel):
     cs = ForeignKeyField(ChallengeSet, related_name='cbns')
     patch_type = CharField(null=True)
     sha256 = FixedCharField(max_length=64, unique=True) # this index shit doesn't work, we create it manually
+    ids_rule = ForeignKeyField(IDSRule, related_name='cbn', null=True) # needed for submitting patch+related ids rules
 
     def delete_binary(self):
         """Remove binary file"""
