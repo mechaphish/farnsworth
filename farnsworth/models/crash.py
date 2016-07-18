@@ -38,7 +38,8 @@ class Crash(BaseModel):
                      enum_name='enum_crash_kind',
                      default='unclassified',
                      null=True)
-    crash_pc = BigIntegerField(null=True)
+    crash_pc = BigIntegerField(null=True) # pc at the time of the crash
+    bb_count = BigIntegerField(null=True) # basic block count
 
     class Meta:     # pylint: disable=no-init,too-few-public-methods,old-style-class
         db_table = 'crashes'
