@@ -183,3 +183,11 @@ class ChallengeSet(BaseModel):
         return self.exploits.where((Exploit.pov_type == 'type2') \
                                    & (Exploit.reliability > 0) \
                                    & (Exploit.method == 'circumstantial')).exists()
+
+    def unprocessed_submission_cables(self):
+        """Return all unprocessed cables order by creation date descending."""
+        from .cs_submission_cable import CSSubmissionCable
+        return self.submission_cables\
+            .select()\
+            .where(CSSubmissionCable.processed_at.is_null(True))\
+            .order_by(CSSubmissionCable.created_at)

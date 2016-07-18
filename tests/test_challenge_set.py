@@ -208,3 +208,17 @@ class TestChallengeSet:
         identity2 = FunctionIdentity.create(cs=cs, address=2, symbol="bbb")
 
         assert_equals(cs.symbols, {1: "aaa", 2: "bbb"})
+
+    def test_unprocessed_submission_cables(self):
+        cs = ChallengeSet.create(name="foo")
+        cbn = ChallengeBinaryNode.create(name="foo1", cs=cs, sha256="sum")
+        ids = IDSRule.create(cs=cs, rules="aaa", sha256="sum")
+        cable1 = CSSubmissionCable.create(cs=cs, ids=ids, cbns=[cbn])
+        cable2 = CSSubmissionCable.create(cs=cs, ids=ids, cbns=[])
+
+        assert_equals(len(cs.unprocessed_submission_cables()), 2)
+        assert_equals(cable1, cs.unprocessed_submission_cables()[0])
+        assert_equals(cable2, cs.unprocessed_submission_cables()[1])
+
+        cable1.process()
+        assert_equals(len(cs.unprocessed_submission_cables()), 1)
