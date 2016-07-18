@@ -11,9 +11,17 @@ from nose.tools import *
 from peewee import IntegrityError
 
 from . import setup_each, teardown_each
-from farnsworth.models import (ChallengeBinaryNode, ChallengeSetFielding,
-                               ChallengeSet, Exploit, FunctionIdentity, IDSRule,
-                               AFLJob, RexJob, Round, Team)
+from farnsworth.models import (AFLJob,
+                               ChallengeBinaryNode,
+                               ChallengeSet,
+                               ChallengeSetFielding,
+                               CSSubmissionCable,
+                               Exploit,
+                               FunctionIdentity,
+                               IDSRule,
+                               RexJob,
+                               Round,
+                               Team)
 import farnsworth.models
 
 NOW = datetime.now()
