@@ -12,6 +12,8 @@ from playhouse.fields import ManyToManyField
 from .base import BaseModel
 from .round import Round
 
+import cPickle as pickle
+
 """ChallengeSet model"""
 
 
@@ -147,9 +149,18 @@ class ChallengeSet(BaseModel):
     @property
     def symbols(self):
         symbols = dict()
-        for function in self.function_identities.select():
+        from .function_identity import FunctionIdentity
+        for function in self.function_identities.where(FunctionIdentity.symbol.is_null(False)).select():
             symbols[function.address] = function.symbol
         return symbols
+
+    @property
+    def func_infos(self):
+        finfos = dict()
+        for function in self.function_identities:
+            finfos[function.address] = pickle.loads(function.func_info)
+
+        return finfos
 
     @property
     def found_crash(self):
