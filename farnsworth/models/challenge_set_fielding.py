@@ -7,7 +7,7 @@ from datetime import datetime
 import os
 import hashlib
 
-from peewee import FixedCharField, ForeignKeyField
+from peewee import FixedCharField, ForeignKeyField, FloatField
 from playhouse.fields import ManyToManyField
 
 from .base import BaseModel
@@ -35,6 +35,7 @@ class ChallengeSetFielding(BaseModel):
     fielded_round = ForeignKeyField(Round, related_name='cs_fieldings', null=True)
     cbns = ManyToManyField(ChallengeBinaryNode, related_name='cbns')
     sha256 = FixedCharField(max_length=64)
+    remote_cb_score = FloatField(null=True)  # performance metric computed from feedback from DARPA.
 
     @classmethod
     def create(cls, *args, **kwargs):
