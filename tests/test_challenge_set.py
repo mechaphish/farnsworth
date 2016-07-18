@@ -73,7 +73,7 @@ class TestChallengeSet:
         assert_equals([cbn1, cbn2], cs.cbns_by_patch_type()['patch0'])
         assert_equals([cbn3], cs.cbns_by_patch_type()['patch1'])
 
-    def test_submit_patches(self):
+    def test_submit(self):
         r1 = Round.create(num=0, ends_at=NOW + timedelta(seconds=30))
         team = Team.create(name=Team.OUR_NAME)
         cs = ChallengeSet.create(name="foo")
@@ -83,7 +83,7 @@ class TestChallengeSet:
         assert_equals(len(cs.fieldings), 0)
 
         # Submit 2 patches at once
-        cs.submit_patches(r1, cbn1, cbn2)
+        cs.submit(cbns=[cbn1, cbn2], round=r1)
         assert_equals(len(cs.fieldings), 1)
 
         assert_equals(len(cs.fieldings.get().cbns), 2)
@@ -93,7 +93,7 @@ class TestChallengeSet:
         assert_is_none(cs.fieldings.get().fielded_round)
 
         # Submit again fails
-        assert_raises(IntegrityError, cs.submit_patches, r1, cbn1, cbn2)
+        assert_raises(IntegrityError, cs.submit, cbns=[cbn1, cbn2], round=r1)
 
     def test_unsubmitted_ids_rules(self):
         r1 = Round.create(num=0)

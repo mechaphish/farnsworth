@@ -90,6 +90,6 @@ class TestChallengeBinaryNode:
         assert_in(patch2, cbn.unsubmitted_patches)
         assert_equals(len(cbn.submitted_patches), 0)
 
-        cs.submit_patches(r0, patch1, patch2)
+        cs.submit(cbns=[patch1, patch2], round=r0)
         assert_equals(len(cbn.submitted_patches), 2)
         assert_equals(len(cbn.unsubmitted_patches), 0)
