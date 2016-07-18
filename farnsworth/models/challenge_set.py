@@ -164,4 +164,4 @@ class ChallengeSet(BaseModel):
 
     @property
     def found_crash(self):
-        return self.crashes.count()
+        return self.crashes.exists()
