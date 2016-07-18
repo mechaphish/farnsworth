@@ -29,10 +29,10 @@ class ChallengeSetSubmissionCable(BaseModel):
 
     @classmethod
     def unprocessed(cls):
-        """Return all unprocessed cables order by creation date descending."""
+        """Return all unprocessed cables order by creation date ascending."""
         return cls.select()\
                   .where(cls.processed_at.is_null(True))\
-                  .order_by(cls.created_at.desc())
+                  .order_by(cls.created_at)
 
     def process(self):
         self.processed_at = datetime.now()
