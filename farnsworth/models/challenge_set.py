@@ -39,18 +39,16 @@ class ChallengeSet(BaseModel):
         tm = cls.rounds.get_through_model()
         return cls.select().join(tm).where(tm.round == round_)
 
-    def submit_patches(self, round=None, *cbns):
-        """Save patches submission at current round"""
+    def submit(self, cbns=[], round=None):
+        """Save patches submission at specified round. If none use current."""
         from .challenge_set_fielding import ChallengeSetFielding
         from .team import Team
-        if not cbns:
-            return False
         if round is None:
             round = Round.current_round()
-        csf = ChallengeSetFielding.create(cs=self,
-                                          cbns=cbns,
-                                          submission_round=round,
-                                          team=Team.get_our())
+        return ChallengeSetFielding.create(cs=self,
+                                           cbns=cbns,
+                                           submission_round=round,
+                                           team=Team.get_our())
     @property
     def unsubmitted_ids_rules(self):
         """Return IDS rules not submitted"""
@@ -185,3 +183,20 @@ class ChallengeSet(BaseModel):
         return self.exploits.where((Exploit.pov_type == 'type2') \
                                    & (Exploit.reliability > 0) \
                                    & (Exploit.method == 'circumstantial')).exists()
+
+    def unprocessed_submission_cables(self):
+        """Return all unprocessed cables order by creation date descending."""
+        from .cs_submission_cable import CSSubmissionCable
+        return self.submission_cables\
+            .select()\
+            .where(CSSubmissionCable.processed_at.is_null(True))\
+            .order_by(CSSubmissionCable.created_at)
+
+    def has_submissions_in_round(self, round):
+        """Return True if it has a submission for our team in specified round"""
+        from .challenge_set_fielding import ChallengeSetFielding
+        from .team import Team
+        return self.fieldings\
+                   .where((ChallengeSetFielding.submission_round == round) & \
+                          (ChallengeSetFielding.team == Team.get_our()))\
+                   .exists()

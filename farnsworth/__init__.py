@@ -15,7 +15,7 @@ def tables():
                                    ChallengeBinaryNode,
                                    ChallengeSet,
                                    ChallengeSetFielding,
-                                   ChallengeSetSubmissionCable,
+                                   CSSubmissionCable,
                                    Crash,
                                    Evaluation,
                                    Exploit,
@@ -45,7 +45,7 @@ def tables():
               ChallengeBinaryNode,
               ChallengeSet,
               ChallengeSetFielding,
-              ChallengeSetSubmissionCable,
+              CSSubmissionCable,
               Crash,
               Evaluation,
               Exploit,
@@ -71,7 +71,8 @@ def tables():
               TracerCache,
               ValidPoll]
     through_models = [ChallengeSet.rounds,
-                      ChallengeSetFielding.cbns]
+                      ChallengeSetFielding.cbns,
+                      CSSubmissionCable.cbns]
     return models + [tm.get_through_model() for tm in through_models]
 
 def create_tables():

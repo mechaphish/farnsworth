@@ -11,9 +11,17 @@ from nose.tools import *
 from peewee import IntegrityError
 
 from . import setup_each, teardown_each
-from farnsworth.models import (ChallengeBinaryNode, ChallengeSetFielding,
-                               ChallengeSet, Exploit, FunctionIdentity, IDSRule,
-                               AFLJob, RexJob, Round, Team)
+from farnsworth.models import (AFLJob,
+                               ChallengeBinaryNode,
+                               ChallengeSet,
+                               ChallengeSetFielding,
+                               CSSubmissionCable,
+                               Exploit,
+                               FunctionIdentity,
+                               IDSRule,
+                               RexJob,
+                               Round,
+                               Team)
 import farnsworth.models
 
 NOW = datetime.now()
@@ -65,7 +73,7 @@ class TestChallengeSet:
         assert_equals([cbn1, cbn2], cs.cbns_by_patch_type()['patch0'])
         assert_equals([cbn3], cs.cbns_by_patch_type()['patch1'])
 
-    def test_submit_patches(self):
+    def test_submit(self):
         r1 = Round.create(num=0, ends_at=NOW + timedelta(seconds=30))
         team = Team.create(name=Team.OUR_NAME)
         cs = ChallengeSet.create(name="foo")
@@ -75,7 +83,7 @@ class TestChallengeSet:
         assert_equals(len(cs.fieldings), 0)
 
         # Submit 2 patches at once
-        cs.submit_patches(r1, cbn1, cbn2)
+        cs.submit(cbns=[cbn1, cbn2], round=r1)
         assert_equals(len(cs.fieldings), 1)
 
         assert_equals(len(cs.fieldings.get().cbns), 2)
@@ -85,7 +93,7 @@ class TestChallengeSet:
         assert_is_none(cs.fieldings.get().fielded_round)
 
         # Submit again fails
-        assert_raises(IntegrityError, cs.submit_patches, r1, cbn1, cbn2)
+        assert_raises(IntegrityError, cs.submit, cbns=[cbn1, cbn2], round=r1)
 
     def test_unsubmitted_ids_rules(self):
         r1 = Round.create(num=0)
@@ -200,3 +208,35 @@ class TestChallengeSet:
         identity2 = FunctionIdentity.create(cs=cs, address=2, symbol="bbb")
 
         assert_equals(cs.symbols, {1: "aaa", 2: "bbb"})
+
+    def test_unprocessed_submission_cables(self):
+        cs = ChallengeSet.create(name="foo")
+        cbn = ChallengeBinaryNode.create(name="foo1", cs=cs, sha256="sum")
+        ids = IDSRule.create(cs=cs, rules="aaa", sha256="sum")
+        cable1 = CSSubmissionCable.create(cs=cs, ids=ids, cbns=[cbn])
+        cable2 = CSSubmissionCable.create(cs=cs, ids=ids, cbns=[])
+
+        assert_equals(len(cs.unprocessed_submission_cables()), 2)
+        assert_equals(cable1, cs.unprocessed_submission_cables()[0])
+        assert_equals(cable2, cs.unprocessed_submission_cables()[1])
+
+        cable1.process()
+        assert_equals(len(cs.unprocessed_submission_cables()), 1)
+
+    def test_has_submissions_in_round(self):
+        r0 = Round.create(num=0)
+        r1 = Round.create(num=1)
+        cs = ChallengeSet.create(name="foo")
+        cbn = ChallengeBinaryNode.create(name="foo1", cs=cs, sha256="sum")
+        our_team = Team.create(name=Team.OUR_NAME)
+        other_team = Team.create(name="enemy")
+
+        ChallengeSetFielding.create(cs=cs, cbns=[cbn], team=our_team, submission_round=r1)
+        assert_false(cs.has_submissions_in_round(r0))
+        assert_true(cs.has_submissions_in_round(r1))
+
+        ChallengeSetFielding.create(cs=cs, cbns=[cbn], team=other_team, submission_round=r0)
+        assert_false(cs.has_submissions_in_round(r0))
+
+        ChallengeSetFielding.create(cs=cs, cbns=[cbn], team=our_team, submission_round=r0)
+        assert_true(cs.has_submissions_in_round(r0))

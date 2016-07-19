@@ -20,13 +20,16 @@ class IDSRule(BaseModel):
     rules = TextField()
     sha256 = FixedCharField(max_length=64) # this index shit doesn't work, we create it manually
 
-    def submit(self):
-        """Save submission at current round"""
+    def submit(self, round=None):
+        """Save submission at specified round. If None use current round."""
         from .ids_rule_fielding import IDSRuleFielding
         from .round import Round
         from .team import Team
-        irf = IDSRuleFielding.create(ids_rule=self, submission_round=Round.current_round(),
-                                     team=Team.get_our())
+        if round is None:
+            round = Round.current_round()
+        return IDSRuleFielding.create(ids_rule=self,
+                                      submission_round=round,
+                                      team=Team.get_our())
 
     def save(self, **kwargs):
         if self.sha256 is None:

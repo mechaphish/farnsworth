@@ -12,8 +12,6 @@ from nose.tools import *
 from . import setup_each, teardown_each
 from farnsworth.models import ChallengeSet, IDSRule, Round, Team
 
-NOW = datetime.now()
-
 
 class TestIDSRule:
     def setup(self):
@@ -23,16 +21,22 @@ class TestIDSRule:
         teardown_each()
 
     def test_submit(self):
-        Round.create(num=0, ends_at=NOW + timedelta(seconds=30))
+        r0 = Round.create(num=0)
+        r1 = Round.create(num=1)
         Team.create(name=Team.OUR_NAME)
         cs = ChallengeSet.create(name="foo")
         ids = IDSRule.create(cs=cs, rules="aaa", sha256="bbb")
 
         assert_equals(len(ids.fieldings), 0)
+
         ids.submit()
         assert_equals(len(ids.fieldings), 1)
         assert_equals(ids.fieldings.get().team, Team.get_our())
         assert_equals(ids.fieldings.get().submission_round, Round.current_round())
+
+        fielding = ids.submit(r0)
+        assert_equals(len(ids.fieldings), 2)
+        assert_equals(fielding.submission_round, r0)
 
     def test_generate_hash_on_create_and_save_if_missing(self):
         cs = ChallengeSet.create(name="foo")
