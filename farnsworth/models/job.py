@@ -56,6 +56,7 @@ class Job(BaseModel):
     worker = CharField()
     kvm_access = False
     data_access = False
+    restart = True
 
     class Meta:     # pylint:disable=no-init,missing-docstring,old-style-class
         def db_table_func(self):   # pylint:disable=no-self-argument,no-self-use
@@ -126,6 +127,7 @@ class ColorGuardJob(Job):
     """
 
     worker = CharField(default='colorguard')
+    restart = False
 
     @property
     def input_test(self):
@@ -161,6 +163,7 @@ class RexJob(Job):
     `payload` field.
     """
     worker = CharField(default='rex')
+    restart = False
 
     @property
     def input_crash(self):
@@ -182,6 +185,7 @@ class PovFuzzer1Job(RexJob):
     """
 
     worker = CharField(default='povfuzzer1')
+    restart = False
 
 
 class PovFuzzer2Job(RexJob):
@@ -192,6 +196,7 @@ class PovFuzzer2Job(RexJob):
     """
 
     worker = CharField(default='povfuzzer2')
+    restart = False
 
 
 class PatcherexJob(Job):
