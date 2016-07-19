@@ -191,3 +191,12 @@ class ChallengeSet(BaseModel):
             .select()\
             .where(CSSubmissionCable.processed_at.is_null(True))\
             .order_by(CSSubmissionCable.created_at)
+
+    def has_submissions_in_round(self, round):
+        """Return True if it has a submission for our team in specified round"""
+        from .challenge_set_fielding import ChallengeSetFielding
+        from .team import Team
+        return self.fieldings\
+                   .where((ChallengeSetFielding.submission_round == round) & \
+                          (ChallengeSetFielding.team == Team.get_our()))\
+                   .exists()

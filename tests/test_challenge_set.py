@@ -222,3 +222,21 @@ class TestChallengeSet:
 
         cable1.process()
         assert_equals(len(cs.unprocessed_submission_cables()), 1)
+
+    def test_has_submissions_in_round(self):
+        r0 = Round.create(num=0)
+        r1 = Round.create(num=1)
+        cs = ChallengeSet.create(name="foo")
+        cbn = ChallengeBinaryNode.create(name="foo1", cs=cs, sha256="sum")
+        our_team = Team.create(name=Team.OUR_NAME)
+        other_team = Team.create(name="enemy")
+
+        ChallengeSetFielding.create(cs=cs, cbns=[cbn], team=our_team, submission_round=r1)
+        assert_false(cs.has_submissions_in_round(r0))
+        assert_true(cs.has_submissions_in_round(r1))
+
+        ChallengeSetFielding.create(cs=cs, cbns=[cbn], team=other_team, submission_round=r0)
+        assert_false(cs.has_submissions_in_round(r0))
+
+        ChallengeSetFielding.create(cs=cs, cbns=[cbn], team=our_team, submission_round=r0)
+        assert_true(cs.has_submissions_in_round(r0))
