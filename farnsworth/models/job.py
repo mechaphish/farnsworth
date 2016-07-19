@@ -225,6 +225,14 @@ class TesterJob(Job):
             return True
         return False
 
+    @classmethod
+    def unstarted(cls, cs):
+        """Return all unstarted jobs for the provided ChallengeSet
+        :param cs: ChallengeSet for which Jobs need to be fetched.
+        :return List of job objects which are not started
+        """
+        return cls.select().where(cls.started_at.is_null(True) & (cls.worker == cls.worker.default) & (cls.cs == cs))
+
 
 class PollCreatorJob(TesterJob):
     """
