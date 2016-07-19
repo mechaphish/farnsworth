@@ -15,10 +15,8 @@ from .job import Job
 class Crash(BaseModel):
     blob = BlobField(null=True)
     cs = ForeignKeyField(ChallengeSet, related_name='crashes')
-    exploitable = BooleanField(null=True)
-    exploited = BooleanField(null=True)
-    explorable = BooleanField(null=True)
-    explored = BooleanField(null=True)
+    exploited = BooleanField(default=False)
+    explored = BooleanField(default=False)
     job = ForeignKeyField(Job, related_name='crashes')
     triaged = BooleanField(null=False, default=False)
     kind = EnumField(choices=['unclassified',

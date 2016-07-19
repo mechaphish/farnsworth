@@ -165,3 +165,16 @@ class ChallengeSet(BaseModel):
     @property
     def found_crash(self):
         return self.crashes.exists()
+
+    def _has_type(self, typename):
+        from .exploit import Exploit
+        return self.exploits.where((Exploit.pov_type == typename)\
+                & (Exploit.reliability > 0)).exists()
+
+    @property
+    def has_type1(self):
+        return self._has_type('type1')
+
+    @property
+    def has_type2(self):
+        return self._has_type('type2')
