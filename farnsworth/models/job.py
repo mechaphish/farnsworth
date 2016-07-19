@@ -30,7 +30,7 @@ def to_job_type(job):
                  PatcherexJob, PovFuzzer1Job, PovFuzzer2Job, RexJob, RopCacheJob,
                  # Tester jobs
                  TesterJob, CBTesterJob, NetworkPollSanitizerJob, PollCreatorJob,
-                 PovTesterJob]
+                 PovTesterJob, ShowmapSyncJob]
 
     for job_type in job_types:
         if job.worker == job_type.worker.default:
@@ -458,3 +458,8 @@ class CacheJob(Job):
 class RopCacheJob(Job):
     """A RopCacheJob."""
     worker = CharField(default='rop_cache')
+
+
+class ShowmapSyncJob(Job):
+    """A ShowMapSync."""
+    worker = CharField(default='showmap_sync')
