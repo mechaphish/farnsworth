@@ -178,3 +178,10 @@ class ChallengeSet(BaseModel):
     @property
     def has_type2(self):
         return self._has_type('type2')
+
+    @property
+    def has_circumstantial_type2(self):
+        from .exploit import Exploit
+        return self.exploits.where((Exploit.pov_type == 'type2')\
+                & (Exploit.reliability > 0)\
+                & (Exploit.method == 'circumstantial')).exists()
