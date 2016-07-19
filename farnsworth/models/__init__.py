@@ -42,7 +42,6 @@ from .job import (
     PovFuzzer2Job,
     RexJob,
     RopCacheJob,
-    WereRabbitJob,
 
     # Tester jobs, inside VM inside Docker
     TesterJob,

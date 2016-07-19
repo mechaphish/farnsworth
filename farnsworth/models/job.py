@@ -28,7 +28,6 @@ def to_job_type(job):
                  AFLJob, CacheJob, CBRoundTesterJob, ColorGuardJob, DrillerJob,
                  FunctionIdentifierJob, IDSJob, NetworkPollCreatorJob, PatchPerformanceJob,
                  PatcherexJob, PovFuzzer1Job, PovFuzzer2Job, RexJob, RopCacheJob,
-                 WereRabbitJob,
                  # Tester jobs
                  TesterJob, CBTesterJob, NetworkPollSanitizerJob, PollCreatorJob,
                  PovTesterJob]
@@ -148,11 +147,6 @@ class AFLJob(Job):
             self._challenge_set = None # pylint:disable=attribute-defined-outside-init
         self._challenge_set = self._challenge_set or ChallengeSet.get(id=self.payload['cs_id']) # pylint:disable=attribute-defined-outside-init
         return self._challenge_set
-
-class WereRabbitJob(Job):
-    """This represents a job for AFL's Were Rabbit crash exploration mode."""
-    worker = CharField(default='were_rabbit')
-
 
 class RexJob(Job):
     """
