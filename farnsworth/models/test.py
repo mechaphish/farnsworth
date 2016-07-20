@@ -8,8 +8,8 @@ from peewee import BooleanField, BlobField, FixedCharField, ForeignKeyField
 from ..actions import CQE_POV, Data, Write
 from .base import BaseModel
 from .challenge_set import ChallengeSet
-from .job import Job
 from .concerns.indexed_blob_model import IndexedBlobModel
+from .job import Job
 
 """Test model"""
 

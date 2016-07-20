@@ -8,8 +8,8 @@ from ..peewee_extensions import EnumField
 
 from .base import BaseModel
 from .challenge_set import ChallengeSet
-from .job import Job
 from .concerns.indexed_blob_model import IndexedBlobModel
+from .job import Job
 
 """Crash model module."""
 
