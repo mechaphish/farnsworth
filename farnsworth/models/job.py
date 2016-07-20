@@ -463,3 +463,14 @@ class RopCacheJob(Job):
 class ShowmapSyncJob(Job):
     """A ShowMapSync."""
     worker = CharField(default='showmap_sync')
+
+    @property
+    def input_round(self):
+        """Return input crash"""
+        from .round import Round
+        # pylint: disable=attribute-defined-outside-init
+        if not hasattr(self, '_input_round'):
+            self._input_round = None
+        self._input_round = self._input_round or Round.get(id=self.payload['round_id'])
+        # pylint: enable=attribute-defined-outside-init
+        return self._input_round_
