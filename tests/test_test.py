@@ -52,6 +52,12 @@ class TestTest:
         assert_true(created)
         test, created = farnsworth.models.Test.get_or_create(cs=cs, job=job, blob="a blob")
         assert_false(created)
+        # because we're opening another transaction in create_or_get()
+        # rollback doesn't work. clean everything in a transaction
+        with ChallengeSet._meta.database.atomic():
+            test.delete_instance()
+            job.delete_instance()
+            cs.delete_instance()
 
     def test_cbn_association(self):
         cs = ChallengeSet.create(name="foo")
