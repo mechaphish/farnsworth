@@ -21,7 +21,7 @@ else:
 setup(name='farnsworth',
       version="0.0.2",
       packages=["farnsworth", "farnsworth.actions", "farnsworth.actions.common",
-                "farnsworth.models"],
+                "farnsworth.models", "farnsworth.models.concerns"],
       entry_points={'console_scripts': ["farnsworth=farnsworth.__main__:main"]},
       install_requires=requires,
       description="Knowledge base of the Shellphish CRS",
