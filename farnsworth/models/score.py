@@ -7,8 +7,8 @@ from peewee import ForeignKeyField
 from playhouse.postgres_ext import BinaryJSONField
 
 from .base import BaseModel
+from .concerns.round_related_model import RoundRelatedModel
 from .round import Round
-from .round_related_model import RoundRelatedModel
 
 """Score model"""
 

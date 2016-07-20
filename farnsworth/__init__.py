@@ -80,11 +80,15 @@ def create_tables():
     master_db.create_tables(tables(), safe=True)
 
     from farnsworth.models import (ChallengeBinaryNode,
-                                   ChallengeSetFielding)
+                                   ChallengeSetFielding,
+                                   Crash,
+                                   Test)
     master_db.create_index(ChallengeBinaryNode, ['sha256'], unique=True)
     master_db.create_index(ChallengeSetFielding, ['cs', 'team', 'submission_round'], unique=True)
     master_db.create_index(ChallengeSetFielding, ['cs', 'team', 'available_round'], unique=True)
     master_db.create_index(ChallengeSetFielding, ['cs', 'team', 'fielded_round'], unique=True)
+    master_db.create_index(Crash, ['cs', 'sha256'], unique=True)
+    master_db.create_index(Test, ['cs', 'sha256'], unique=True)
 
 def drop_tables():
     LOG.debug("Dropping tables...")

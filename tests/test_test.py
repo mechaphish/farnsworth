@@ -21,6 +21,38 @@ class TestTest:
     def teardown(self):
         teardown_each()
 
+    def test_save_automatically_calculates_sha256(self):
+        cs = ChallengeSet.create(name="foo")
+        job = AFLJob.create()
+        test = farnsworth.models.Test(cs=cs, job=job, blob="a blob")
+        assert_is_none(test.sha256)
+
+        test.save()
+        assert_equals(test.sha256, "bbffdf5ecaf101e014fa03c8d0b1996554bac10f")
+
+        test = farnsworth.models.Test(cs=cs, job=job, blob="a blob", sha256="sum")
+        test.save()
+        assert_equals(test.sha256, "sum")
+
+        test = farnsworth.models.Test.create(cs=cs, job=job, blob="another blob")
+        assert_is_not_none(test.sha256)
+
+    def test_cs_sha256_uniqueness(self):
+        cs = ChallengeSet.create(name="foo")
+        job = AFLJob.create()
+        test = farnsworth.models.Test.create(cs=cs, job=job, blob="a blob")
+
+        assert_raises(farnsworth.models.Test.create, cs=cs, job=job, blob="a blob")
+
+    def test_get_or_create(self):
+        cs = ChallengeSet.create(name="foo")
+        job = AFLJob.create()
+
+        test, created = farnsworth.models.Test.get_or_create(cs=cs, job=job, blob="a blob")
+        assert_true(created)
+        test, created = farnsworth.models.Test.get_or_create(cs=cs, job=job, blob="a blob")
+        assert_false(created)
+
     def test_cbn_association(self):
         cs = ChallengeSet.create(name="foo")
         job = AFLJob.create(cs=cs)
@@ -48,17 +80,17 @@ class TestTest:
 
         assert_equal(len(farnsworth.models.Test.unsynced_testcases(NOW)), 0)
 
-        test1 = farnsworth.models.Test.create(cs=cs1, job=job1, blob="XXX")
+        test1 = farnsworth.models.Test.create(cs=cs1, job=job1, blob="XXX1")
         assert_equal(len(farnsworth.models.Test.unsynced_testcases(NOW)), 1)
 
-        test2 = farnsworth.models.Test.create(cs=cs2, job=job2, blob="XXX")
+        test2 = farnsworth.models.Test.create(cs=cs2, job=job2, blob="XXX2")
         assert_equal(len(farnsworth.models.Test.unsynced_testcases(NOW)), 2)
 
         unsynced_cs1 = farnsworth.models.Test.unsynced_testcases(NOW) \
                                               .join(Job).where(Job.cs == cs1)
         assert_equal(len(unsynced_cs1), 1)
 
-        test3 = farnsworth.models.Test.create(cs=cs1, job=job3, blob="XXX")
+        test3 = farnsworth.models.Test.create(cs=cs1, job=job3, blob="XXX3")
         assert_equal(len(farnsworth.models.Test.unsynced_testcases(NOW)), 3)
         unsynced_cs2 = farnsworth.models.Test.unsynced_testcases(NOW) \
                                               .join(Job).where(Job.cs == cs2)

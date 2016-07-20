@@ -3,17 +3,18 @@
 
 from __future__ import absolute_import, unicode_literals
 
-from peewee import BooleanField, BlobField, ForeignKeyField
+from peewee import BooleanField, BlobField, FixedCharField, ForeignKeyField
 
 from ..actions import CQE_POV, Data, Write
 from .base import BaseModel
 from .challenge_set import ChallengeSet
+from .concerns.indexed_blob_model import IndexedBlobModel
 from .job import Job
 
 """Test model"""
 
 
-class Test(BaseModel):
+class Test(IndexedBlobModel, BaseModel): # Inherited classes order matters!
     """Test model"""
     blob = BlobField()
     cs = ForeignKeyField(ChallengeSet, related_name='tests')
@@ -21,6 +22,7 @@ class Test(BaseModel):
     drilled = BooleanField(null=False, default=False)
     colorguard_traced = BooleanField(null=False, default=False)
     poll_created = BooleanField(null=False, default=False)
+    sha256 = FixedCharField(max_length=64)
 
     @classmethod
     def unsynced_testcases(cls, prev_sync_time):

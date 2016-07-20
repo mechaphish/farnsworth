@@ -3,16 +3,17 @@
 
 from __future__ import absolute_import, unicode_literals
 
-from peewee import BlobField, BooleanField, ForeignKeyField, BigIntegerField
+from peewee import BigIntegerField, BlobField, BooleanField, FixedCharField, ForeignKeyField
 from ..peewee_extensions import EnumField
 
 from .base import BaseModel
 from .challenge_set import ChallengeSet
+from .concerns.indexed_blob_model import IndexedBlobModel
 from .job import Job
 
 """Crash model module."""
 
-class Crash(BaseModel):
+class Crash(IndexedBlobModel, BaseModel): # Inherited classes order matters!
     blob = BlobField(null=True)
     cs = ForeignKeyField(ChallengeSet, related_name='crashes')
     exploited = BooleanField(default=False)
@@ -38,6 +39,7 @@ class Crash(BaseModel):
                      null=True)
     crash_pc = BigIntegerField(null=True) # pc at the time of the crash
     bb_count = BigIntegerField(null=True) # basic block count
+    sha256 = FixedCharField(max_length=64)
 
     class Meta:     # pylint: disable=no-init,too-few-public-methods,old-style-class
         db_table = 'crashes'
