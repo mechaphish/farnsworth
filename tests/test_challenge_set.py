@@ -68,10 +68,11 @@ class TestChallengeSet:
         cbn1 = ChallengeBinaryNode.create(name="foo1", cs=cs, patch_type="patch0", sha256="sum1")
         cbn2 = ChallengeBinaryNode.create(name="foo2", cs=cs, patch_type="patch0", sha256="sum2")
         cbn3 = ChallengeBinaryNode.create(name="foo3", cs=cs, patch_type="patch1", sha256="sum3")
-        # FIXME: use assert_in
-        assert_equals(['patch0', 'patch1'], sorted(cs.cbns_by_patch_type().keys()))
-        assert_equals([cbn1, cbn2], cs.cbns_by_patch_type()['patch0'])
-        assert_equals([cbn3], cs.cbns_by_patch_type()['patch1'])
+        assert_in('patch0', cs.cbns_by_patch_type().keys())
+        assert_in('patch1', cs.cbns_by_patch_type().keys())
+        assert_in(cbn1, cs.cbns_by_patch_type()['patch0'])
+        assert_in(cbn2, cs.cbns_by_patch_type()['patch0'])
+        assert_in(cbn3, cs.cbns_by_patch_type()['patch1'])
 
     def test_submit(self):
         r1 = Round.create(num=0, ends_at=NOW + timedelta(seconds=30))
