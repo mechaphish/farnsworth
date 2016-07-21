@@ -35,9 +35,9 @@ class CBPollPerformance(BaseModel):
             return CBPollPerformance.select() \
                                     .where(CBPollPerformance.cs == cs
                                            & CBPollPerformance.patch_type.is_null(True)
-                                           & CBPollPerformance.is_poll_ok == True)).count()
+                                           & CBPollPerformance.is_poll_ok == True).count()
         else:
             return CBPollPerformance.select() \
                                     .where(CBPollPerformance.cs == cs
                                            & CBPollPerformance.patch_type == patch_type
-                                           & CBPollPerformance.is_poll_ok == True)).count()
+                                           & CBPollPerformance.is_poll_ok == True).count()
