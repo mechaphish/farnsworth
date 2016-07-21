@@ -9,7 +9,7 @@ from peewee import CharField, BlobField, ForeignKeyField, FixedCharField, Boolea
 from .base import BaseModel
 from .challenge_set import ChallengeSet
 from .ids_rule import IDSRule
-from .patch_type import PatchType
+from .patch_type import APatchType
 # Imports for Exploit, Round, Exploit deferred to prevent circular imports.
 
 class ChallengeBinaryNode(BaseModel):

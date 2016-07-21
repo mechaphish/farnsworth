@@ -9,7 +9,7 @@ from playhouse.postgres_ext import BinaryJSONField
 from .base import BaseModel
 from .round import Round
 from .challenge_set import ChallengeSet
-from .patch_type import PatchType
+from .patch_type import APatchType
 
 """patch_scores model"""
 
@@ -26,4 +26,4 @@ class PatchScore(BaseModel):
     round = ForeignKeyField(Round, related_name='patch_scores')
     perf_score = BinaryJSONField(null=False)
 
-    patch_type = ForeignKeyField(PatchType, related_name='estimated_scores')
+    patch_type = ForeignKeyField(APatchType, related_name='estimated_scores')

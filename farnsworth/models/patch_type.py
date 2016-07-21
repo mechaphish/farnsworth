@@ -10,7 +10,7 @@ from .base import BaseModel
 """patch_type_config model"""
 
 
-class PatchType(BaseModel):
+class APatchType(BaseModel):
     """
     Patch Types
     """
