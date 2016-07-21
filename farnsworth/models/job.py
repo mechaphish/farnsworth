@@ -30,7 +30,7 @@ def to_job_type(job):
                  PatcherexJob, PovFuzzer1Job, PovFuzzer2Job, RexJob, RopCacheJob,
                  # Tester jobs
                  TesterJob, CBTesterJob, NetworkPollSanitizerJob, PollCreatorJob,
-                 PovTesterJob]
+                 PovTesterJob, ShowmapSyncJob]
 
     for job_type in job_types:
         if job.worker == job_type.worker.default:
@@ -113,9 +113,13 @@ class DrillerJob(Job):
     def input_test(self):
         """Return input test case"""
         from .test import Test
+        # pylint:disable=attribute-defined-outside-init
         if not hasattr(self, '_input_test'):
-            self._input_test = None # pylint:disable=attribute-defined-outside-init
-        self._input_test = self._input_test or Test.get(id=self.payload['test_id']) # pylint:disable=attribute-defined-outside-init
+            self._input_test = None
+
+        if self._input_test is None:
+            self._input_test = Test.get(id=self.payload['test_id'])
+
         return self._input_test
 
 
@@ -132,9 +136,13 @@ class ColorGuardJob(Job):
     def input_test(self):
         """Return input test case"""
         from .test import Test
+        # pylint:disable=attribute-defined-outside-init
         if not hasattr(self, '_input_test'):
-            self._input_test = None # pylint:disable=attribute-defined-outside-init
-        self._input_test = self._input_test or Test.get(id=self.payload['test_id']) # pylint:disable=attribute-defined-outside-init
+            self._input_test = None
+
+        if self._input_test is None:
+            self._input_test = Test.get(id=self.payload['test_id'])
+
         return self._input_test
 
 
@@ -145,9 +153,13 @@ class AFLJob(Job):
     @property
     def challenge_set(self):
         """Return challenge set to fuzz"""
+        # pylint:disable=attribute-defined-outside-init
         if not hasattr(self, '_challenge_set'):
-            self._challenge_set = None # pylint:disable=attribute-defined-outside-init
-        self._challenge_set = self._challenge_set or ChallengeSet.get(id=self.payload['cs_id']) # pylint:disable=attribute-defined-outside-init
+            self._challenge_set = None
+
+        if self._challenge_set is None:
+            self._challenge_set = ChallengeSet.get(id=self.payload['cs_id'])
+
         return self._challenge_set
 
 class RexJob(Job):
@@ -166,8 +178,10 @@ class RexJob(Job):
         # pylint: disable=attribute-defined-outside-init
         if not hasattr(self, '_input_crash'):
             self._input_crash = None
-        self._input_crash = self._input_crash or Crash.get(id=self.payload['crash_id'])
-        # pylint: enable=attribute-defined-outside-init
+
+        if self._input_crash is None:
+            self._input_crash = Crash.get(id=self.payload['crash_id'])
+
         return self._input_crash
 
 
@@ -231,7 +245,9 @@ class TesterJob(Job):
         :param cs: ChallengeSet for which Jobs need to be fetched.
         :return List of job objects which are not started
         """
-        return cls.select().where(cls.started_at.is_null(True) & (cls.worker == cls.worker.default) & (cls.cs == cs))
+        return cls.select().where(cls.started_at.is_null(True)
+                                  & (cls.worker == cls.worker.default)
+                                  & (cls.cs == cs))
 
 
 class PollCreatorJob(TesterJob):
@@ -250,9 +266,13 @@ class PollCreatorJob(TesterJob):
         :return: Test corresponding to this job.
         """
         from .test import Test
+        # pylint: disable=attribute-defined-outside-init
         if not hasattr(self, '_target_test'):
             self._target_test = None
-        self._target_test = self._target_test or Test.get(id=self.payload['test_id'])
+
+        if self._target_test is None:
+            self._target_test = Test.get(id=self.payload['test_id'])
+
         return self._target_test
 
 
@@ -271,9 +291,13 @@ class NetworkPollSanitizerJob(TesterJob):
         :return: RawRoundPoll corresponding to this job.
         """
         from .raw_round_poll import RawRoundPoll
+        # pylint: disable=attribute-defined-outside-init
         if not hasattr(self, '_round_poll'):
             self._round_poll = None
-        self._round_poll = self._round_poll or RawRoundPoll.get(id=self.payload['rrp_id'])
+
+        if self._round_poll is None:
+            self._round_poll = RawRoundPoll.get(id=self.payload['rrp_id'])
+
         return self._round_poll
 
 
@@ -292,9 +316,13 @@ class CBTesterJob(TesterJob):
         :return: ValidPoll corresponding to this job.
         """
         from .valid_polls import ValidPoll
+        # pylint: disable=attribute-defined-outside-init
         if not hasattr(self, '_poll'):
             self._poll = None
-        self._poll = self._poll or ValidPoll.get(id=self.payload['poll_id'])
+
+        if self._poll is None:
+            self._poll = ValidPoll.get(id=self.payload['poll_id'])
+
         return self._poll
 
     @property
@@ -315,10 +343,13 @@ class CBTesterJob(TesterJob):
         Get the patch type of the cb_tester job.
         :return: patch type as string.
         """
+        # pylint: disable=attribute-defined-outside-init
         if not hasattr(self, '_patch_type'):
             self._patch_type = None
-        if 'patch_type' in self.payload:
-            self._patch_type = self._patch_type or self.payload['patch_type']
+
+        if 'patch_type' in self.payload and self._patch_type is None:
+            self._patch_type = self.payload['patch_type']
+
         return self._patch_type
 
 
@@ -336,9 +367,13 @@ class PatchPerformanceJob(Job):
         :return: Round for which patch performance need to be computed.
         """
         from .round import Round
+        # pylint: disable=attribute-defined-outside-init
         if not hasattr(self, '_target_round'):
             self._target_round = None
-        self._target_round = self._target_round or Round.get(id=self.payload['round_id'])
+
+        if self._target_round is None:
+            self._target_round = Round.get(id=self.payload['round_id'])
+
         return self._target_round
 
 
@@ -360,9 +395,13 @@ class CBRoundTesterJob(Job):
         :return: Target Round corresponding to this job.
         """
         from .round import Round
+        # pylint: disable=attribute-defined-outside-init
         if not hasattr(self, '_target_round'):
             self._target_round = None
-        self._target_round = self._target_round or Round.get(id=self.payload['round_id'])
+
+        if self._target_round is None:
+            self._target_round = Round.get(id=self.payload['round_id'])
+
         return self._target_round
 
 
@@ -373,12 +412,14 @@ class NetworkPollCreatorJob(Job):
     @property
     def target_round_traffic(self):
         """RawRoundTraffic that needs to be processed by this job."""
+        from .raw_round_traffic import RawRoundTraffic
         # pylint: disable=attribute-defined-outside-init
         if not hasattr(self, '_target_round_traffic'):
             self._target_round_traffic = None
-        from .raw_round_traffic import RawRoundTraffic
-        self._target_round_traffic = self._target_round_traffic or RawRoundTraffic.find(self.payload['rrt_id'])
-        # pylint: enable=attribute-defined-outside-init
+
+        if self._target_round_traffic is None:
+            self._target_round_traffic = RawRoundTraffic.find(self.payload['rrt_id'])
+
         return self._target_round_traffic
 
 
@@ -399,8 +440,10 @@ class PovTesterJob(TesterJob):
         # pylint: disable=attribute-defined-outside-init
         if not hasattr(self, '_target_exploit'):
             self._target_exploit = None
-        self._target_exploit = self._target_exploit or Exploit.get(id=self.payload['exploit_id'])
-        # pylint: enable=attribute-defined-outside-init
+
+        if self._target_exploit is None:
+            self._target_exploit = Exploit.get(id=self.payload['exploit_id'])
+
         return self._target_exploit
 
     @property
@@ -409,10 +452,13 @@ class PovTesterJob(TesterJob):
         Get the CS Fielding associated with this Job.
         :return: CS Fielding object.
         """
+        # pylint: disable=attribute-defined-outside-init
         if not hasattr(self, '_target_cs_fielding'):
             self._target_cs_fielding = None
-        self._target_cs_fielding = self._target_cs_fielding or \
-                                   ChallengeSetFielding.get(ChallengeSetFielding.sha256 == self.payload['cs_fld_hash'])
+
+        if self._target_cs_fielding is None:
+            self._target_cs_fielding = ChallengeSetFielding.get(ChallengeSetFielding.sha256 == self.payload['cs_fld_hash'])
+
         return self._target_cs_fielding
 
     @property
@@ -421,11 +467,13 @@ class PovTesterJob(TesterJob):
         Get the IDS Fielding associated with this Job.
         :return: IDS Fielding object.
         """
+        # pylint: disable=attribute-defined-outside-init
         if not hasattr(self, '_target_ids_fielding'):
             self._target_ids_fielding = None
-        if 'ids_fld_hash' in self.payload:
-            self._target_ids_fielding = self._target_ids_fielding or \
-                                        IDSRuleFielding.get(IDSRuleFielding.sha256 == self.payload['ids_fld_hash'])
+
+        if 'ids_fld_hash' in self.payload and self._target_ids_fielding is None:
+            self._target_ids_fielding = IDSRuleFielding.get(IDSRuleFielding.sha256 == self.payload['ids_fld_hash'])
+
         return self._target_ids_fielding
 
 
@@ -437,9 +485,13 @@ class IDSJob(Job):
     def cs(self):
         """Return input ChallengeSet"""
         from .challenge_set import ChallengeSet
+        # pylint:disable=attribute-defined-outside-init
         if not hasattr(self, '_cs'):
-            self._cs = None # pylint:disable=attribute-defined-outside-init
-        self._cs = self._cs or ChallengeSet.find(self.payload.get('cs_id')) # pylint:disable=attribute-defined-outside-init
+            self._cs = None
+
+        if self._cs is None:
+            self._cs = ChallengeSet.find(self.payload.get('cs_id'))
+
         return self._cs
 
 
@@ -458,3 +510,21 @@ class CacheJob(Job):
 class RopCacheJob(Job):
     """A RopCacheJob."""
     worker = CharField(default='rop_cache')
+
+
+class ShowmapSyncJob(Job):
+    """A ShowMapSync."""
+    worker = CharField(default='showmap_sync')
+
+    @property
+    def input_round(self):
+        """Return input crash"""
+        from .round import Round
+        # pylint: disable=attribute-defined-outside-init
+        if not hasattr(self, '_input_round'):
+            self._input_round = None
+
+        if self._input_round is None:
+            self._input_round = Round.get(id=self.payload['round_id'])
+
+        return self._input_round

@@ -48,7 +48,8 @@ from .job import (
     CBTesterJob,
     NetworkPollSanitizerJob,
     PollCreatorJob,
-    PovTesterJob
+    PovTesterJob,
+    ShowmapSyncJob
 )
 from .patch_score import PatchScore
 from .pcap import Pcap
