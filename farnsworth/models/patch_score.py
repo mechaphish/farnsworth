@@ -35,7 +35,7 @@ class PatchScore(BaseModel, CBScoreMixin):
 
     @property
     def security(self):
-        return 1 - self.patch_type.exploitability
+        return 2 - self.patch_type.exploitability
 
     @property
     def success(self):

@@ -52,4 +52,4 @@ class PollFeedback(BaseModel, RoundRelatedModel, CBScoreMixin):
             # unpatched
             return 1
         else:
-            return 1 - self.patch_type.exploitability
+            return 2 - self.patch_type.exploitability
