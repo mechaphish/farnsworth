@@ -473,4 +473,4 @@ class ShowmapSyncJob(Job):
             self._input_round = None
         self._input_round = self._input_round or Round.get(id=self.payload['round_id'])
         # pylint: enable=attribute-defined-outside-init
-        return self._input_round_
+        return self._input_round
