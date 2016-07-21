@@ -33,7 +33,7 @@ class ChallengeSetFielding(BaseModel):
     submission_round = ForeignKeyField(Round, related_name='cs_fieldings', null=True)
     available_round = ForeignKeyField(Round, related_name='cs_fieldings', null=True)
     fielded_round = ForeignKeyField(Round, related_name='cs_fieldings', null=True)
-    cbns = ManyToManyField(ChallengeBinaryNode, related_name='cbns')
+    cbns = ManyToManyField(ChallengeBinaryNode, related_name='fieldings')
     sha256 = FixedCharField(max_length=64)
     remote_cb_score = FloatField(null=True)  # performance metric computed from feedback from DARPA.
 

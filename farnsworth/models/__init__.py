@@ -53,6 +53,7 @@ from .job import (
     ShowmapSyncJob
 )
 from .patch_score import PatchScore
+from .poll_feedback import PollFeedback
 from .pcap import Pcap
 from .pov_test_result import PovTestResult
 from .raw_round_poll import RawRoundPoll

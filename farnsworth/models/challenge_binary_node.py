@@ -19,7 +19,7 @@ class ChallengeBinaryNode(BaseModel):
     name = CharField()
     cs = ForeignKeyField(ChallengeSet, related_name='cbns')
     sha256 = FixedCharField(max_length=64)
-    patch_type = ForeignKeyField(PatchType, related_name='patched_cbns')
+    patch_type = ForeignKeyField(APatchType, related_name='patched_cbns', null=True)
     ids_rule = ForeignKeyField(IDSRule, related_name='cbn', null=True) # needed for submitting patch+related ids rules
 
     is_blacklisted = BooleanField(default=False)  # needed for patch submission decision making.
