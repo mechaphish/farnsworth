@@ -17,3 +17,5 @@ class APatchType(BaseModel):
     name = CharField(null=False)
     functionality_risk = FloatField(null=False)
     exploitability = FloatField(null=False)
+
+PatchType = APatchType
