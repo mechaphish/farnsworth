@@ -16,6 +16,12 @@ class Round(BaseModel):
     num = IntegerField()
 
     @classmethod
+    def prev_round(cls):
+        rounds = cls.select().order_by(cls.created_at.desc())
+        if len(rounds) > 1:
+            return rounds[1]
+
+    @classmethod
     def current_round(cls):
         rounds = cls.select().order_by(cls.created_at.desc())
         if rounds:
