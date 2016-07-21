@@ -3,7 +3,7 @@
 
 from __future__ import absolute_import, unicode_literals
 
-from datetime import datetime, timedelta
+from datetime import datetime
 import os
 import time
 
@@ -86,7 +86,7 @@ class TestChallengeBinaryNode:
         assert_in(cbn3, ChallengeBinaryNode.all_descendants())
 
     def test_submitted_and_unsubmitted_patches(self):
-        r0 = Round.create(num=0, ends_at=NOW + timedelta(seconds=30))
+        r0 = Round.create(num=0)
         team = Team.create(name=Team.OUR_NAME)
         cs = ChallengeSet.create(name="foo")
         cs.rounds = [r0]

@@ -3,7 +3,7 @@
 
 from __future__ import absolute_import, unicode_literals
 
-from datetime import datetime, timedelta
+from datetime import datetime
 import time
 import os
 

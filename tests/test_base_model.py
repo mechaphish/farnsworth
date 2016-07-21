@@ -3,7 +3,7 @@
 
 from __future__ import absolute_import, unicode_literals
 
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from nose.tools import *
 
@@ -21,7 +21,7 @@ class TestBaseModel:
         teardown_each()
 
     def test_save(self):
-        r1 = Round.create(num=0, ends_at=NOW + timedelta(seconds=30))
+        r1 = Round.create(num=0)
         cs = ChallengeSet.create(name="foo")
         cs.rounds = [r1]
         cbn = ChallengeBinaryNode.create(name="foo", cs=cs, sha256="sum")
@@ -34,7 +34,7 @@ class TestBaseModel:
 
     def test_get_or_create(self):
         assert_equals(len(ChallengeSet.select()), 0)
-        r1 = Round.create(num=0, ends_at=NOW + timedelta(seconds=30))
+        r1 = Round.create(num=0)
         cs1, _ = ChallengeSet.get_or_create(name="foo")
         cs2, _ = ChallengeSet.get_or_create(name="foo")
         cs3, _ = ChallengeSet.get_or_create(name="bar")
@@ -53,7 +53,7 @@ class TestBaseModel:
         ChallengeSet._meta.database.commit()
 
     def test_all(self):
-        r1 = Round.create(num=0, ends_at=NOW + timedelta(seconds=30))
+        r1 = Round.create(num=0)
         cs = ChallengeSet.create(name="foo")
         cs.rounds = [r1]
         cbn1 = ChallengeBinaryNode.create(name="foo", cs=cs, sha256="sum1")

@@ -3,7 +3,7 @@
 
 from __future__ import absolute_import, unicode_literals
 
-from datetime import datetime, timedelta
+from datetime import datetime
 import time
 import os
 
@@ -51,8 +51,8 @@ class TestChallengeSet:
 
     def test_fielded_in_round(self):
         now = datetime.now()
-        r1 = Round.create(num=0, ends_at=now + timedelta(seconds=15))
-        r2 = Round.create(num=1, ends_at=now + timedelta(seconds=30))
+        r1 = Round.create(num=0)
+        r2 = Round.create(num=1)
         cs1 = ChallengeSet.create(name="foo")
         cs1.rounds = [r1, r2]
         cs2 = ChallengeSet.create(name="bar")
@@ -75,7 +75,7 @@ class TestChallengeSet:
         assert_in(cbn3, cs.cbns_by_patch_type()['patch1'])
 
     def test_submit(self):
-        r1 = Round.create(num=0, ends_at=NOW + timedelta(seconds=30))
+        r1 = Round.create(num=0)
         team = Team.create(name=Team.OUR_NAME)
         cs = ChallengeSet.create(name="foo")
         cbn1 = ChallengeBinaryNode.create(name="foo", cs=cs, blob=BLOB, sha256="sum1")
