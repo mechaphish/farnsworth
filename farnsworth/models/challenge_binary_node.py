@@ -23,7 +23,7 @@ class ChallengeBinaryNode(BaseModel):
     name = CharField()
     cs = ForeignKeyField(ChallengeSet, related_name='cbns')
     patch_type = CharField(null=True)
-    sha256 = FixedCharField(max_length=64, unique=True) # this index shit doesn't work, we create it manually
+    sha256 = FixedCharField(max_length=64)
     ids_rule = ForeignKeyField(IDSRule, related_name='cbn', null=True) # needed for submitting patch+related ids rules
 
     def delete_binary(self):
