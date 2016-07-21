@@ -44,3 +44,9 @@ class TestRound:
         assert_equals(Round.at_timestamp(NOW + timedelta(seconds=15)).num, 0)
         assert_equals(Round.at_timestamp(NOW + timedelta(seconds=25)).num, 1)
         assert_equals(Round.at_timestamp(NOW + timedelta(seconds=35)).num, 2)
+
+    def test_ready(self):
+        round0 = Round.create(num=0)
+        assert_false(round0.is_ready())
+        round0.ready()
+        assert_true(round0.is_ready())
