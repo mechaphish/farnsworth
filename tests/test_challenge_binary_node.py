@@ -26,11 +26,20 @@ class TestChallengeBinaryNode:
     def teardown(self):
         teardown_each()
 
-    def test_sha256_uniqueness(self):
-        cs = ChallengeSet.create(name="foo")
-        ChallengeBinaryNode.create(name="test1", cs=cs, blob=BLOB, sha256="same-sum")
+    def test_cs_name_and_sha256_uniqueness(self):
+        cs1 = ChallengeSet.create(name="foo")
+        cs2 = ChallengeSet.create(name="bar")
+        # first binary is ok
+        ChallengeBinaryNode.create(name="test1", cs=cs1, blob=BLOB, sha256="same-sum")
+        # same binary with different name is ok
+        ChallengeBinaryNode.create(name="test2", cs=cs1, blob=BLOB, sha256="same-sum")
+        # same binary with different cs is ok
+        ChallengeBinaryNode.create(name="test1", cs=cs2, blob=BLOB, sha256="same-sum")
+        # same cs and name but different binary is ok
+        ChallengeBinaryNode.create(name="test1", cs=cs2, blob=BLOB, sha256="different-sum")
+        # same cs, name and binary raises error
         assert_raises(IntegrityError, ChallengeBinaryNode.create,
-                      name="test1", cs=cs, blob=BLOB, sha256="same-sum")
+                      name="test1", cs=cs1, blob=BLOB, sha256="same-sum")
 
     def test_root_association(self):
         cs = ChallengeSet.create(name="foo")
