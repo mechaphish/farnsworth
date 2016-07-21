@@ -12,7 +12,7 @@ from peewee import IntegrityError
 
 from . import setup_each, teardown_each
 from farnsworth.models import (ChallengeBinaryNode, ChallengeSet,
-                               Round, Team)
+                               Round, Team, PatchType)
 import farnsworth.models    # to avoid collisions between Test and nosetests
 
 NOW = datetime.now()
@@ -91,8 +91,24 @@ class TestChallengeBinaryNode:
         cs = ChallengeSet.create(name="foo")
         cs.rounds = [r0]
         cbn = ChallengeBinaryNode.create(name="cbn", cs=cs, sha256="sum1")
-        patch1 = ChallengeBinaryNode.create(name="patch1", cs=cs, root=cbn, sha256="sum2")
-        patch2 = ChallengeBinaryNode.create(name="patch2", cs=cs, root=cbn, sha256="sum3")
+        patchtype1 = PatchType.create(
+            name="PatchType1",
+            functionality_risk = 0,
+            exploitability = 0
+        )
+        patchtype2 = PatchType.create(
+            name="PatchType2",
+            functionality_risk = 0,
+            exploitability = 0
+        )
+
+
+        patch1 = ChallengeBinaryNode.create(
+            name="patch1", patch_type=patchtype1, cs=cs, root=cbn, sha256="sum2"
+        )
+        patch2 = ChallengeBinaryNode.create(
+            name="patch2", patch_type=patchtype2, cs=cs, root=cbn, sha256="sum3"
+        )
 
         assert_equals(len(cbn.unsubmitted_patches), 2)
         assert_in(patch1, cbn.unsubmitted_patches)

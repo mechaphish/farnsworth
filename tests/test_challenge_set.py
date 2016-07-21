@@ -19,6 +19,7 @@ from farnsworth.models import (AFLJob,
                                Exploit,
                                FunctionIdentity,
                                IDSRule,
+                               PatchType,
                                RexJob,
                                Round,
                                Team)
@@ -65,14 +66,24 @@ class TestChallengeSet:
     def test_cbns_by_patch_type(self):
         cs = ChallengeSet.create(name="foo")
         cbn = ChallengeBinaryNode.create(name="foo", cs=cs, sha256="sum")
-        cbn1 = ChallengeBinaryNode.create(name="foo1", cs=cs, patch_type="patch0", sha256="sum1")
-        cbn2 = ChallengeBinaryNode.create(name="foo2", cs=cs, patch_type="patch0", sha256="sum2")
-        cbn3 = ChallengeBinaryNode.create(name="foo3", cs=cs, patch_type="patch1", sha256="sum3")
-        assert_in('patch0', cs.cbns_by_patch_type().keys())
-        assert_in('patch1', cs.cbns_by_patch_type().keys())
-        assert_in(cbn1, cs.cbns_by_patch_type()['patch0'])
-        assert_in(cbn2, cs.cbns_by_patch_type()['patch0'])
-        assert_in(cbn3, cs.cbns_by_patch_type()['patch1'])
+        patch0 = PatchType.create(
+            name="patch0",
+            functionality_risk=0,
+            exploitability=1,
+        )
+        patch1 = PatchType.create(
+            name="patch1",
+            functionality_risk=0,
+            exploitability=1,
+        )
+        cbn1 = ChallengeBinaryNode.create(name="foo1", cs=cs, patch_type=patch0, sha256="sum1")
+        cbn2 = ChallengeBinaryNode.create(name="foo2", cs=cs, patch_type=patch0, sha256="sum2")
+        cbn3 = ChallengeBinaryNode.create(name="foo3", cs=cs, patch_type=patch1, sha256="sum3")
+        assert_in(patch0, cs.cbns_by_patch_type().keys())
+        assert_in(patch1, cs.cbns_by_patch_type().keys())
+        assert_in(cbn1, cs.cbns_by_patch_type()[patch0])
+        assert_in(cbn2, cs.cbns_by_patch_type()[patch0])
+        assert_in(cbn3, cs.cbns_by_patch_type()[patch1])
 
     def test_submit(self):
         r1 = Round.create(num=0)
@@ -150,7 +161,11 @@ class TestChallengeSet:
         cs = ChallengeSet.create(name="foo")
         cs.rounds = [r0, r1]
         cbn = ChallengeBinaryNode.create(name="foo", cs=cs, sha256="sum1")
-        cbn_patched = ChallengeBinaryNode.create(name="foo", cs=cs, patch_type="patch0", sha256="sum2")
+        cbn_patched = ChallengeBinaryNode.create(name="foo", cs=cs, patch_type=PatchType.create(
+            name="patch1",
+            functionality_risk=0,
+            exploitability=1,
+        ), sha256="sum2")
         cbn_other_team = ChallengeBinaryNode.create(name="foo", cs=cs, sha256="sum3")
         ChallengeSetFielding.create(cs=cs, cbns=[cbn], team=our_team, available_round=r0)
         ChallengeSetFielding.create(cs=cs, cbns=[cbn_patched], team=our_team, submission_round=r0).save()
