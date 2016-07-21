@@ -20,6 +20,14 @@ class TestRound:
     def teardown(self):
         teardown_each()
 
+    def test_prev_round(self):
+        assert_equals(Round.prev_round(), None)
+        Round.create(num=0, ends_at=NOW + timedelta(seconds=15))
+        assert_equals(Round.prev_round(), None)
+        Round.create(num=1, ends_at=NOW + timedelta(seconds=25))
+        Round.create(num=2, ends_at=NOW + timedelta(seconds=35))
+        assert_equals(Round.prev_round().num, 1)
+
     def test_current_round(self):
         assert_equals(Round.current_round(), None)
         Round.create(num=0, ends_at=NOW + timedelta(seconds=15))
