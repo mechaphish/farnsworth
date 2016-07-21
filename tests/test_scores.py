@@ -19,6 +19,61 @@ class TestScores(object):
     def teardown(self):
         teardown_each()
 
+    def test_cbn_to_polls(self):
+        r3 = Round.create(num=3)
+        r4 = Round.create(num=4)
+        r5 = Round.create(num=5)
+        cs = ChallengeSet.create(name="foo2")
+        team = Team.create(name=Team.OUR_NAME)
+        cbn1 = ChallengeBinaryNode.create(name="foo_2", cs=cs, sha256="sum2")
+        csf3 = ChallengeSetFielding.create(
+            cs=cs, cbns=[cbn1], team=team, available_round=r3, submission_round=r3,
+            poll_feedback = PollFeedback.create(
+                cs=cs,
+                round_id=r3.id,
+                success=0.0,
+                timeout=0,
+                connect=0,
+                function=0,
+                time_overhead=0.0,
+                memory_overhead=0.0,
+                size_overhead=0.0,
+            )
+        )
+        csf4 = ChallengeSetFielding.create(
+            cs=cs, cbns=[cbn1], team=team, available_round=r4,
+            poll_feedback = PollFeedback.create(
+                cs=cs,
+                round_id=r4.id,
+                success=0.99,
+                timeout=0,
+                connect=0,
+                function=0,
+                time_overhead=0.0,
+                memory_overhead=0.0,
+                size_overhead=0.0,
+            )
+        )
+        csf5 = ChallengeSetFielding.create(
+            cs=cs, cbns=[cbn1], team=team, available_round=r5,
+            # some variance
+            poll_feedback = PollFeedback.create(
+                cs=cs,
+                round_id=r5.id,
+                success=0.99,
+                timeout=0,
+                connect=0,
+                function=0,
+                time_overhead=0.0,
+                memory_overhead=0.2,
+                size_overhead=0.0,
+            )
+        )
+
+        assert len(cbn1.poll_feedbacks) == 2
+        assert cbn1.avg_cb_score == (0.9609803444828162 + 0.6830134553650711)/2
+        assert cbn1.min_cb_score == 0.6830134553650711
+
     def test_poll_feedback(self):
         r0 = Round.create(num=0)
         cs = ChallengeSet.create(name="foo")
@@ -38,6 +93,8 @@ class TestScores(object):
             memory_overhead=0.0,
             size_overhead=0.0,
         )
+        csf.poll_feedback = p
+        csf.save()
 
         assert p.cqe_performance_score == 1.0
         assert p.cqe_functionality_score == 1.0
@@ -56,6 +113,8 @@ class TestScores(object):
             memory_overhead=0.09,
             size_overhead=0.0,
         )
+        csf.poll_feedback = p
+        csf.save()
 
         assert p.memory_overhead == 0.09
         assert p.availability == 1.0
@@ -72,6 +131,8 @@ class TestScores(object):
             memory_overhead=0.03,
             size_overhead=0.03,
         )
+        csf.poll_feedback = p
+        csf.save()
 
         assert p.availability == 1.0
         assert p.cb_score == 1.0
@@ -89,6 +150,8 @@ class TestScores(object):
             memory_overhead=0.03,
             size_overhead=0.03,
         )
+        csf.poll_feedback = p
+        csf.save()
 
         assert p.availability == 0.9609803444828162
         assert p.cb_score == 0.9609803444828162
@@ -105,6 +168,8 @@ class TestScores(object):
             memory_overhead=0.0,
             size_overhead=0.0,
         )
+        csf.poll_feedback = p
+        csf.save()
 
         assert p.availability == 0.8884870479156888
         assert p.cb_score == 0.8884870479156888
@@ -121,6 +186,8 @@ class TestScores(object):
             memory_overhead=0.0,
             size_overhead=0.0,
         )
+        csf.poll_feedback = p
+        csf.save()
 
         assert p.availability == 0.00381
         assert p.cb_score == 0.00381
@@ -137,6 +204,8 @@ class TestScores(object):
             memory_overhead=0.20,
             size_overhead=0.10,
         )
+        csf.poll_feedback = p
+        csf.save()
 
         assert p.availability == 0.6830134553650711
         assert p.cb_score == 0.6830134553650711
@@ -153,6 +222,8 @@ class TestScores(object):
             memory_overhead=0.20,
             size_overhead=0.10,
         )
+        csf.poll_feedback = p
+        csf.save()
 
         assert p.availability == 0
         assert p.cb_score == 0

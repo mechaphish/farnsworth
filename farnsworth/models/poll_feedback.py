@@ -3,13 +3,12 @@
 
 from __future__ import absolute_import, unicode_literals
 
-from peewee import ForeignKeyField, IntegerField, FloatField
+from peewee import ForeignKeyField, IntegerField, FloatField, BooleanField
 
 from .base import BaseModel
 from .round import Round
 from .team import Team
 from .challenge_set import ChallengeSet
-from .challenge_set_fielding import ChallengeSetFielding
 from .concerns.round_related_model import RoundRelatedModel
 from ..mixins import CBScoreMixin
 
@@ -27,31 +26,12 @@ class PollFeedback(BaseModel, RoundRelatedModel, CBScoreMixin):
         return Round.get(id=self.round_id)
 
     @property
-    def cs_fielding(self):
-        our_team = Team.get_our()
-        return ChallengeSetFielding.select().where(
-            (ChallengeSetFielding.available_round == self.round) &
-            (ChallengeSetFielding.team == our_team) &
-            (ChallengeSetFielding.cs == self.cs)
-        )[0]
-
-    @property
     def cbns(self):
-        return self.cs_fielding.cbns
+        return self.cs_fielding.get().cbns
 
     @property
     def patch_type(self):
-        return self.cbns[0].patch_type
-
-    @property
-    def fielding(self):
-        """
-        Returns which fielding this is for.
-        """
-        return ChallengeSetFielding.select().where(
-            ChallengeSetFielding.fielded_round == PollFeedback.round &
-            ChallengeSetFielding.cs == PollFeedback.cs
-        )
+        return self.cbns.get().patch_type
 
     # functionality tests
     success = FloatField()

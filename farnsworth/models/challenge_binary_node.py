@@ -80,6 +80,31 @@ class ChallengeBinaryNode(BaseModel):
                        (ChallengeSetFielding.team == Team.get_our()) &
                        (ChallengeSetFielding.submission_round.is_null(False)))
 
+    #
+    # Feedback crap
+    #
+
+    @property
+    def poll_feedbacks(self):
+        """All the received polls for this CB."""
+        # there is probably a DB way to do this better
+        return [
+            f.poll_feedback for f in self.fieldings
+            if f.submission_round is None or f.available_round.num != f.submission_round.num
+        ]
+
+    @property
+    def min_cb_score(self):
+        feedbacks = self.poll_feedbacks
+        return min(f.cb_score for f in feedbacks) if len(feedbacks) else None
+
+    @property
+    def avg_cb_score(self):
+        feedbacks = self.poll_feedbacks
+        return (
+            sum(f.cb_score for f in feedbacks) / len(feedbacks)
+        ) if len(feedbacks) else None
+
     @classmethod
     def roots(cls):
         """Return all root nodes (original CB)"""

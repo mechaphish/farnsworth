@@ -15,6 +15,7 @@ from .challenge_binary_node import ChallengeBinaryNode
 from .challenge_set import ChallengeSet
 from .round import Round
 from .team import Team
+from .poll_feedback import PollFeedback
 
 """ChallengeSetFielding model"""
 
@@ -30,12 +31,14 @@ class ChallengeSetFielding(BaseModel):
 
     cs = ForeignKeyField(ChallengeSet, related_name='fieldings')
     team = ForeignKeyField(Team, related_name='cs_fieldings')
-    submission_round = ForeignKeyField(Round, related_name='cs_fieldings', null=True)
-    available_round = ForeignKeyField(Round, related_name='cs_fieldings', null=True)
-    fielded_round = ForeignKeyField(Round, related_name='cs_fieldings', null=True)
+    submission_round = ForeignKeyField(Round, related_name='submitted_fieldings', null=True)
+    available_round = ForeignKeyField(Round, related_name='available_fieldings', null=True)
+    fielded_round = ForeignKeyField(Round, related_name='fielded_fieldings', null=True)
     cbns = ManyToManyField(ChallengeBinaryNode, related_name='fieldings')
     sha256 = FixedCharField(max_length=64)
     remote_cb_score = FloatField(null=True)  # performance metric computed from feedback from DARPA.
+
+    poll_feedback = ForeignKeyField(PollFeedback, related_name='cs_fielding', null=True)
 
     @classmethod
     def create(cls, *args, **kwargs):
