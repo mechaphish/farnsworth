@@ -17,8 +17,8 @@ from .team import Team
 
 class Evaluation(BaseModel):
     """Evaluation model"""
-    round = ForeignKeyField(Round, related_name='feedbacks')
-    team = ForeignKeyField(Team, related_name='feedbacks')
+    round = ForeignKeyField(Round, related_name='evaluations')
+    team = ForeignKeyField(Team, related_name='evaluations')
     ids = BinaryJSONField()
     cbs = BinaryJSONField()
 
