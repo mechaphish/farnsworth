@@ -42,5 +42,4 @@ class IDSRule(BaseModel):
         try:
             return cls.get(cls.sha256 == sha256)
         except cls.DoesNotExist:
-            kwargs['sha256'] = sha256
-            return cls.create(**kwargs)
+            return cls.create(sha256=sha256, **kwargs)
