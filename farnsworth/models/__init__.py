@@ -62,7 +62,7 @@ from .round import Round
 from .score import Score
 from .team import Team
 from .test import Test
-from .patch_type_config import PatchTypeConfig
+from .patch_type import PatchType
 from .tester_result import TesterResult
 from .tracer_cache import TracerCache
 from .valid_polls import ValidPoll

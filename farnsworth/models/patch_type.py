@@ -10,10 +10,10 @@ from .base import BaseModel
 """patch_type_config model"""
 
 
-class PatchTypeConfig(BaseModel):
+class PatchType(BaseModel):
     """
-    Configuration of patch type
+    Patch Types
     """
-    patch_type = CharField(null=False)
+    name = CharField(null=False)
     functionality_risk = FloatField(null=False)
     exploitability = FloatField(null=False)
