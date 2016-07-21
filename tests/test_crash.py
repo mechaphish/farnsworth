@@ -50,7 +50,8 @@ class TestCrash:
         crash, created = Crash.get_or_create(cs=cs, job=job, blob="a blob")
         assert_false(created)
         # because we're opening another transaction in create_or_get()
-        # rollback doesn't work. clean everything here
-        crash.delete_instance()
-        job.delete_instance()
-        cs.delete_instance()
+        # rollback doesn't work. clean everything in a transaction
+        with Crash._meta.database.atomic():
+            crash.delete_instance()
+            job.delete_instance()
+            cs.delete_instance()
