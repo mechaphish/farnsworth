@@ -23,3 +23,10 @@ build_images:
     - cgc-build meister
     - cgc-build ambassador
     tags: ["docker-builder"]
+
+update_vm_image:
+    only: ["master"]
+    stage: deploy
+    script:
+    - update-vm-image
+    tags: ["docker-builder"]
