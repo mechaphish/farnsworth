@@ -33,12 +33,12 @@ class CBPollPerformance(BaseModel):
         """
         if patch_type is None:
             return CBPollPerformance.select() \
-                                    .where(CBPollPerformance.cs == cs
-                                           , CBPollPerformance.patch_type.is_null(True)).count()
+                                    .where(CBPollPerformance.cs == cs,
+                                           CBPollPerformance.patch_type.is_null(True)).count()
         else:
             return CBPollPerformance.select() \
-                                    .where(CBPollPerformance.cs == cs
-                                           , CBPollPerformance.patch_type == patch_type).count()
+                                    .where(CBPollPerformance.cs == cs,
+                                           CBPollPerformance.patch_type == patch_type).count()
 
     @classmethod
     def get_untested_polls(cls, cs, patch_type):
@@ -49,11 +49,11 @@ class CBPollPerformance(BaseModel):
         :return: all untested polls for provided CS and patch type
         """
         if patch_type is None:
-            tested_polls = CBPollPerformance.select(CBPollPerformance.poll).where(CBPollPerformance.cs == cs
-                                                                                  , CBPollPerformance.patch_type.
-                                                                                  is_null(True))
+            tested_polls = CBPollPerformance.select(CBPollPerformance.poll) \
+                                            .where(CBPollPerformance.cs == cs,
+                                                   CBPollPerformance.patch_type.is_null(True))
         else:
-            tested_polls = CBPollPerformance.select(CBPollPerformance.poll).where(CBPollPerformance.cs == cs
-                                                                                  , CBPollPerformance.
-                                                                                  patch_type == patch_type)
+            tested_polls = CBPollPerformance.select(CBPollPerformance.poll) \
+                                            .where(CBPollPerformance.cs == cs,
+                                                   CBPollPerformance.patch_type == patch_type)
         return cs.valid_polls.where(ValidPoll.id.not_in(tested_polls))
