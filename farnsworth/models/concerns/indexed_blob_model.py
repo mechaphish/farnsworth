@@ -35,4 +35,4 @@ class IndexedBlobModel(object):
             try:
                 return cls.get(sha256=sha256, **kwargs), False
             except cls.DoesNotExist: # this could happen with master-slave sync delay
-                return None
+                return None, False
