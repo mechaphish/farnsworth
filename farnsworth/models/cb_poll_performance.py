@@ -22,3 +22,22 @@ class CBPollPerformance(BaseModel):
     performances = BinaryJSONField()
     is_poll_ok = BooleanField(default=False)
     patch_type = CharField(null=True)   # THIS SHOULD NOT BE A CHARFIELD
+
+    @classmethod
+    def num_success_polls(cs, patch_type):
+        """
+            Get number of successful polls tested on the provided CS and patch type
+        :param target_cs: Challenge Set for num successful polls tested.
+        :param patch_type: Patch Type for which results need to be fetched.
+        :return: num of successful polls
+        """
+        if patch_type is None:
+            return CBPollPerformance.select() \
+                                    .where(CBPollPerformance.cs == cs
+                                           & CBPollPerformance.patch_type.is_null(True)
+                                           & CBPollPerformance.is_poll_ok == True).count()
+        else:
+            return CBPollPerformance.select() \
+                                    .where(CBPollPerformance.cs == cs
+                                           & CBPollPerformance.patch_type == patch_type
+                                           & CBPollPerformance.is_poll_ok == True).count()
