@@ -139,6 +139,23 @@ class ChallengeSet(BaseModel):
                 (Job.completed_at.is_null(False))).exists()
 
     @property
+    def function_identification_started_at(self):
+        """When did the function identification job for this binary start"""
+        from .job import Job
+        id_job = Job.select().where((Job.cs == self) &\
+                (Job.worker == 'function_identifier')).first()
+
+        return id_job.started_at if id_job is not None else None
+
+    @property
+    def completed_function_identification(self):
+        """Has the function identification job on this binary completed"""
+        from .job import Job
+        return Job.select().where((Job.cs == self) &\
+                (Job.worker == 'function_identifier') &\
+                (Job.completed_at.is_null(False))).exists()
+
+    @property
     def undrilled_tests(self):
         """Return all undrilled test cases."""
         from .test import Test
