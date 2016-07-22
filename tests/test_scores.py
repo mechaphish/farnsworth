@@ -24,8 +24,8 @@ class TestScores(object):
         r4 = Round.create(num=4)
         r5 = Round.create(num=5)
         cs = ChallengeSet.create(name="foo2")
-        team = Team.create(name=Team.OUR_NAME)
-        cbn1 = ChallengeBinaryNode.create(name="foo_2", cs=cs, sha256="sum2")
+        team = Team.get_our()
+        cbn1 = ChallengeBinaryNode.create(name="foo_2", cs=cs, sha256="sum2", blob="asdf")
         csf3 = ChallengeSetFielding.create(
             cs=cs, cbns=[cbn1], team=team, available_round=r3, submission_round=r3,
             poll_feedback = PollFeedback.create(
@@ -77,8 +77,8 @@ class TestScores(object):
     def test_poll_feedback(self):
         r0 = Round.create(num=0)
         cs = ChallengeSet.create(name="foo")
-        team = Team.create(name=Team.OUR_NAME)
-        cbn1 = ChallengeBinaryNode.create(name="foo_1", cs=cs, sha256="sum1")
+        team = Team.get_our()
+        cbn1 = ChallengeBinaryNode.create(name="foo_1", cs=cs, sha256="sum1", blob="asdf")
         csf = ChallengeSetFielding.create(cs=cs, cbns=[cbn1], team=team, available_round=r0)
 
         # check full score

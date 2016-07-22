@@ -27,6 +27,7 @@ import farnsworth.models
 
 NOW = datetime.now()
 BLOB = "blob data"
+BLOB2 = "blob data2"
 
 
 class TestChallengeSet:
@@ -65,7 +66,7 @@ class TestChallengeSet:
 
     def test_cbns_by_patch_type(self):
         cs = ChallengeSet.create(name="foo")
-        cbn = ChallengeBinaryNode.create(name="foo", cs=cs, sha256="sum")
+        cbn = ChallengeBinaryNode.create(name="foo", cs=cs, blob="aaa")
         patch0 = PatchType.create(
             name="patch0",
             functionality_risk=0,
@@ -76,9 +77,9 @@ class TestChallengeSet:
             functionality_risk=0,
             exploitability=1,
         )
-        cbn1 = ChallengeBinaryNode.create(name="foo1", cs=cs, patch_type=patch0, sha256="sum1")
-        cbn2 = ChallengeBinaryNode.create(name="foo2", cs=cs, patch_type=patch0, sha256="sum2")
-        cbn3 = ChallengeBinaryNode.create(name="foo3", cs=cs, patch_type=patch1, sha256="sum3")
+        cbn1 = ChallengeBinaryNode.create(name="foo1", cs=cs, patch_type=patch0, blob="aaa1")
+        cbn2 = ChallengeBinaryNode.create(name="foo2", cs=cs, patch_type=patch0, blob="aaa2")
+        cbn3 = ChallengeBinaryNode.create(name="foo3", cs=cs, patch_type=patch1, blob="aaa3")
         assert_in(patch0, cs.cbns_by_patch_type().keys())
         assert_in(patch1, cs.cbns_by_patch_type().keys())
         assert_in(cbn1, cs.cbns_by_patch_type()[patch0])
@@ -89,8 +90,8 @@ class TestChallengeSet:
         r1 = Round.create(num=0)
         team = Team.create(name=Team.OUR_NAME)
         cs = ChallengeSet.create(name="foo")
-        cbn1 = ChallengeBinaryNode.create(name="foo", cs=cs, blob=BLOB, sha256="sum1")
-        cbn2 = ChallengeBinaryNode.create(name="foo", cs=cs, blob=BLOB, sha256="sum2")
+        cbn1 = ChallengeBinaryNode.create(name="foo", cs=cs, blob=BLOB)
+        cbn2 = ChallengeBinaryNode.create(name="foo", cs=cs, blob=BLOB2)
 
         assert_equals(len(cs.fieldings), 0)
 
@@ -160,13 +161,13 @@ class TestChallengeSet:
         other_team = Team.create(name="opponent")
         cs = ChallengeSet.create(name="foo")
         cs.rounds = [r0, r1]
-        cbn = ChallengeBinaryNode.create(name="foo", cs=cs, sha256="sum1")
+        cbn = ChallengeBinaryNode.create(name="foo", cs=cs, blob="aaa1")
         cbn_patched = ChallengeBinaryNode.create(name="foo", cs=cs, patch_type=PatchType.create(
             name="patch1",
             functionality_risk=0,
             exploitability=1,
-        ), sha256="sum2")
-        cbn_other_team = ChallengeBinaryNode.create(name="foo", cs=cs, sha256="sum3")
+        ), blob="aaa2")
+        cbn_other_team = ChallengeBinaryNode.create(name="foo", cs=cs, blob="aaa3")
         ChallengeSetFielding.create(cs=cs, cbns=[cbn], team=our_team, available_round=r0)
         ChallengeSetFielding.create(cs=cs, cbns=[cbn_patched], team=our_team, submission_round=r0).save()
         ChallengeSetFielding.create(cs=cs, cbns=[cbn_other_team], team=other_team, available_round=r0).save()
@@ -182,12 +183,12 @@ class TestChallengeSet:
         # CS single binary
         cs = ChallengeSet.create(name="single")
         cs.rounds = [r0]
-        cbn = ChallengeBinaryNode.create(name="foo", cs=cs, sha256="sum1")
+        cbn = ChallengeBinaryNode.create(name="foo", cs=cs, blob="aaa1")
         # CS multi binary
         cs_multi = ChallengeSet.create(name="multi")
         cs_multi.rounds = [r0]
-        cbn1 = ChallengeBinaryNode.create(name="foo1", cs=cs_multi, sha256="sum2")
-        cbn2 = ChallengeBinaryNode.create(name="foo2", cs=cs_multi, sha256="sum3")
+        cbn1 = ChallengeBinaryNode.create(name="foo1", cs=cs_multi, blob="aaa2")
+        cbn2 = ChallengeBinaryNode.create(name="foo2", cs=cs_multi, blob="aaa3")
         # create fielding entries
         ChallengeSetFielding.create(cs=cs, cbns=[cbn], team=our_team, available_round=r0)
         ChallengeSetFielding.create(cs=cs_multi, cbns=[cbn1, cbn2], team=our_team, available_round=r0)
@@ -227,8 +228,8 @@ class TestChallengeSet:
 
     def test_unprocessed_submission_cables(self):
         cs = ChallengeSet.create(name="foo")
-        cbn = ChallengeBinaryNode.create(name="foo1", cs=cs, sha256="sum")
-        ids = IDSRule.create(cs=cs, rules="aaa", sha256="sum")
+        cbn = ChallengeBinaryNode.create(name="foo1", cs=cs, blob="aaa")
+        ids = IDSRule.create(cs=cs, rules="aaa", blob="aaa")
         cable1 = CSSubmissionCable.create(cs=cs, ids=ids, cbns=[cbn])
         cable2 = CSSubmissionCable.create(cs=cs, ids=ids, cbns=[])
 
@@ -243,7 +244,7 @@ class TestChallengeSet:
         r0 = Round.create(num=0)
         r1 = Round.create(num=1)
         cs = ChallengeSet.create(name="foo")
-        cbn = ChallengeBinaryNode.create(name="foo1", cs=cs, sha256="sum")
+        cbn = ChallengeBinaryNode.create(name="foo1", cs=cs, blob="aaa")
         our_team = Team.create(name=Team.OUR_NAME)
         other_team = Team.create(name="enemy")
 

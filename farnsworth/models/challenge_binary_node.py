@@ -4,7 +4,8 @@
 from __future__ import absolute_import, unicode_literals
 
 import os
-from peewee import CharField, BlobField, ForeignKeyField, FixedCharField, BooleanField
+import hashlib
+from peewee import CharField, BlobField, ForeignKeyField, FixedCharField, BooleanField, IntegerField
 
 from .base import BaseModel
 from .challenge_set import ChallengeSet
@@ -12,10 +13,15 @@ from .ids_rule import IDSRule
 from .patch_type import PatchType
 # Imports for Exploit, Round, Exploit deferred to prevent circular imports.
 
+def _sha256sum(*strings):
+    array = list(strings)
+    array.sort()
+    return hashlib.sha256("".join(array)).hexdigest()
+
 class ChallengeBinaryNode(BaseModel):
     """ChallengeBinaryNode model"""
     root = ForeignKeyField('self', null=True, related_name='descendants')
-    blob = BlobField(null=True)
+    blob = BlobField()
     name = CharField()
     cs = ForeignKeyField(ChallengeSet, related_name='cbns')
     sha256 = FixedCharField(max_length=64)
@@ -28,6 +34,14 @@ class ChallengeBinaryNode(BaseModel):
         """Remove binary file"""
         if os.path.isfile(self._path):
             os.remove(self._path)
+
+    @classmethod
+    def create(cls, *args, **kwargs):
+        kwargs['size'] = len(kwargs['blob'])
+        if 'sha256' not in kwargs:
+            kwargs['sha256'] = _sha256sum(kwargs['blob'])
+        obj = super(cls, cls).create(*args, **kwargs)
+        return obj
 
     @property
     def _path(self):
