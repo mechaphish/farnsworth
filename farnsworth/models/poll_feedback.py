@@ -42,7 +42,6 @@ class PollFeedback(BaseModel, RoundRelatedModel, CBScoreMixin):
     # performance tests
     time_overhead = FloatField()
     memory_overhead = FloatField()
-    size_overhead = FloatField()
 
     # security
     @property
@@ -53,3 +52,13 @@ class PollFeedback(BaseModel, RoundRelatedModel, CBScoreMixin):
             return 1
         else:
             return 2 - self.patch_type.exploitability
+
+    @property
+    def cbns(self):
+        return self.cs_fielding.get().cbns
+
+    @property
+    def size_overhead(self):
+        current_size = sum(cbn.size for cbn in self.cbns)
+        orig_size = sum(cbn.size for cbn in self.cs.cbns_original)
+        return max(float(current_size) / float(orig_size) - 1.0, 0.0)

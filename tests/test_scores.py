@@ -15,9 +15,48 @@ BLOB = "cb scores"
 class TestScores(object):
     def setup(self):
         setup_each()
+        Team.create(name=Team.OUR_NAME)
 
     def teardown(self):
         teardown_each()
+
+    def test_size_overhead(self):
+        ra = Round.create(num=6)
+        rb = Round.create(num=7)
+        cs = ChallengeSet.create(name="foo3")
+        team = Team.get_our()
+        cbn1 = ChallengeBinaryNode.create(name="foo_3", cs=cs, sha256="sum3", blob="asdf")
+        cbn2 = ChallengeBinaryNode.create(name="foo_3a", cs=cs, sha256="sum4", blob="asdf11")
+
+        csf_orig = ChallengeSetFielding.create(
+            cs=cs, cbns=[cbn1], team=team, available_round=ra, submission_round=ra,
+            poll_feedback = PollFeedback.create(
+                cs=cs,
+                round_id=ra.id,
+                success=1.0,
+                timeout=0,
+                connect=0,
+                function=0,
+                time_overhead=0.0,
+                memory_overhead=0.0,
+            )
+        )
+
+        csf_patched = ChallengeSetFielding.create(
+            cs=cs, cbns=[cbn2], team=team, available_round=rb,
+            poll_feedback = PollFeedback.create(
+                cs=cs,
+                round_id=ra.id,
+                success=1.0,
+                timeout=0,
+                connect=0,
+                function=0,
+                time_overhead=0.0,
+                memory_overhead=0.0,
+            )
+        )
+
+        assert cbn2.min_cb_score < 1.
 
     def test_cbn_to_polls(self):
         r3 = Round.create(num=3)
@@ -37,7 +76,6 @@ class TestScores(object):
                 function=0,
                 time_overhead=0.0,
                 memory_overhead=0.0,
-                size_overhead=0.0,
             )
         )
         csf4 = ChallengeSetFielding.create(
@@ -51,7 +89,6 @@ class TestScores(object):
                 function=0,
                 time_overhead=0.0,
                 memory_overhead=0.0,
-                size_overhead=0.0,
             )
         )
         csf5 = ChallengeSetFielding.create(
@@ -66,7 +103,6 @@ class TestScores(object):
                 function=0,
                 time_overhead=0.0,
                 memory_overhead=0.2,
-                size_overhead=0.0,
             )
         )
 
@@ -91,7 +127,6 @@ class TestScores(object):
             function=0,
             time_overhead=0.0,
             memory_overhead=0.0,
-            size_overhead=0.0,
         )
         csf.poll_feedback = p
         csf.save()
@@ -111,7 +146,6 @@ class TestScores(object):
             function=0,
             time_overhead=0.0,
             memory_overhead=0.09,
-            size_overhead=0.0,
         )
         csf.poll_feedback = p
         csf.save()
@@ -129,7 +163,6 @@ class TestScores(object):
             function=0,
             time_overhead=0.03,
             memory_overhead=0.03,
-            size_overhead=0.03,
         )
         csf.poll_feedback = p
         csf.save()
@@ -148,7 +181,6 @@ class TestScores(object):
             function=0,
             time_overhead=0.03,
             memory_overhead=0.03,
-            size_overhead=0.03,
         )
         csf.poll_feedback = p
         csf.save()
@@ -166,7 +198,6 @@ class TestScores(object):
             function=0,
             time_overhead=0.0,
             memory_overhead=0.0,
-            size_overhead=0.0,
         )
         csf.poll_feedback = p
         csf.save()
@@ -184,7 +215,6 @@ class TestScores(object):
             function=0,
             time_overhead=0.0,
             memory_overhead=0.0,
-            size_overhead=0.0,
         )
         csf.poll_feedback = p
         csf.save()
@@ -202,7 +232,6 @@ class TestScores(object):
             function=0,
             time_overhead=0.10,
             memory_overhead=0.20,
-            size_overhead=0.10,
         )
         csf.poll_feedback = p
         csf.save()
@@ -220,7 +249,6 @@ class TestScores(object):
             function=0,
             time_overhead=1.00,
             memory_overhead=0.20,
-            size_overhead=0.10,
         )
         csf.poll_feedback = p
         csf.save()

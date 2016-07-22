@@ -23,6 +23,7 @@ class ChallengeBinaryNode(BaseModel):
     root = ForeignKeyField('self', null=True, related_name='descendants')
     blob = BlobField()
     name = CharField()
+    size = IntegerField()
     cs = ForeignKeyField(ChallengeSet, related_name='cbns')
     sha256 = FixedCharField(max_length=64)
     patch_type = ForeignKeyField(PatchType, related_name='patched_cbns', null=True)
