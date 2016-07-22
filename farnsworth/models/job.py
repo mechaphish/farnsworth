@@ -193,6 +193,8 @@ class PovFuzzer1Job(RexJob):
     """
 
     worker = CharField(default='povfuzzer1')
+    kvm_access = True
+    data_access = True
     restart = False
 
 
@@ -204,6 +206,8 @@ class PovFuzzer2Job(RexJob):
     """
 
     worker = CharField(default='povfuzzer2')
+    kvm_access = True
+    data_access = True
     restart = False
 
 
