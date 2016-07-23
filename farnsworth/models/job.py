@@ -217,10 +217,14 @@ class PatcherexJob(Job):
     """A PatcherexJob."""
 
     PATCH_TYPES = ["voidbitflip",
+                   "medium_detour_flip",
+                   "medium_reassembler_flip",
+                   "medium_detour_flip_fidget",
+                   "medium_reassembler_flip_fidget",
                    "medium_detour",
                    "medium_reassembler",
-                   "medium_detour_fidget",
-                   "medium_reassembler_fidget"]
+                   "light_detour",
+                   "light_reassembler"]
 
     worker = CharField(default='patcherex')
 
