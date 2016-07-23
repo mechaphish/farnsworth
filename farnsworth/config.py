@@ -24,7 +24,7 @@ master_db = RetryPooledPostgresqlExtDatabase(   # pylint: disable=invalid-name
     register_hstore=False,
     autocommit=True,
     autorollback=True,
-    max_connections=40,
+    max_connections=20,
     stale_timeout=60
 )
 
