@@ -200,6 +200,12 @@ class ChallengeSet(BaseModel):
         return self._has_type('type2')
 
     @property
+    def most_reliable_exploit(self):
+        from .exploit import Exploit
+        return self.exploits.select().order_by(Exploit.reliability).desc()\
+                .order_by(Exploit.id).asc().first()
+
+    @property
     def has_circumstantial_type2(self):
         from .exploit import Exploit
         return self.exploits.where((Exploit.pov_type == 'type2') \
