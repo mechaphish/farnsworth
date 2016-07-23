@@ -241,3 +241,29 @@ class TestChallengeSet:
 
         ChallengeSetFielding.create(cs=cs, cbns=[cbn], team=our_team, submission_round=r0)
         assert_true(cs.has_submissions_in_round(r0))
+
+    def test_most_reliable_exploit(self):
+        r1 = Round.create(num=0)
+        team = Team.create(name=Team.OUR_NAME)
+        cs = ChallengeSet.create(name="foo")
+        cs.rounds = [r1]
+        job1 = RexJob.create(cs=cs)
+        job2 = RexJob.create(cs=cs)
+        job3 = RexJob.create(cs=cs)
+        job4 = RexJob.create(cs=cs)
+
+        pov1 = Exploit.create(cs=cs, job=job1, pov_type='type1', exploitation_method='rop',
+                              blob="exploit1", c_code="exploit it", reliability=0.9)
+        assert_equals(pov1, cs.most_reliable_exploit)
+
+        pov2 = Exploit.create(cs=cs, job=job2, pov_type='type2', exploitation_method='rop',
+                              blob="exploit2", c_code="exploit it", reliability=0.5)
+        assert_equals(pov1, cs.most_reliable_exploit)
+
+        pov3 = Exploit.create(cs=cs, job=job3, pov_type='type2', exploitation_method='rop',
+                              blob="exploit3", c_code="exploit it", reliability=0.9)
+        assert_equals(pov1, cs.most_reliable_exploit)
+
+        pov4 = Exploit.create(cs=cs, job=job4, pov_type='type2', exploitation_method='rop',
+                              blob="exploit4", c_code="exploit it", reliability=1.0)
+        assert_equals(pov4, cs.most_reliable_exploit)

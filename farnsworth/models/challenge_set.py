@@ -145,7 +145,8 @@ class ChallengeSet(BaseModel):
         """When did the function identification job for this binary start"""
         from .job import Job
         id_job = Job.select() \
-                    .where((Job.cs == self) & (Job.worker == 'function_identifier')) \
+                    .where((Job.cs == self)
+                           & (Job.worker == 'function_identifier')) \
                     .first()
 
         return id_job.started_at if id_job is not None else None
@@ -170,7 +171,7 @@ class ChallengeSet(BaseModel):
     def symbols(self):
         symbols = dict()
         from .function_identity import FunctionIdentity
-        for function in self.function_identities.where(FunctionIdentity.symbol.is_null(False)).select():
+        for function in self.function_identities.select().where(FunctionIdentity.symbol.is_null(False)):
             symbols[function.address] = function.symbol
         return symbols
 
@@ -188,8 +189,9 @@ class ChallengeSet(BaseModel):
 
     def _has_type(self, typename):
         from .exploit import Exploit
-        return self.exploits.where((Exploit.pov_type == typename)\
-                & (Exploit.reliability > 0)).exists()
+        return self.exploits.where((Exploit.pov_type == typename)
+                                   & (Exploit.reliability > 0)) \
+                            .exists()
 
     @property
     def has_type1(self):
@@ -198,6 +200,13 @@ class ChallengeSet(BaseModel):
     @property
     def has_type2(self):
         return self._has_type('type2')
+
+    @property
+    def most_reliable_exploit(self):
+        from .exploit import Exploit
+        return self.exploits.select() \
+                            .order_by(Exploit.reliability.desc(), Exploit.id) \
+                            .first()
 
     @property
     def has_circumstantial_type2(self):
@@ -209,16 +218,15 @@ class ChallengeSet(BaseModel):
     def unprocessed_submission_cables(self):
         """Return all unprocessed cables order by creation date descending."""
         from .cs_submission_cable import CSSubmissionCable
-        return self.submission_cables\
-            .select()\
-            .where(CSSubmissionCable.processed_at.is_null(True))\
-            .order_by(CSSubmissionCable.created_at)
+        return self.submission_cables.select() \
+                                     .where(CSSubmissionCable.processed_at.is_null(True)) \
+                                     .order_by(CSSubmissionCable.created_at)
 
     def has_submissions_in_round(self, round):
         """Return True if it has a submission for our team in specified round"""
         from .challenge_set_fielding import ChallengeSetFielding
         from .team import Team
-        return self.fieldings\
-                   .where((ChallengeSetFielding.submission_round == round) & \
-                          (ChallengeSetFielding.team == Team.get_our()))\
+        return self.fieldings \
+                   .where((ChallengeSetFielding.submission_round == round)
+                          & (ChallengeSetFielding.team == Team.get_our())) \
                    .exists()
