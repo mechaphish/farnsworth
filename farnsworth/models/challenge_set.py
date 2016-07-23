@@ -205,8 +205,8 @@ class ChallengeSet(BaseModel):
     def most_reliable_exploit(self):
         from .exploit import Exploit
         return self.exploits.select() \
-                            .order_by(Exploit.reliability).desc() \
-                            .order_by(Exploit.id).asc().first()
+                            .order_by(Exploit.reliability.desc(), Exploit.id) \
+                            .first()
 
     @property
     def has_circumstantial_type2(self):
