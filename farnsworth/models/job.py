@@ -45,6 +45,8 @@ class Job(BaseModel):
     cs = ForeignKeyField(ChallengeSet, null=True, related_name='jobs')
     cbn = ForeignKeyField(ChallengeBinaryNode, null=True, related_name='jobs')
     completed_at = DateTimeField(null=True)
+    request_cpu = IntegerField(null=True, default=1)
+    request_memory = IntegerField(null=True, default=2048)  # MiB
     limit_cpu = IntegerField(null=True, default=2)
     limit_memory = IntegerField(null=True, default=4096)    # MiB
     limit_time = IntegerField(null=True)                    # Seconds
