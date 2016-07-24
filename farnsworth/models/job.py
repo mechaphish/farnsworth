@@ -546,7 +546,7 @@ class ShowmapSyncJob(Job):
         return self._input_round
 
 
-class BackdoorCreatorJob(Job):
-    """A BackdoorCreatorJob."""
+class BackdoorSubmitterJob(Job):
+    """A BackdoorSubmitterJob."""
 
-    worker = CharField(default='backdoor_creator')
+    worker = CharField(default='backdoor_submitter')
