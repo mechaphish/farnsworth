@@ -44,9 +44,8 @@ class ChallengeSetFielding(BaseModel):
     def create(cls, *args, **kwargs):
         if 'cbns' in kwargs:
             cbns = kwargs.pop('cbns')
-
-        if 'sha256' not in kwargs:
-            kwargs['sha256'] = _sha256sum(*[c.sha256 for c in cbns])
+            if 'sha256' not in kwargs:
+                kwargs['sha256'] = _sha256sum(*[c.sha256 for c in cbns])
 
         obj = super(cls, cls).create(*args, **kwargs)
         obj.cbns = cbns
