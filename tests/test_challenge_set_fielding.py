@@ -68,9 +68,9 @@ class TestChallengeSetFielding:
         team2 = Team.create(name="other_team")
         cs = ChallengeSet.create(name="foo")
 
-        cbn1 = ChallengeBinaryNode.create(name="foo_1", cs=cs, sha256="sum1")
-        cbn2 = ChallengeBinaryNode.create(name="foo_2", cs=cs, sha256="sum2")
-        cbn3 = ChallengeBinaryNode.create(name="foo_3", cs=cs, sha256="sum3")
+        cbn1 = ChallengeBinaryNode.create(name="foo_1", cs=cs, sha256="sum1", blob="blob1")
+        cbn2 = ChallengeBinaryNode.create(name="foo_2", cs=cs, sha256="sum2", blob="blob2")
+        cbn3 = ChallengeBinaryNode.create(name="foo_3", cs=cs, sha256="sum3", blob="blob3")
 
         r1 = Round.create(num=1)
         csf11 = ChallengeSetFielding.create(cs=cs, cbns=[cbn1], team=team1, available_round=r1)

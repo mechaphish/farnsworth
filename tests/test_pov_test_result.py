@@ -48,11 +48,11 @@ class TestPovTestResult:
         ids1 = IDSRule.create(cs=cs, rules="ids1", sha256="sum1")
         idsrf1 = IDSRuleFielding.create(cs=cs, ids_rule=ids1, team=team, available_round=r1)
 
-        cbn1 = ChallengeBinaryNode.create(name="foo_3", cs=cs, sha256="sum3")
+        cbn1 = ChallengeBinaryNode.create(name="foo_3", cs=cs, sha256="sum3", blob="blob3")
         csf1 = ChallengeSetFielding.create(cs=cs, cbns=[cbn1], team=team, available_round=r1)
 
         r2 = Round.create(num=2)
-        cbn2 = ChallengeBinaryNode.create(name="foo_3", cs=cs, sha256="sum4")
+        cbn2 = ChallengeBinaryNode.create(name="foo_3", cs=cs, sha256="sum4", blob="blob4")
         csf2 = ChallengeSetFielding.create(cs=cs, cbns=[cbn2], team=team, available_round=r2)
 
         job = AFLJob.create(cbn=cbn1, cs=cs)
@@ -101,11 +101,11 @@ class TestPovTestResult:
         ids1 = IDSRule.create(cs=cs, rules="ids1", sha256="sum1")
         idsrf1 = IDSRuleFielding.create(cs=cs, ids_rule=ids1, team=team, available_round=r1)
 
-        cbn1 = ChallengeBinaryNode.create(name="foo_3", cs=cs, sha256="sum3")
+        cbn1 = ChallengeBinaryNode.create(name="foo_3", cs=cs, sha256="sum3", blob="blob3")
         csf1 = ChallengeSetFielding.create(cs=cs, cbns=[cbn1], team=team, available_round=r1)
 
         r2 = Round.create(num=2)
-        cbn2 = ChallengeBinaryNode.create(name="foo_3", cs=cs, sha256="sum4")
+        cbn2 = ChallengeBinaryNode.create(name="foo_3", cs=cs, sha256="sum4", blob="blob4")
         csf2 = ChallengeSetFielding.create(cs=cs, cbns=[cbn2], team=team, available_round=r2)
 
         job = AFLJob.create(cbn=cbn1, cs=cs)
@@ -154,14 +154,14 @@ class TestPovTestResult:
         ids1 = IDSRule.create(cs=cs1, rules="ids1", sha256="sum1")
         idsrf1 = IDSRuleFielding.create(cs=cs1, ids_rule=ids1, team=team, available_round=r1)
 
-        cbn1 = ChallengeBinaryNode.create(name="foo_3", cs=cs1, sha256="sum3")
+        cbn1 = ChallengeBinaryNode.create(name="foo_3", cs=cs1, sha256="sum3", blob="blob3")
         csf1 = ChallengeSetFielding.create(cs=cs1, cbns=[cbn1], team=team, available_round=r1)
         job1 = AFLJob.create(cbn=cbn1, cs=cs1)
         exploit1 = Exploit.create(job=job1, cs=cs1, blob="exploit", pov_type='type1',
                                   c_code="c_code")
 
         r2 = Round.create(num=2)
-        cbn2 = ChallengeBinaryNode.create(name="foo_3", cs=cs2, sha256="sum4")
+        cbn2 = ChallengeBinaryNode.create(name="foo_3", cs=cs2, sha256="sum4", blob="blob4")
         csf2 = ChallengeSetFielding.create(cs=cs2, cbns=[cbn2], team=team, available_round=r2)
 
         job2 = AFLJob.create(cbn=cbn1, cs=cs2)
@@ -209,14 +209,14 @@ class TestPovTestResult:
         ids1 = IDSRule.create(cs=cs1, rules="ids1", sha256="sum1")
         idsrf1 = IDSRuleFielding.create(cs=cs1, ids_rule=ids1, team=team, available_round=r1)
 
-        cbn1 = ChallengeBinaryNode.create(name="foo_3", cs=cs1, sha256="sum3")
+        cbn1 = ChallengeBinaryNode.create(name="foo_3", cs=cs1, sha256="sum3", blob="blob3")
         csf1 = ChallengeSetFielding.create(cs=cs1, cbns=[cbn1], team=team, available_round=r1)
         job1 = AFLJob.create(cbn=cbn1, cs=cs1)
         exploit1 = Exploit.create(job=job1, cs=cs1, blob="exploit", pov_type='type1',
                                   c_code="c_code")
 
         r2 = Round.create(num=2)
-        cbn2 = ChallengeBinaryNode.create(name="foo_3", cs=cs2, sha256="sum4")
+        cbn2 = ChallengeBinaryNode.create(name="foo_3", cs=cs2, sha256="sum4", blob="blob4")
         csf2 = ChallengeSetFielding.create(cs=cs2, cbns=[cbn2], team=team, available_round=r2)
 
         job2 = AFLJob.create(cbn=cbn1, cs=cs2)
