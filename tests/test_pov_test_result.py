@@ -64,6 +64,7 @@ class TestPovTestResult:
         pov1 = PovTestResult.create(exploit=exploit,
                                     cs_fielding=csf1,
                                     num_success=2)
+        assert_equals(pov1, PovTestResult.best(csf1, None))
         assert_is_none(PovTestResult.best(csf1, idsrf1))
         assert_is_none(PovTestResult.best(csf2, idsrf1))
 
