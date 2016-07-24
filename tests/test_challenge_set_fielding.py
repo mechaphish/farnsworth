@@ -31,14 +31,14 @@ class TestChallengeSetFielding:
         r1 = Round.create(num=1)
         team = Team.create(name=Team.OUR_NAME)
         cs = ChallengeSet.create(name="foo")
-        cbn1 = ChallengeBinaryNode.create(name="foo_1", cs=cs, sha256="sum1")
-        cbn2 = ChallengeBinaryNode.create(name="foo_2", cs=cs, sha256="sum2")
+        cbn1 = ChallengeBinaryNode.create(name="foo_1", cs=cs, blob="aaa1")
+        cbn2 = ChallengeBinaryNode.create(name="foo_2", cs=cs, blob="aaa2")
 
         csf = ChallengeSetFielding.create(cs=cs, cbns=[cbn1], team=team, available_round=r0)
-        assert_equals(csf.sha256, "bb558b4638d76b2461f5cdeca98bc8b4ba29b652cfa1ca7662c82d15fd171063")
+        assert_equals(csf.sha256, "04de190c8dbd04bdb5768118c2cd745c7918f6858eddd765354819fc59c6d46e")
 
         csf2 = ChallengeSetFielding.create(cs=cs, cbns=[cbn1, cbn2], team=team, available_round=r1)
-        assert_equals(csf2.sha256, "9f8525c7dceee7e6c7a505d0a18bb22082dfa11cec5ade586e46fe77c4564047")
+        assert_equals(csf2.sha256, "277b0b746f1937a8f54797e2698e54f8646f0413ad353da19d93522c05817e73")
 
         # insert duplicate team+cs+round fails
         assert_raises(IntegrityError, ChallengeSetFielding.create, cs=cs, cbns=[cbn1], team=team,
@@ -48,20 +48,20 @@ class TestChallengeSetFielding:
         r0 = Round.create(num=0)
         team = Team.create(name=Team.OUR_NAME)
         cs = ChallengeSet.create(name="foo")
-        cbn1 = ChallengeBinaryNode.create(name="foo_1", cs=cs, sha256="sum1")
-        cbn2 = ChallengeBinaryNode.create(name="foo_2", cs=cs, sha256="sum2")
-        cbn3 = ChallengeBinaryNode.create(name="foo_3", cs=cs, sha256="sum3")
+        cbn1 = ChallengeBinaryNode.create(name="foo_1", cs=cs, blob="aaa1")
+        cbn2 = ChallengeBinaryNode.create(name="foo_2", cs=cs, blob="aaa2")
+        cbn3 = ChallengeBinaryNode.create(name="foo_3", cs=cs, blob="aaa3")
         csf = ChallengeSetFielding.create(cs=cs, cbns=[cbn1], team=team, available_round=r0)
         assert_equals(len(csf.cbns), 1)
-        assert_equals(csf.sha256, "bb558b4638d76b2461f5cdeca98bc8b4ba29b652cfa1ca7662c82d15fd171063")
+        assert_equals(csf.sha256, "04de190c8dbd04bdb5768118c2cd745c7918f6858eddd765354819fc59c6d46e")
 
         csf.add_cbns_if_missing(cbn2, cbn3)
         assert_equals(len(csf.cbns), 3)
-        assert_equals(csf.sha256, "647dceb057c2155895174a2915c6b54f7790785b3b1ab1fe2b399e7e1b5b0889")
+        assert_equals(csf.sha256, "85b75a70a55b3e7606d1a1cc19ee1a16f1ad510dfb4dc84648a9df3ec6f83fe0")
 
         csf.add_cbns_if_missing(cbn2, cbn3)
         assert_equals(len(csf.cbns), 3)
-        assert_equals(csf.sha256, "647dceb057c2155895174a2915c6b54f7790785b3b1ab1fe2b399e7e1b5b0889")
+        assert_equals(csf.sha256, "85b75a70a55b3e7606d1a1cc19ee1a16f1ad510dfb4dc84648a9df3ec6f83fe0")
 
     def test_latest(self):
         team1 = Team.create(name=Team.OUR_NAME)

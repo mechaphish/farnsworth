@@ -4,32 +4,46 @@
 from __future__ import absolute_import, unicode_literals
 
 import os
-from datetime import datetime
-
-from peewee import CharField, BlobField, DateTimeField, ForeignKeyField, FixedCharField
+import hashlib
+from peewee import CharField, BlobField, ForeignKeyField, FixedCharField, BooleanField, IntegerField
 
 from .base import BaseModel
 from .challenge_set import ChallengeSet
 from .ids_rule import IDSRule
+from .patch_type import PatchType
+from .patch_score import PatchScore
 # Imports for Exploit, Round, Exploit deferred to prevent circular imports.
 
-"""ChallengeBinaryNode model"""
-
+def _sha256sum(*strings):
+    array = list(strings)
+    array.sort()
+    return hashlib.sha256("".join(array)).hexdigest()
 
 class ChallengeBinaryNode(BaseModel):
     """ChallengeBinaryNode model"""
     root = ForeignKeyField('self', null=True, related_name='descendants')
-    blob = BlobField(null=True)
+    blob = BlobField()
     name = CharField()
+    size = IntegerField()
     cs = ForeignKeyField(ChallengeSet, related_name='cbns')
-    patch_type = CharField(null=True)
     sha256 = FixedCharField(max_length=64)
+    patch_type = ForeignKeyField(PatchType, related_name='patched_cbns', null=True)
     ids_rule = ForeignKeyField(IDSRule, related_name='cbn', null=True) # needed for submitting patch+related ids rules
+
+    is_blacklisted = BooleanField(default=False)  # needed for patch submission decision making.
 
     def delete_binary(self):
         """Remove binary file"""
         if os.path.isfile(self._path):
             os.remove(self._path)
+
+    @classmethod
+    def create(cls, *args, **kwargs):
+        kwargs['size'] = len(kwargs['blob'])
+        if 'sha256' not in kwargs:
+            kwargs['sha256'] = _sha256sum(kwargs['blob'])
+        obj = super(cls, cls).create(*args, **kwargs)
+        return obj
 
     @property
     def _path(self):
@@ -81,6 +95,45 @@ class ChallengeBinaryNode(BaseModel):
                    .where(
                        (ChallengeSetFielding.team == Team.get_our()) &
                        (ChallengeSetFielding.submission_round.is_null(False)))
+
+    #
+    # Feedback crap
+    #
+
+    @property
+    def estimated_feedback(self):
+        return PatchScore.select().where(
+            (PatchScore.cs == self.cs) &
+            (PatchScore.patch_type == self.patch_type)
+        ).get()
+
+    @property
+    def estimated_cb_score(self):
+        return self.estimated_feedback.cb_score
+
+    @property
+    def poll_feedbacks(self):
+        """All the received polls for this CB."""
+        # there is probably a DB way to do this better
+        return [
+            f.poll_feedback for f in self.fieldings
+            if (
+                f.poll_feedback.success + f.poll_feedback.timeout +
+                f.poll_feedback.connect + f.poll_feedback.function
+            )> 0
+        ]
+
+    @property
+    def min_cb_score(self):
+        feedbacks = self.poll_feedbacks
+        return min(f.cb_score for f in feedbacks) if len(feedbacks) else None
+
+    @property
+    def avg_cb_score(self):
+        feedbacks = self.poll_feedbacks
+        return (
+            sum(f.cb_score for f in feedbacks) / len(feedbacks)
+        ) if len(feedbacks) else None
 
     @classmethod
     def roots(cls):

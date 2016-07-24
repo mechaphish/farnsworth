@@ -12,10 +12,10 @@ from .log import LOG
 def tables():
     from farnsworth.models import (Bitmap,
                                    CBPollPerformance,
+                                   CSSubmissionCable,
                                    ChallengeBinaryNode,
                                    ChallengeSet,
                                    ChallengeSetFielding,
-                                   CSSubmissionCable,
                                    Crash,
                                    Evaluation,
                                    Exploit,
@@ -28,7 +28,9 @@ def tables():
                                    IDSRuleFielding,
                                    Job,
                                    PatchScore,
+                                   PatchType,
                                    Pcap,
+                                   PollFeedback,
                                    PovTestResult,
                                    RawRoundPoll,
                                    RawRoundTraffic,
@@ -58,8 +60,10 @@ def tables():
               IDSRuleFielding,
               Job,
               PatchScore,
+              PatchType,
               Pcap,
               PovTestResult,
+              PollFeedback,
               RawRoundPoll,
               RawRoundTraffic,
               RopCache,
@@ -89,6 +93,11 @@ def create_tables():
     master_db.create_index(ChallengeSetFielding, ['cs', 'team', 'fielded_round'], unique=True)
     master_db.create_index(Crash, ['cs', 'sha256'], unique=True)
     master_db.create_index(Test, ['cs', 'sha256'], unique=True)
+
+    LOG.debug("Creating patch types...")
+    from farnsworth.models import PatcherexJob, PatchType
+    for name,(func_risk,exploitability) in PatcherexJob.PATCH_TYPES.items():
+        PatchType.create(name=name, functionality_risk=func_risk, exploitability=exploitability)
 
 def drop_tables():
     LOG.debug("Dropping tables...")
