@@ -25,9 +25,9 @@ def to_job_type(job):
     modified one for convience.
     """
     job_types = [# Worker jobs, directly on Kubernetes
-                 AFLJob, CacheJob, CBRoundTesterJob, ColorGuardJob, DrillerJob,
-                 FunctionIdentifierJob, IDSJob, NetworkPollCreatorJob, PatchPerformanceJob,
-                 PatcherexJob, PovFuzzer1Job, PovFuzzer2Job, RexJob, RopCacheJob,
+                 AFLJob, BackdoorSubmitterJob, CacheJob, CBRoundTesterJob, ColorGuardJob,
+                 DrillerJob, FunctionIdentifierJob, IDSJob, NetworkPollCreatorJob,
+                 PatchPerformanceJob, PatcherexJob, PovFuzzer1Job, PovFuzzer2Job, RexJob, RopCacheJob,
                  # Tester jobs
                  TesterJob, CBTesterJob, NetworkPollSanitizerJob, PollCreatorJob,
                  PovTesterJob, ShowmapSyncJob]
