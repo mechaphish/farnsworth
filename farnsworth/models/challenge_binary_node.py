@@ -109,7 +109,7 @@ class ChallengeBinaryNode(BaseModel):
 
     @property
     def estimated_cb_score(self):
-        return self.poll_feedback.cb_score
+        return self.estimated_feedback.cb_score
 
     @property
     def poll_feedbacks(self):
