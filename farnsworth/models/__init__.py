@@ -29,6 +29,7 @@ from .job import (
     Job,
     # Worker jobs, inside Docker
     AFLJob,
+    BackdoorSubmitterJob,
     CacheJob,
     CBRoundTesterJob,
     ColorGuardJob,
@@ -42,7 +43,6 @@ from .job import (
     PovFuzzer2Job,
     RexJob,
     RopCacheJob,
-    BackdoorSubmitterJob,
 
     # Tester jobs, inside VM inside Docker
     TesterJob,
