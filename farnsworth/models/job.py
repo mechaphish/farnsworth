@@ -217,15 +217,18 @@ class PovFuzzer2Job(RexJob):
 class PatcherexJob(Job):
     """A PatcherexJob."""
 
-    PATCH_TYPES = ["voidbitflip",
-                   "medium_detour_flip",
-                   "medium_reassembler_flip",
-                   "medium_detour_flip_fidget",
-                   "medium_reassembler_flip_fidget",
-                   "medium_detour",
-                   "medium_reassembler",
-                   "light_detour",
-                   "light_reassembler"]
+    # the risks and exploitability associated with every patch type
+    PATCH_TYPES = {
+        "voidbitflip": (0.1, 0.9),
+        "medium_detour_flip": (0.3, 0.5),
+        "medium_reassembler_flip": (0.2, 0.5),
+        "medium_detour_flip_fidget": (0.25, 0.5),
+        "medium_reassembler_flip_fidget": (0.23, 0.5),
+        "medium_detour": (0.25, 0.6),
+        "medium_reassembler": (0.23, 0.6),
+        "light_detour": (0.23, 0.8),
+        "light_reassembler": (0.22, 0.8)
+    }
 
     worker = CharField(default='patcherex')
 

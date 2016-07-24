@@ -94,6 +94,11 @@ def create_tables():
     master_db.create_index(Crash, ['cs', 'sha256'], unique=True)
     master_db.create_index(Test, ['cs', 'sha256'], unique=True)
 
+    LOG.debug("Creating patch types...")
+    from farnsworth.models import PatcherexJob, PatchType
+    for name,(func_risk,exploitability) in PatcherexJob.PATCH_TYPES.items():
+        PatchType.create(name=name, functionality_risk=func_risk, exploitability=exploitability)
+
 def drop_tables():
     LOG.debug("Dropping tables...")
     master_db.drop_tables(tables(), safe=True, cascade=True)
