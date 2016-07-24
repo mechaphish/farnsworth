@@ -18,20 +18,7 @@ from ..mixins import CBScoreMixin
 class PollFeedback(BaseModel, RoundRelatedModel, CBScoreMixin):
     """Feedback model"""
     cs = ForeignKeyField(ChallengeSet, related_name='feedbacks')
-
-    #round = ForeignKeyField(Round, related_name='feedbacks')
-    round_id = IntegerField()
-    @property
-    def round(self):
-        return Round.get(id=self.round_id)
-
-    @property
-    def cbns(self):
-        return self.cs_fielding.get().cbns
-
-    @property
-    def patch_type(self):
-        return self.cbns.get().patch_type
+    round = ForeignKeyField(Round, related_name='poll_feedbacks')
 
     # functionality tests
     success = FloatField()
@@ -42,6 +29,14 @@ class PollFeedback(BaseModel, RoundRelatedModel, CBScoreMixin):
     # performance tests
     time_overhead = FloatField()
     memory_overhead = FloatField()
+
+    @property
+    def cbns(self):
+        return self.cs_fielding.get().cbns
+
+    @property
+    def patch_type(self):
+        return self.cbns.get().patch_type
 
     # security
     @property

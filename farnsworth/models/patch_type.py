@@ -10,12 +10,10 @@ from .base import BaseModel
 """patch_type_config model"""
 
 
-class APatchType(BaseModel):
+class PatchType(BaseModel):
     """
     Patch Types
     """
     name = CharField(null=False)
     functionality_risk = FloatField(null=False)
     exploitability = FloatField(null=False)
-
-PatchType = APatchType
