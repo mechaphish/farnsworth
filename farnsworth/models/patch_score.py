@@ -51,7 +51,7 @@ class PatchScore(BaseModel, CBScoreMixin):
         exec_time_overhead = 9999  # big number
         if ref_tsk_clk != 0:
             exec_time_overhead = (rep_tsk_clk * 1.0) / ref_tsk_clk
-        return exec_time_overhead
+        return exec_time_overhead - 1
 
     @property
     def memory_overhead(self):
