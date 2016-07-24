@@ -107,8 +107,8 @@ class TestScores(object):
         )
 
         assert len(cbn1.poll_feedbacks) == 2
-        assert cbn1.avg_cb_score == (0.9609803444828162 + 0.6830134553650711)/2
-        assert cbn1.min_cb_score == 0.6830134553650711
+        assert round(cbn1.avg_cb_score, 5) == round((0.9609803444828162 + 0.6830134553650711)/2, 5)
+        assert round(cbn1.min_cb_score, 5) == round(0.6830134553650711, 5)
 
     def test_poll_feedback(self):
         r0 = Round.create(num=0)
