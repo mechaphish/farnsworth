@@ -521,6 +521,17 @@ class CacheJob(Job):
 
     worker = CharField(default='cache')
 
+    @property
+    def atoi_flag(self):
+        """Return whether or not to run with symbols"""
+        if not hasattr(self, '_atoi_flag'):
+            self._atoi_flag = None
+
+        if self._atoi_flag is None:
+            self._atoi_flag = self.payload['with_atoi']
+
+        return self._atoi_flag
+
 
 class RopCacheJob(Job):
     """A RopCacheJob."""
