@@ -523,11 +523,13 @@ class CacheJob(Job):
 
 class RopCacheJob(Job):
     """A RopCacheJob."""
+
     worker = CharField(default='rop_cache')
 
 
 class ShowmapSyncJob(Job):
     """A ShowMapSync."""
+
     worker = CharField(default='showmap_sync')
 
     @property
@@ -542,3 +544,9 @@ class ShowmapSyncJob(Job):
             self._input_round = Round.get(id=self.payload['round_id'])
 
         return self._input_round
+
+
+class BackdoorCreatorJob(Job):
+    """A BackdoorCreatorJob."""
+
+    worker = CharField(default='backdoor_creator')
