@@ -25,9 +25,10 @@ def to_job_type(job):
     modified one for convience.
     """
     job_types = [# Worker jobs, directly on Kubernetes
-                 AFLJob, CacheJob, CBRoundTesterJob, ColorGuardJob, DrillerJob,
-                 FunctionIdentifierJob, IDSJob, NetworkPollCreatorJob, PatchPerformanceJob,
-                 PatcherexJob, PovFuzzer1Job, PovFuzzer2Job, RexJob, RopCacheJob,
+                 AFLJob, BackdoorSubmitterJob, CacheJob, CBRoundTesterJob, ColorGuardJob,
+                 DrillerJob, FunctionIdentifierJob, IDSJob, NetworkPollCreatorJob,
+                 PatchPerformanceJob, PatcherexJob, PovFuzzer1Job, PovFuzzer2Job, RexJob,
+                 RopCacheJob,
                  # Tester jobs
                  TesterJob, CBTesterJob, NetworkPollSanitizerJob, PollCreatorJob,
                  PovTesterJob, ShowmapSyncJob]
@@ -523,11 +524,13 @@ class CacheJob(Job):
 
 class RopCacheJob(Job):
     """A RopCacheJob."""
+
     worker = CharField(default='rop_cache')
 
 
 class ShowmapSyncJob(Job):
     """A ShowMapSync."""
+
     worker = CharField(default='showmap_sync')
 
     @property
@@ -542,3 +545,9 @@ class ShowmapSyncJob(Job):
             self._input_round = Round.get(id=self.payload['round_id'])
 
         return self._input_round
+
+
+class BackdoorSubmitterJob(Job):
+    """A BackdoorSubmitterJob."""
+
+    worker = CharField(default='backdoor_submitter')

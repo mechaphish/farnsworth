@@ -29,6 +29,7 @@ from .job import (
     Job,
     # Worker jobs, inside Docker
     AFLJob,
+    BackdoorSubmitterJob,
     CacheJob,
     CBRoundTesterJob,
     ColorGuardJob,
