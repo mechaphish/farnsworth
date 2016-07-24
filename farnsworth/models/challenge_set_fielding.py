@@ -56,3 +56,18 @@ class ChallengeSetFielding(BaseModel):
                 self.sha256 = _sha256sum(*[c.sha256 for c in self.cbns])
         if self.is_dirty():
             self.save()
+
+    @classmethod
+    def latest(cls, cs, team):
+        """
+            Get latest cs fielding for provided team and CS
+        :param cs: CS for which fielding need to be fetched.
+        :param team: Team for which cs fielding need to be fetched.
+        :return: list containing latest cs fielding.
+        """
+
+        query = ChallengeSetFielding.select()
+        predicate = (ChallengeSetFielding.team == team) \
+                    & (ChallengeSetFielding.cs == cs) \
+                    & (ChallengeSetFielding.available_round == Round.current_round())
+        return query.where(predicate).limit(1)
