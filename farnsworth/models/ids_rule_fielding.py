@@ -35,9 +35,10 @@ class IDSRuleFielding(BaseModel):
         :return: list containing latest IDS fielding.
         """
 
-        query = IDSRuleFielding.select() \
-                               .join(IDSRule, on=(IDSRuleFielding.ids_rule == IDSRule.id))
-        predicate = (IDSRuleFielding.team == team) \
-                    & (IDSRule.cs == cs) \
-                    & (IDSRuleFielding.available_round == Round.current_round())
-        return query.where(predicate).limit(1)
+        query = cls.select(cls).join(IDSRule, on=(cls.ids_rule == IDSRule.id))
+        predicate = (IDSRule.cs == cs) \
+                    & (cls.team == team) \
+                    & (cls.available_round == Round.current_round())
+        result = query.where(predicate).limit(1)
+        if result:
+            return result[0]

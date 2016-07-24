@@ -65,9 +65,9 @@ class ChallengeSetFielding(BaseModel):
         :param team: Team for which cs fielding need to be fetched.
         :return: list containing latest cs fielding.
         """
-
-        query = ChallengeSetFielding.select()
-        predicate = (ChallengeSetFielding.team == team) \
-                    & (ChallengeSetFielding.cs == cs) \
-                    & (ChallengeSetFielding.available_round == Round.current_round())
-        return query.where(predicate).limit(1)
+        predicate = (cls.team == team) \
+                    & (cls.cs == cs) \
+                    & (cls.available_round == Round.current_round())
+        result = cls.select().where(predicate).limit(1)
+        if result:
+            return result[0]

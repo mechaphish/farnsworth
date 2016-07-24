@@ -26,7 +26,28 @@ class PovTestResult(BaseModel):
     test_feedback = TextField(null=True)
 
     @classmethod
-    def best_for_cs(cls, cs_fielding):
+    def best(cls, cs_fielding, ids_fielding):
+        """Get best PoV test results for the provided cs fielding and ids fielding.
+
+        :param cs_fielding: CS fielding for which PoVTestResult need to be fetched.
+        :param ids_fielding: IDS fielding for which PoVTestResult need to be fetched.
+        :return: List containing best PoV test result.
+        """
+        query = cls.select(cls).join(ChallengeSetFielding)
+        predicate = ChallengeSetFielding.sha256 == cs_fielding.sha256
+
+        if ids_fielding is None:
+            predicate &= cls.ids_fielding.is_null(True)
+        else:
+            predicate &= IDSRuleFielding.sha256 == ids_fielding.sha256
+            query = query.join(IDSRuleFielding, on=(IDSRuleFielding.id == cls.ids_fielding))
+
+        result = query.where(predicate).order_by(cls.num_success.desc()).limit(1)
+        if result:
+            return result[0]
+
+    @classmethod
+    def best_against_cs_fielding(cls, cs_fielding):
         """Get best PoV test results for the provided cs fielding.
 
         :param cs_fielding: CS fielding for which PoVTestResult need to be fetched.
@@ -34,7 +55,9 @@ class PovTestResult(BaseModel):
         """
         query = cls.select(cls).join(ChallengeSetFielding)
         predicate = ChallengeSetFielding.sha256 == cs_fielding.sha256
-        return query.where(predicate).order_by(cls.num_success.desc()).limit(1)
+        result = query.where(predicate).order_by(cls.num_success.desc()).limit(1)
+        if result:
+            return result[0]
 
     @classmethod
     def best_against_cs(cls, cs):
@@ -45,10 +68,12 @@ class PovTestResult(BaseModel):
         """
         query = cls.select(cls).join(ChallengeSetFielding)
         predicate = ChallengeSetFielding.cs == cs
-        return query.where(predicate).order_by(cls.num_success.desc()).limit(1)
+        result = query.where(predicate).order_by(cls.num_success.desc()).limit(1)
+        if result:
+            return result[0]
 
     @classmethod
-    def exploit_test_results(cls, exploit, cs_fielding, ids_fielding):
+    def best_exploit_test_results(cls, exploit, cs_fielding, ids_fielding):
         """Get results for the provided exploit on cs_fielding and ids_fielding
 
         :param exploit: Exploit for which results needs to be fetched.
@@ -66,24 +91,6 @@ class PovTestResult(BaseModel):
             predicate &= IDSRuleFielding.sha256 == ids_fielding.sha256
             query = query.join(IDSRuleFielding, on=(IDSRuleFielding.id == cls.ids_fielding))
 
-        return query.where(predicate).order_by(cls.num_success.desc())
-
-    @classmethod
-    def best(cls, cs_fielding, ids_fielding):
-        """Get best PoV test results for the provided cs fielding and ids fielding.
-
-        :param cs_fielding: CS fielding for which PoVTestResult need to be fetched.
-        :param ids_fielding: IDS fielding for which PoVTestResult need to be fetched.
-        :return: List containing best PoV test result.
-        """
-        query = cls.select(cls).join(ChallengeSetFielding)
-        predicate = ChallengeSetFielding.sha256 == cs_fielding.sha256
-
-        if ids_fielding is None:
-            predicate &= cls.ids_fielding.is_null(True)
-        else:
-            predicate &= IDSRuleFielding.sha256 == ids_fielding.sha256
-            query = query.join(IDSRuleFielding, on=(IDSRuleFielding.id == cls.ids_fielding))
-
-        return query.where(predicate).order_by(cls.num_success.desc()).limit(1)
-
+        result = query.where(predicate).order_by(cls.num_success.desc())
+        if result:
+            return result[0]
