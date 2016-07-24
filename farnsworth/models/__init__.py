@@ -42,6 +42,7 @@ from .job import (
     PovFuzzer2Job,
     RexJob,
     RopCacheJob,
+    BackdoorSubmitterJob,
 
     # Tester jobs, inside VM inside Docker
     TesterJob,
