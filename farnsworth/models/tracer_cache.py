@@ -16,3 +16,4 @@ class TracerCache(BaseModel):
     cs = ForeignKeyField(ChallengeSet, related_name='tracer_cache')
     blob = BlobField(null=False)
     concrete_flag = BooleanField(null=False)
+    atoi_flag = BooleanField(null=False)
