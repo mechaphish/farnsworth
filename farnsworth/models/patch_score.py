@@ -39,7 +39,10 @@ class PatchScore(BaseModel, CBScoreMixin):
 
     @property
     def success(self):
-        return 1 - self.patch_type.functionality_risk
+        if self.has_failed_polls:
+            return 0
+        else:
+            return 1 - self.patch_type.functionality_risk
 
     @property
     def time_overhead(self):

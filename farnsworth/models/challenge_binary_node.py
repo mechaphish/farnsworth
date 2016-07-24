@@ -11,6 +11,7 @@ from .base import BaseModel
 from .challenge_set import ChallengeSet
 from .ids_rule import IDSRule
 from .patch_type import PatchType
+from .patch_score import PatchScore
 # Imports for Exploit, Round, Exploit deferred to prevent circular imports.
 
 def _sha256sum(*strings):
@@ -98,6 +99,17 @@ class ChallengeBinaryNode(BaseModel):
     #
     # Feedback crap
     #
+
+    @property
+    def estimated_feedback(self):
+        return PatchScore.select().where(
+            (PatchScore.cs == self.cs) &
+            (PatchScore.patch_type == self.patch_type)
+        ).get()
+
+    @property
+    def estimated_cb_score(self):
+        return self.poll_feedback.cb_score
 
     @property
     def poll_feedbacks(self):
