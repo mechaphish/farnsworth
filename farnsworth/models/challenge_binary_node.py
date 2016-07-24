@@ -117,7 +117,10 @@ class ChallengeBinaryNode(BaseModel):
         # there is probably a DB way to do this better
         return [
             f.poll_feedback for f in self.fieldings
-            if f.submission_round is None or f.available_round.num != f.submission_round.num
+            if (
+                f.poll_feedback.success + f.poll_feedback.timeout +
+                f.poll_feedback.connect + f.poll_feedback.function
+            )> 0
         ]
 
     @property
