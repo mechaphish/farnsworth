@@ -1,3 +1,9 @@
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
+
+from __future__ import absolute_import, unicode_literals
+
+
 class CBScoreMixin(object):
     @property
     def cqe_performance_score(self):

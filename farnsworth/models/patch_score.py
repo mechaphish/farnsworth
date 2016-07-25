@@ -9,7 +9,7 @@ from playhouse.postgres_ext import BinaryJSONField
 from .base import BaseModel
 from .round import Round
 from .challenge_set import ChallengeSet
-from ..mixins import CBScoreMixin
+from ..mixins.cb_score_mixin import CBScoreMixin
 from .patch_type import PatchType
 
 """patch_scores model"""

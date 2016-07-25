@@ -10,7 +10,7 @@ from .round import Round
 from .team import Team
 from .challenge_set import ChallengeSet
 from .concerns.round_related_model import RoundRelatedModel
-from ..mixins import CBScoreMixin
+from ..mixins.cb_score_mixin import CBScoreMixin
 
 """Feedback model"""
 
