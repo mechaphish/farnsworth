@@ -8,6 +8,7 @@ from playhouse.postgres_ext import BinaryJSONField
 
 from .base import BaseModel
 from .valid_polls import ValidPoll
+from .patch_type import PatchType
 from .challenge_set import ChallengeSet
 
 """cb_poll_performances model"""
@@ -21,7 +22,7 @@ class CBPollPerformance(BaseModel):
     poll = ForeignKeyField(ValidPoll, related_name='cb_poll_performances')
     performances = BinaryJSONField()
     is_poll_ok = BooleanField(default=False)
-    patch_type = CharField(null=True)   # THIS SHOULD NOT BE A CHARFIELD
+    patch_type = ForeignKeyField(PatchType, related_name='cb_poll_performances', null=True)
 
     @classmethod
     def num_tested_polls(cls, cs, patch_type):
