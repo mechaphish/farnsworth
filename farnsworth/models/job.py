@@ -219,13 +219,11 @@ class PatcherexJob(Job):
 
     # the risks and exploitability associated with every patch type
     PATCH_TYPES = {
-        "voidbitflip": (0.1, 0.9),
-        "medium_detour_flip": (0.3, 0.5),
-        "medium_reassembler_flip": (0.2, 0.5),
-        "medium_detour_flip_fidget": (0.25, 0.5),
-        "medium_reassembler_flip_fidget": (0.23, 0.5),
-        "medium_detour": (0.25, 0.6),
-        "medium_reassembler": (0.23, 0.6),
+        "voidpartialbitflip": (0.1, 0.9),
+        "medium_detour": (0.3, 0.5),
+        "medium_reassembler": (0.2, 0.5),
+        "medium_detour_fidget": (0.25, 0.5),
+        "medium_reassembler_fidget": (0.23, 0.5),
         "light_detour": (0.23, 0.8),
         "light_reassembler": (0.22, 0.8)
     }
