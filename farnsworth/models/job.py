@@ -225,7 +225,8 @@ class PatcherexJob(Job):
         "medium_detour_fidget": (0.25, 0.5),
         "medium_reassembler_fidget": (0.23, 0.5),
         "light_detour": (0.23, 0.8),
-        "light_reassembler": (0.22, 0.8)
+        "light_reassembler": (0.22, 0.8),
+        "optimized": (0.22, 0.8)
     }
 
     worker = CharField(default='patcherex')
