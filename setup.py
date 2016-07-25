@@ -10,7 +10,7 @@ dependencies = ["git+ssh://git@git.seclab.cs.ucsb.edu/cgc/peewee.git#egg=peewee-
 
 requires = ["peewee>=2.8.1",
             # tests
-            "python-dotenv==0.3.0",
+            "python-dotenv>=0.3.0",
             "nose>=1.3.7",
             "nose-timer>=0.5.0",
             "coverage>=4.0.3"]
