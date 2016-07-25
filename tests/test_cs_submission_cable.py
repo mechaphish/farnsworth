@@ -24,8 +24,8 @@ class TestCSSubmissionCable:
 
     def test_get_or_create(self):
         cs = ChallengeSet.create(name="foo")
-        cbn1 = ChallengeBinaryNode.create(name="foo1", cs=cs, sha256="sum1")
-        cbn2 = ChallengeBinaryNode.create(name="foo1", cs=cs, sha256="sum2")
+        cbn1 = ChallengeBinaryNode.create(name="foo1", cs=cs, blob="aaa1")
+        cbn2 = ChallengeBinaryNode.create(name="foo1", cs=cs, blob="aaa2")
         ids = IDSRule.create(cs=cs, rules="aaa", sha256="sum")
 
         cable, created = CSSubmissionCable.get_or_create(cs=cs, ids=ids, cbns=[cbn1])

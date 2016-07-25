@@ -12,11 +12,15 @@ from peewee import IntegrityError
 
 from . import setup_each, teardown_each
 from farnsworth.models import (ChallengeBinaryNode, ChallengeSet,
-                               Round, Team)
+                               Round, Team, PatchType)
 import farnsworth.models    # to avoid collisions between Test and nosetests
 
 NOW = datetime.now()
 BLOB = "blob data"
+BLOB2 = "blob data2"
+BLOB3 = "blob data3"
+BLOB4 = "blob data4"
+BLOB5 = "blob data5"
 
 
 class TestChallengeBinaryNode:
@@ -30,22 +34,21 @@ class TestChallengeBinaryNode:
         cs1 = ChallengeSet.create(name="foo")
         cs2 = ChallengeSet.create(name="bar")
         # first binary is ok
-        ChallengeBinaryNode.create(name="test1", cs=cs1, blob=BLOB, sha256="same-sum")
+        ChallengeBinaryNode.create(name="test1", cs=cs1, blob=BLOB)
         # same binary with different name is ok
-        ChallengeBinaryNode.create(name="test2", cs=cs1, blob=BLOB, sha256="same-sum")
+        ChallengeBinaryNode.create(name="test2", cs=cs1, blob=BLOB)
         # same binary with different cs is ok
-        ChallengeBinaryNode.create(name="test1", cs=cs2, blob=BLOB, sha256="same-sum")
+        ChallengeBinaryNode.create(name="test1", cs=cs2, blob=BLOB)
         # same cs and name but different binary is ok
-        ChallengeBinaryNode.create(name="test1", cs=cs2, blob=BLOB, sha256="different-sum")
+        ChallengeBinaryNode.create(name="test1", cs=cs2, blob=BLOB2)
         # same cs, name and binary raises error
-        assert_raises(IntegrityError, ChallengeBinaryNode.create,
-                      name="test1", cs=cs1, blob=BLOB, sha256="same-sum")
+        assert_raises(IntegrityError, ChallengeBinaryNode.create, name="test1", cs=cs1, blob=BLOB)
 
     def test_root_association(self):
         cs = ChallengeSet.create(name="foo")
-        root_cbn = ChallengeBinaryNode.create(name="root", cs=cs, blob=BLOB, sha256="sum1")
-        cbn1 = ChallengeBinaryNode.create(name="test1", cs=cs, root=root_cbn, blob=BLOB, sha256="sum2")
-        cbn2 = ChallengeBinaryNode.create(name="test2", cs=cs, root=root_cbn, blob=BLOB, sha256="sum3")
+        root_cbn = ChallengeBinaryNode.create(name="root", cs=cs, blob=BLOB3)
+        cbn1 = ChallengeBinaryNode.create(name="test1", cs=cs, root=root_cbn, blob=BLOB4)
+        cbn2 = ChallengeBinaryNode.create(name="test2", cs=cs, root=root_cbn, blob=BLOB5)
 
         assert_equals(cbn1.root, root_cbn)
         assert_equals(len(root_cbn.descendants), 2)
@@ -54,14 +57,14 @@ class TestChallengeBinaryNode:
 
     def test_binary_is_created_and_deleted_properly(self):
         cs = ChallengeSet.create(name=str(time.time()))
-        cbn = ChallengeBinaryNode.create(name="mybin", cs=cs, blob="byte data", sha256="sum1")
+        cbn = ChallengeBinaryNode.create(name="mybin-%s" % cs.name, cs=cs, blob=BLOB)
         binpath = cbn._path
 
         assert_false(os.path.isfile(binpath))
         cbn.path
 
         assert_true(os.path.isfile(binpath))
-        assert_equals(open(cbn.path, 'rb').read(), "byte data")
+        assert_equals(open(cbn.path, 'rb').read(), BLOB)
         cbn = None
         # FIXME
         # assert_false(os.path.isfile(binpath))
@@ -90,9 +93,25 @@ class TestChallengeBinaryNode:
         team = Team.create(name=Team.OUR_NAME)
         cs = ChallengeSet.create(name="foo")
         cs.rounds = [r0]
-        cbn = ChallengeBinaryNode.create(name="cbn", cs=cs, sha256="sum1")
-        patch1 = ChallengeBinaryNode.create(name="patch1", cs=cs, root=cbn, sha256="sum2")
-        patch2 = ChallengeBinaryNode.create(name="patch2", cs=cs, root=cbn, sha256="sum3")
+        cbn = ChallengeBinaryNode.create(name="cbn", cs=cs, blob="aaa1")
+        patchtype1 = PatchType.create(
+            name="PatchType1",
+            functionality_risk = 0,
+            exploitability = 0
+        )
+        patchtype2 = PatchType.create(
+            name="PatchType2",
+            functionality_risk = 0,
+            exploitability = 0
+        )
+
+
+        patch1 = ChallengeBinaryNode.create(
+            name="patch1", patch_type=patchtype1, cs=cs, root=cbn, blob="aaa2"
+        )
+        patch2 = ChallengeBinaryNode.create(
+            name="patch2", patch_type=patchtype2, cs=cs, root=cbn, blob="aaa3"
+        )
 
         assert_equals(len(cbn.unsubmitted_patches), 2)
         assert_in(patch1, cbn.unsubmitted_patches)
