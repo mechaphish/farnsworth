@@ -33,4 +33,4 @@ class RawRoundPoll(BaseModel):
                 for data_var in action.data_vars:
                     test_blob.append(data_var.data)
 
-        return ''.join(test_blob)
+        return str('').join(test_blob)
