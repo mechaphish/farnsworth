@@ -2,7 +2,7 @@ tests:
   services:
     - postgres:9.5
   script:
-    - pip install --process-dependency-links -e .
+    - pip install --process-dependency-links -U -e .
     - ./setupdb.sh .env.test
     - nosetests tests
   tags: ["angr"]
