@@ -6,7 +6,7 @@
 from distutils.core import setup
 import platform
 
-dependencies = ["git+ssh://git@git.seclab.cs.ucsb.edu/cgc/peewee.git#egg=peewee-2.8.2"]
+dependencies = ["git+ssh://git@git.seclab.cs.ucsb.edu/cgc/peewee.git#egg=peewee-99.9.9"]
 
 requires = ["peewee>=2.8.1",
             # tests
