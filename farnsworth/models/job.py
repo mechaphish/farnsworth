@@ -111,6 +111,7 @@ class DrillerJob(Job):
     """
 
     worker = CharField(default='driller')
+    restart = False
 
     @property
     def input_test(self):
@@ -515,12 +516,14 @@ class FunctionIdentifierJob(Job):
     """A FunctionIdentifierJob."""
 
     worker = CharField(default='function_identifier')
+    restart = False
 
 
 class CacheJob(Job):
     """A CacheJob."""
 
     worker = CharField(default='cache')
+    restart = False
 
     @property
     def atoi_flag(self):
@@ -538,12 +541,14 @@ class RopCacheJob(Job):
     """A RopCacheJob."""
 
     worker = CharField(default='rop_cache')
+    restart = False
 
 
 class ShowmapSyncJob(Job):
     """A ShowMapSync."""
 
     worker = CharField(default='showmap_sync')
+    restart = False
 
     @property
     def input_round(self):
@@ -563,3 +568,4 @@ class BackdoorSubmitterJob(Job):
     """A BackdoorSubmitterJob."""
 
     worker = CharField(default='backdoor_submitter')
+    restart = False
