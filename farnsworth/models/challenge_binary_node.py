@@ -124,7 +124,10 @@ class ChallengeBinaryNode(BaseModel):
 
     @property
     def estimated_cb_score(self):
-        return self.estimated_feedback.cb_score if self.estimated_feedback is not None else None
+        if self.estimated_feedback is not None:
+            return self.estimated_feedback.cb_score
+        else:
+            return None
 
     @property
     def poll_feedbacks(self):
@@ -140,8 +143,11 @@ class ChallengeBinaryNode(BaseModel):
 
     @property
     def min_cb_score(self):
-        feedbacks = self.poll_feedbacks
-        return min(f.cb_score for f in feedbacks) if len(feedbacks) else None
+        try:
+            return min(f.cb_score for f in self.poll_feedbacks)
+        except ValueError:
+            # No feedbacks avaiable, arg to min is None
+            return None
 
     @property
     def avg_cb_score(self):
