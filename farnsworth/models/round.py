@@ -16,15 +16,6 @@ class Round(BaseModel):
     num = IntegerField()
     ready_at = DateTimeField(null=True)
 
-    @property
-    def antecedent(self):
-        rounds = self.__class__.select()\
-                               .where(self.__class__.created_at < self.created_at)\
-                               .order_by(self.__class__.created_at.desc())\
-                               .limit(1)
-        if rounds and rounds[0].num < self.num:
-            return rounds[0]
-
     @classmethod
     def prev_round(cls):
         rounds = cls.select().order_by(cls.created_at.desc()).limit(1).offset(1)

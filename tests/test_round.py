@@ -20,14 +20,6 @@ class TestRound:
     def teardown(self):
         teardown_each()
 
-    def test_antecedent(self):
-        round_previous_competition = Round.create(num=99)
-        r0 = Round.create(num=0)
-        r1 = Round.create(num=1)
-
-        assert_is_none(r0.antecedent)
-        assert_equals(r1.antecedent, r0)
-
     def test_prev_round(self):
         assert_equals(Round.prev_round(), None)
         Round.create(num=0)
