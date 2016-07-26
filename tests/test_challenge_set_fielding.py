@@ -44,6 +44,22 @@ class TestChallengeSetFielding:
         assert_raises(IntegrityError, ChallengeSetFielding.create, cs=cs, cbns=[cbn1], team=team,
                       available_round=r0)
 
+    def create_or_update(self):
+        r0 = Round.create(num=0)
+        team = Team.create(name=Team.OUR_NAME)
+        cs = ChallengeSet.create(name="foo")
+        cbn1 = ChallengeBinaryNode.create(name="foo_1", cs=cs, blob="aaa1")
+        cbn2 = ChallengeBinaryNode.create(name="foo_2", cs=cs, blob="aaa2")
+
+        csf1 = ChallengeSetFielding.create_or_update(team=team, round=r0, cbn=cbn1)
+        assert_in(cbn1, csf1.cbns)
+        assert_equals(len(csf1.cbns), 1)
+
+        csf2 = ChallengeSetFielding.create_or_update(team=team, round=r0, cbn=cbn2)
+        assert_equals(csf1, csf2)
+        assert_in(cbn2, csf1.cbns)
+        assert_equals(len(csf1.cbns), 2)
+
     def test_add_cbns_if_missing(self):
         r0 = Round.create(num=0)
         team = Team.create(name=Team.OUR_NAME)

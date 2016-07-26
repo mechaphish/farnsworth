@@ -103,7 +103,6 @@ class TestChallengeSet:
         assert_equals(cs.fieldings.get().team, Team.get_our())
         assert_equals(cs.fieldings.get().submission_round, Round.current_round())
         assert_is_none(cs.fieldings.get().available_round)
-        assert_is_none(cs.fieldings.get().fielded_round)
 
         # Submit again fails
         assert_raises(IntegrityError, cs.submit, cbns=[cbn1, cbn2], round=r1)

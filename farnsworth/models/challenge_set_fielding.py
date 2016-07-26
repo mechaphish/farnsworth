@@ -33,7 +33,6 @@ class ChallengeSetFielding(BaseModel):
     team = ForeignKeyField(Team, related_name='cs_fieldings')
     submission_round = ForeignKeyField(Round, related_name='submitted_fieldings', null=True)
     available_round = ForeignKeyField(Round, related_name='available_fieldings', null=True)
-    fielded_round = ForeignKeyField(Round, related_name='fielded_fieldings', null=True)
     cbns = ManyToManyField(ChallengeBinaryNode, related_name='fieldings')
     sha256 = FixedCharField(max_length=64)
     remote_cb_score = FloatField(null=True)  # performance metric computed from feedback from DARPA.
@@ -50,6 +49,16 @@ class ChallengeSetFielding(BaseModel):
         obj = super(cls, cls).create(*args, **kwargs)
         obj.cbns = cbns
         return obj
+
+    @classmethod
+    def create_or_update(cls, team, round, cbn):
+        try:
+            csf = cls.get((cls.cs == cs) & \
+                          (cls.team == team) & \
+                          (cls.available_round == round))
+            csf.add_cbns_if_missing(cbn)
+        except cls.DoesNotExist:
+            csf = cls.create(cs=cs, team=team, cbns=[cbn], available_round=round)
 
     def add_cbns_if_missing(self, *cbns):
         """Wrap manytomany.add() to recalculate sha256 sum"""
