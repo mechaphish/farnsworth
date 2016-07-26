@@ -112,10 +112,6 @@ class ChallengeBinaryNode(BaseModel):
                        (ChallengeSetFielding.team == Team.get_our()) &
                        (ChallengeSetFielding.submission_round.is_null(False)))
 
-    #
-    # Feedback crap
-    #
-
     @property
     def estimated_feedback(self):
         try:
