@@ -188,4 +188,4 @@ class TestScores(object):
         ps = PatchScore.create(cs=cs, round=r6, num_polls=1, perf_score=perf_score, patch_type=pt)
         csf_orig = ChallengeSetFielding.create(cs=cs, cbns=[cbn2], team=team, available_round=r6,
                                                submission_round=r6, poll_feedback=pf)
-        assert_equals(cbn2.estimated_cb_score, 1.8)
+        assert_almost_equals(cbn2.estimated_cb_score, 1.8)
