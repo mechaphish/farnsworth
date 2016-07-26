@@ -12,7 +12,6 @@ from .challenge_set import ChallengeSet
 from .ids_rule import IDSRule
 from .patch_type import PatchType
 from .patch_score import PatchScore
-from .challenge_set_fielding import ChallengeSetFielding as CSF
 from .team import Team
 # Imports for Exploit, Round, Exploit deferred to prevent circular imports.
 
@@ -149,3 +148,5 @@ class ChallengeBinaryNode(BaseModel):
     def all_descendants(cls):
         """Return all descendant nodes (patches)"""
         return cls.select().where(cls.root.is_null(False))
+
+from .challenge_set_fielding import ChallengeSetFielding as CSF
