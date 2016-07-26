@@ -21,6 +21,7 @@ build_images:
     script:
     - cgc-build worker
     - cgc-build meister
+    - cgc-build scriba
     - cgc-build ambassador
     tags: ["docker-builder"]
 
