@@ -231,7 +231,7 @@ class PatcherexJob(Job):
     }
 
     worker = CharField(default='patcherex')
-
+    restart = False
 
 class TesterJob(Job):
     """
