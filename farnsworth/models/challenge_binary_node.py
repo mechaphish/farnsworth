@@ -139,7 +139,6 @@ class ChallengeBinaryNode(BaseModel):
                               .where((CSF.team == Team.get_our())
                                      & (CSF.poll_feedback.is_null(False))
                                      & (total > 0))
-        #import ipdb; ipdb.set_trace()
         return [csf.poll_feedback for csf in query]
 
     @property
@@ -147,7 +146,7 @@ class ChallengeBinaryNode(BaseModel):
         try:
             return min(f.cb_score for f in self.poll_feedbacks)
         except ValueError:
-            # No feedbacks avaiable, arg to min is None
+            # No feedbacks available, arg to min is None
             return None
 
     @property
@@ -155,7 +154,7 @@ class ChallengeBinaryNode(BaseModel):
         try:
             return _avg(f.cb_score for f in self.poll_feedbacks)
         except ValueError:
-            # No feedbacks avaiable, arg to _avg is None
+            # No feedbacks available, arg to _avg is None
             return None
 
     @classmethod
