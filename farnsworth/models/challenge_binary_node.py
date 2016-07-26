@@ -12,6 +12,8 @@ from .challenge_set import ChallengeSet
 from .ids_rule import IDSRule
 from .patch_type import PatchType
 from .patch_score import PatchScore
+from .challenge_set_fielding import ChallengeSetFielding as CSF
+from .team import Team
 # Imports for Exploit, Round, Exploit deferred to prevent circular imports.
 
 def _sha256sum(*strings):
@@ -119,8 +121,8 @@ class ChallengeBinaryNode(BaseModel):
         """All the received polls for this CB."""
         # there is probably a DB way to do this better
         return [
-            f.poll_feedback for f in self.fieldings
-            if (
+            f.poll_feedback for f in self.fieldings.where(CSF.team == Team.get_our())
+            if f.poll_feedback is not None and (
                 f.poll_feedback.success + f.poll_feedback.timeout +
                 f.poll_feedback.connect + f.poll_feedback.function
             )> 0
