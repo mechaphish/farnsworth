@@ -53,7 +53,7 @@ class ChallengeSetFielding(BaseModel):
     @classmethod
     def create_or_update(cls, team, round, cbn):
         try:
-            csf = cls.get((cls.cs == cs) & \
+            csf = cls.get((cls.cs == cbn.cs) & \
                           (cls.team == team) & \
                           (cls.available_round == round))
             csf.add_cbns_if_missing(cbn)
