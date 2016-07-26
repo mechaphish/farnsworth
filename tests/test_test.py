@@ -44,6 +44,14 @@ class TestTest:
 
         assert_raises(farnsworth.models.Test.create, cs=cs, job=job, blob="a blob")
 
+    def test_cs_sha256_uniqueness_across_cses(self):
+        cs1 = ChallengeSet.create(name="foo1")
+        cs2 = ChallengeSet.create(name="foo2")
+        job1 = AFLJob.create()
+        job2 = AFLJob.create()
+        test1 = farnsworth.models.Test.create(cs=cs1, job=job1, blob="a blob")
+        test2 = farnsworth.models.Test.create(cs=cs2, job=job2, blob="a blob")
+
     def test_get_or_create(self):
         cs = ChallengeSet.create(name="foo")
         job = AFLJob.create()
