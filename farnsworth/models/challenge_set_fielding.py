@@ -50,6 +50,16 @@ class ChallengeSetFielding(BaseModel):
         obj.cbns = cbns
         return obj
 
+    @classmethod
+    def create_or_update(cls, team, round, cbn):
+        try:
+            csf = cls.get((cls.cs == cs) & \
+                          (cls.team == team) & \
+                          (cls.available_round == round))
+            csf.add_cbns_if_missing(cbn)
+        except cls.DoesNotExist:
+            csf = cls.create(cs=cs, team=team, cbns=[cbn], available_round=round)
+
     def add_cbns_if_missing(self, *cbns):
         """Wrap manytomany.add() to recalculate sha256 sum"""
         for cbn in cbns:
