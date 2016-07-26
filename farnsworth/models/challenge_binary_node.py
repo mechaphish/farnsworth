@@ -115,10 +115,8 @@ class ChallengeBinaryNode(BaseModel):
     @property
     def estimated_feedback(self):
         try:
-            return PatchScore.select().where(
-                (PatchScore.cs == self.cs) &
-                (PatchScore.patch_type == self.patch_type)
-            ).get()
+            return PatchScore.get((PatchScore.cs == self.cs)
+                                  & (PatchScore.patch_type == self.patch_type))
         except PatchScore.DoesNotExist:
             return None
 
