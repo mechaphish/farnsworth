@@ -130,14 +130,17 @@ class ChallengeBinaryNode(BaseModel):
     @property
     def poll_feedbacks(self):
         """All the received polls for this CB."""
-        # there is probably a DB way to do this better
-        return [
-            f.poll_feedback for f in self.fieldings.where(CSF.team == Team.get_our())
-            if f.poll_feedback is not None and (
-                f.poll_feedback.success + f.poll_feedback.timeout +
-                f.poll_feedback.connect + f.poll_feedback.function
-            )> 0
-        ]
+        # There is probably a DB way to do this better
+        from .challenge_set_fielding import ChallengeSetFielding as CSF
+        from .poll_feedback import PollFeedback as PF
+        total = (PF.success + PF.timeout + PF.connect + PF.function)
+        query = self.fieldings.select(CSF.poll_feedback) \
+                              .join(PF, on=(CSF.poll_feedback == PF.id)) \
+                              .where((CSF.team == Team.get_our())
+                                     & (CSF.poll_feedback.is_null(False))
+                                     & (total > 0))
+        #import ipdb; ipdb.set_trace()
+        return [csf.poll_feedback for csf in query]
 
     @property
     def min_cb_score(self):
@@ -164,5 +167,3 @@ class ChallengeBinaryNode(BaseModel):
     def all_descendants(cls):
         """Return all descendant nodes (patches)"""
         return cls.select().where(cls.root.is_null(False))
-
-from .challenge_set_fielding import ChallengeSetFielding as CSF
