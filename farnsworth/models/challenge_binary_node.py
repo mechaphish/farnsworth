@@ -15,10 +15,24 @@ from .patch_score import PatchScore
 from .team import Team
 # Imports for Exploit, Round, Exploit deferred to prevent circular imports.
 
+
 def _sha256sum(*strings):
     array = list(strings)
     array.sort()
     return hashlib.sha256("".join(array)).hexdigest()
+
+
+def _avg(xs):
+    count, sum_ = 0, 0
+    for x in xs:
+        sum_ += x
+        count += 1
+
+    if count > 0:
+        return sum_ / count
+    else:
+        raise ValueError("_avg() arg is an empty sequence")
+
 
 class ChallengeBinaryNode(BaseModel):
     """ChallengeBinaryNode model"""
@@ -134,10 +148,11 @@ class ChallengeBinaryNode(BaseModel):
 
     @property
     def avg_cb_score(self):
-        feedbacks = self.poll_feedbacks
-        return (
-            sum(f.cb_score for f in feedbacks) / len(feedbacks)
-        ) if len(feedbacks) else None
+        try:
+            return _avg(f.cb_score for f in self.poll_feedbacks)
+        except ValueError:
+            # No feedbacks avaiable, arg to _avg is None
+            return None
 
     @classmethod
     def roots(cls):
