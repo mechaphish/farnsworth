@@ -21,7 +21,7 @@ else:
     requires.append("psycopg2>=2.6.1")
 
 setup(name='farnsworth',
-      version="0.0.2",
+      version="1.0.0",
       packages=["farnsworth", "farnsworth.actions", "farnsworth.actions.common",
                 "farnsworth.mixins", "farnsworth.models", "farnsworth.models.concerns"],
       entry_points={'console_scripts': ["farnsworth=farnsworth.__main__:main"]},
