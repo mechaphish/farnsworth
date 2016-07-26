@@ -14,11 +14,9 @@ class CBScoreMixin(object):
         # Computed according to the CQE scoring manual
         # https://cgc.darpa.mil/CQE_Scoring.pdf
         perf_score = None
-        perf_factor = 1 + max(
-            0.25 * self.size_overhead,
-            self.memory_overhead,
-            self.time_overhead
-        )
+        perf_factor = 1 + max(0.25 * self.size_overhead,
+                              self.memory_overhead,
+                              self.time_overhead)
 
         if 0 <= perf_factor < 1.10:
             perf_score = 1
@@ -35,7 +33,7 @@ class CBScoreMixin(object):
     def cqe_functionality_score(self):
         """
         Compute functionality score from functionality factor using CQE formula.
-        :return: functionality score [ 0.0, 1.0]
+        :return: functionality score [0.0, 1.0]
         """
         func_factor = self.success
 

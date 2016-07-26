@@ -26,12 +26,7 @@ class PatchScore(BaseModel, CBScoreMixin):
     failed_polls = BinaryJSONField(null=True)
     round = ForeignKeyField(Round, related_name='patch_scores')
     perf_score = BinaryJSONField(null=False)
-
     patch_type = ForeignKeyField(PatchType, related_name='estimated_scores')
-
-    #
-    # scores (for score calculation)
-    #
 
     @property
     def security(self):

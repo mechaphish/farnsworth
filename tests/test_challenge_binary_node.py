@@ -94,24 +94,13 @@ class TestChallengeBinaryNode:
         cs = ChallengeSet.create(name="foo")
         cs.rounds = [r0]
         cbn = ChallengeBinaryNode.create(name="cbn", cs=cs, blob="aaa1")
-        patchtype1 = PatchType.create(
-            name="PatchType1",
-            functionality_risk = 0,
-            exploitability = 0
-        )
-        patchtype2 = PatchType.create(
-            name="PatchType2",
-            functionality_risk = 0,
-            exploitability = 0
-        )
+        patchtype1 = PatchType.create(name="PatchType1", functionality_risk=0, exploitability=0)
+        patchtype2 = PatchType.create(name="PatchType2", functionality_risk=0, exploitability=0)
 
-
-        patch1 = ChallengeBinaryNode.create(
-            name="patch1", patch_type=patchtype1, cs=cs, root=cbn, blob="aaa2"
-        )
-        patch2 = ChallengeBinaryNode.create(
-            name="patch2", patch_type=patchtype2, cs=cs, root=cbn, blob="aaa3"
-        )
+        patch1 = ChallengeBinaryNode.create(name="patch1", patch_type=patchtype1, cs=cs, root=cbn,
+                                            blob="aaa2")
+        patch2 = ChallengeBinaryNode.create(name="patch2", patch_type=patchtype2, cs=cs, root=cbn,
+                                            blob="aaa3")
 
         assert_equals(len(cbn.unsubmitted_patches), 2)
         assert_in(patch1, cbn.unsubmitted_patches)
