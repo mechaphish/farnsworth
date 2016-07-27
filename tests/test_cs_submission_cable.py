@@ -13,7 +13,8 @@ from . import setup_each, teardown_each
 from farnsworth.models import (ChallengeBinaryNode,
                                ChallengeSet,
                                CSSubmissionCable,
-                               IDSRule)
+                               IDSRule,
+                               Round)
 
 class TestCSSubmissionCable:
     def setup(self):
@@ -23,21 +24,22 @@ class TestCSSubmissionCable:
         teardown_each()
 
     def test_get_or_create(self):
+        r = Round.create(num=0)
         cs = ChallengeSet.create(name="foo")
         cbn1 = ChallengeBinaryNode.create(name="foo1", cs=cs, blob="aaa1")
         cbn2 = ChallengeBinaryNode.create(name="foo1", cs=cs, blob="aaa2")
         ids = IDSRule.create(cs=cs, rules="aaa", sha256="sum")
 
-        cable, created = CSSubmissionCable.get_or_create(cs=cs, ids=ids, cbns=[cbn1])
-        assert_true(created)
+        cbl1, crtd1 = CSSubmissionCable.get_or_create(cs=cs, ids=ids, cbns=[cbn1], round=r)
+        assert_true(crtd1)
 
-        cable2, created2 = CSSubmissionCable.get_or_create(cs=cs, ids=ids, cbns=[cbn1])
-        assert_false(created2)
-        assert_equals(cable.id, cable2.id)
+        cbl2, crtd2 = CSSubmissionCable.get_or_create(cs=cs, ids=ids, cbns=[cbn1], round=r)
+        assert_false(crtd2)
+        assert_equals(cbl1.id, cbl2.id)
 
-        cable3, created3 = CSSubmissionCable.get_or_create(cs=cs, ids=ids, cbns=[cbn1, cbn2])
-        assert_true(created3)
+        cbl3, crtd3 = CSSubmissionCable.get_or_create(cs=cs, ids=ids, cbns=[cbn1, cbn2], round=r)
+        assert_true(crtd3)
 
-        cable4, created4 = CSSubmissionCable.get_or_create(cs=cs, ids=ids, cbns=[cbn1, cbn2])
-        assert_false(created4)
-        assert_equals(cable3.id, cable4.id)
+        cbl4, crtd4 = CSSubmissionCable.get_or_create(cs=cs, ids=ids, cbns=[cbn1, cbn2], round=r)
+        assert_false(crtd4)
+        assert_equals(cbl3.id, cbl4.id)

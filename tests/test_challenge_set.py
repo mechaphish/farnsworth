@@ -226,11 +226,12 @@ class TestChallengeSet:
         assert_equals(cs.symbols, {1: "aaa", 2: "bbb"})
 
     def test_unprocessed_submission_cables(self):
+        r = Round.create(num=0)
         cs = ChallengeSet.create(name="foo")
         cbn = ChallengeBinaryNode.create(name="foo1", cs=cs, blob="aaa")
         ids = IDSRule.create(cs=cs, rules="aaa", blob="aaa")
-        cable1 = CSSubmissionCable.create(cs=cs, ids=ids, cbns=[cbn])
-        cable2 = CSSubmissionCable.create(cs=cs, ids=ids, cbns=[])
+        cable1 = CSSubmissionCable.create(cs=cs, ids=ids, cbns=[cbn], round=r)
+        cable2 = CSSubmissionCable.create(cs=cs, ids=ids, cbns=[], round=r)
 
         assert_equals(len(cs.unprocessed_submission_cables()), 2)
         assert_equals(cable1, cs.unprocessed_submission_cables()[0])
