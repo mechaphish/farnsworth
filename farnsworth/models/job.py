@@ -220,14 +220,9 @@ class PatcherexJob(Job):
 
     # the risks and exploitability associated with every patch type
     PATCH_TYPES = {
-        "voidpartialbitflip": (0.1, 0.9),
-        "medium_detour": (0.3, 0.5),
-        "medium_reassembler": (0.2, 0.5),
-        "medium_detour_fidget": (0.25, 0.5),
-        "medium_reassembler_fidget": (0.23, 0.5),
-        "light_detour": (0.23, 0.8),
-        "light_reassembler": (0.22, 0.8),
-        "optimized": (0.22, 0.8)
+        "medium_reassembler_optimized": (0.0, 0.30),
+        "medium_reassembler": (0.0, 0.31),
+        "medium_detour": (0.0, 0.32),
     }
 
     worker = CharField(default='patcherex')
