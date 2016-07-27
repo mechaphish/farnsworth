@@ -24,9 +24,17 @@ class TestRound:
         assert_equals(Round.prev_round(), None)
         Round.create(num=0)
         assert_equals(Round.prev_round(), None)
-        Round.create(num=1)
+        r1 = Round.create(num=1)
         Round.create(num=2)
-        assert_equals(Round.prev_round().num, 1)
+        assert_equals(Round.prev_round(), r1)
+
+    def test_prev_round_on_new_game(self):
+        Round.create(num=99)
+        assert_equals(Round.prev_round(), None)
+        r0 = Round.create(num=0)
+        assert_equals(Round.prev_round(), None)
+        Round.create(num=1)
+        assert_equals(Round.prev_round(), r0)
 
     def test_current_round(self):
         assert_equals(Round.current_round(), None)
