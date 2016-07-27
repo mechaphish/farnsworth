@@ -39,16 +39,6 @@ class ChallengeSet(BaseModel):
         tm = cls.rounds.get_through_model()
         return cls.select().join(tm).where(tm.round == round_)
 
-    def submit(self, cbns=[], round=None):
-        """Save patches submission at specified round. If none use current."""
-        from .challenge_set_fielding import ChallengeSetFielding
-        from .team import Team
-        if round is None:
-            round = Round.current_round()
-        return ChallengeSetFielding.create(cs=self,
-                                           cbns=cbns,
-                                           submission_round=round,
-                                           team=Team.get_our())
     @property
     def unsubmitted_ids_rules(self):
         """Return IDS rules not submitted"""

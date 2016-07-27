@@ -105,9 +105,9 @@ class ChallengeBinaryNode(BaseModel):
         from .challenge_set_fielding import ChallengeSetFielding
         from .team import Team
         tm = ChallengeSetFielding.cbns.get_through_model()
-        return self.descendants\
-                   .join(tm, on=(tm.challengebinarynode == ChallengeBinaryNode.id))\
-                   .join(ChallengeSetFielding)\
+        return self.descendants \
+                   .join(tm, on=(tm.challengebinarynode == ChallengeBinaryNode.id)) \
+                   .join(ChallengeSetFielding) \
                    .where(
                        (ChallengeSetFielding.team == Team.get_our()) &
                        (ChallengeSetFielding.submission_round.is_null(False)))

@@ -12,6 +12,7 @@ from .base import BaseModel
 from .challenge_binary_node import ChallengeBinaryNode
 from .challenge_set import ChallengeSet
 from .ids_rule import IDSRule
+from .round import Round
 
 """CSSubmissionCable model"""
 
@@ -22,6 +23,7 @@ class CSSubmissionCable(BaseModel):
     cs = ForeignKeyField(ChallengeSet, related_name='submission_cables')
     ids = ForeignKeyField(IDSRule, related_name='submission_cables')
     cbns = ManyToManyField(ChallengeBinaryNode, related_name='submission_cables')
+    round = ForeignKeyField(Round, related_name='cs_submission_cables')
     processed_at = DateTimeField(null=True)
 
     @classmethod
@@ -34,17 +36,18 @@ class CSSubmissionCable(BaseModel):
         return obj
 
     @classmethod
-    def get_or_create(cls, cs, ids, cbns=[]):
-        results = cls.select()\
-                     .where((cls.cs == cs) & \
-                            (cls.ids == ids))
+    def get_or_create(cls, cs, ids, round, cbns=[]):
+        results = cls.select() \
+                     .where((cls.cs == cs)
+                            & (cls.ids == ids)
+                            & (cls.round == round))
         for cssb in results:
             found = {cbn.id for cbn in cssb.cbns}
             expected = {cbn.id for cbn in cbns}
             if (len(found) == len(expected)) and \
                (len(found & expected) == len(expected)):
                 return (cssb, False)
-        return (cls.create(cs=cs, ids=ids, cbns=cbns), True)
+        return (cls.create(cs=cs, ids=ids, cbns=cbns, round=round), True)
 
     def process(self):
         self.processed_at = datetime.now()

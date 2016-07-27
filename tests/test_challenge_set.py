@@ -19,6 +19,7 @@ from farnsworth.models import (AFLJob,
                                Exploit,
                                FunctionIdentity,
                                IDSRule,
+                               IDSRuleFielding,
                                PatchType,
                                RexJob,
                                Round,
@@ -86,27 +87,6 @@ class TestChallengeSet:
         assert_in(cbn2, cs.cbns_by_patch_type()[patch0])
         assert_in(cbn3, cs.cbns_by_patch_type()[patch1])
 
-    def test_submit(self):
-        r1 = Round.create(num=0)
-        team = Team.create(name=Team.OUR_NAME)
-        cs = ChallengeSet.create(name="foo")
-        cbn1 = ChallengeBinaryNode.create(name="foo", cs=cs, blob=BLOB)
-        cbn2 = ChallengeBinaryNode.create(name="foo", cs=cs, blob=BLOB2)
-
-        assert_equals(len(cs.fieldings), 0)
-
-        # Submit 2 patches at once
-        cs.submit(cbns=[cbn1, cbn2], round=r1)
-        assert_equals(len(cs.fieldings), 1)
-
-        assert_equals(len(cs.fieldings.get().cbns), 2)
-        assert_equals(cs.fieldings.get().team, Team.get_our())
-        assert_equals(cs.fieldings.get().submission_round, Round.current_round())
-        assert_is_none(cs.fieldings.get().available_round)
-
-        # Submit again fails
-        assert_raises(IntegrityError, cs.submit, cbns=[cbn1, cbn2], round=r1)
-
     def test_unsubmitted_ids_rules(self):
         r1 = Round.create(num=0)
         team = Team.create(name=Team.OUR_NAME)
@@ -118,12 +98,12 @@ class TestChallengeSet:
         assert_in(ids1, cs.unsubmitted_ids_rules)
         assert_in(ids2, cs.unsubmitted_ids_rules)
 
-        ids1.submit()
+        IDSRuleFielding.create(ids_rule=ids1, team=team, submission_round=r1)
         assert_equals(len(cs.unsubmitted_ids_rules), 1)
         assert_not_in(ids1, cs.unsubmitted_ids_rules)
         assert_in(ids2, cs.unsubmitted_ids_rules)
 
-        ids2.submit()
+        IDSRuleFielding.create(ids_rule=ids2, team=team, submission_round=r1)
         assert_equals(len(cs.unsubmitted_ids_rules), 0)
         assert_not_in(ids1, cs.unsubmitted_ids_rules)
         assert_not_in(ids2, cs.unsubmitted_ids_rules)
@@ -226,11 +206,12 @@ class TestChallengeSet:
         assert_equals(cs.symbols, {1: "aaa", 2: "bbb"})
 
     def test_unprocessed_submission_cables(self):
+        r = Round.create(num=0)
         cs = ChallengeSet.create(name="foo")
         cbn = ChallengeBinaryNode.create(name="foo1", cs=cs, blob="aaa")
         ids = IDSRule.create(cs=cs, rules="aaa", blob="aaa")
-        cable1 = CSSubmissionCable.create(cs=cs, ids=ids, cbns=[cbn])
-        cable2 = CSSubmissionCable.create(cs=cs, ids=ids, cbns=[])
+        cable1 = CSSubmissionCable.create(cs=cs, ids=ids, cbns=[cbn], round=r)
+        cable2 = CSSubmissionCable.create(cs=cs, ids=ids, cbns=[], round=r)
 
         assert_equals(len(cs.unprocessed_submission_cables()), 2)
         assert_equals(cable1, cs.unprocessed_submission_cables()[0])
