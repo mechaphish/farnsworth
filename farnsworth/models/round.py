@@ -20,7 +20,9 @@ class Round(BaseModel):
     def prev_round(cls):
         rounds = cls.select().order_by(cls.created_at.desc()).limit(1).offset(1)
         if rounds:
-            return rounds[0]
+            if rounds[0].num < cls.current_round().num:
+                return rounds[0]
+            # Otherwise, we might be in a new game
 
     @classmethod
     def current_round(cls):
