@@ -44,7 +44,7 @@ class TestChallengeSetFielding:
         assert_raises(IntegrityError, ChallengeSetFielding.create, cs=cs, cbns=[cbn1], team=team,
                       available_round=r0)
 
-    def create_or_update(self):
+    def test_create_or_update(self):
         r0 = Round.create(num=0)
         team = Team.create(name=Team.OUR_NAME)
         cs = ChallengeSet.create(name="foo")

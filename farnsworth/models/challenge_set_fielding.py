@@ -58,7 +58,8 @@ class ChallengeSetFielding(BaseModel):
                           (cls.available_round == round))
             csf.add_cbns_if_missing(cbn)
         except cls.DoesNotExist:
-            csf = cls.create(cs=cs, team=team, cbns=[cbn], available_round=round)
+            csf = cls.create(cs=cbn.cs, team=team, cbns=[cbn], available_round=round)
+        return csf
 
     def add_cbns_if_missing(self, *cbns):
         """Wrap manytomany.add() to recalculate sha256 sum"""
