@@ -44,21 +44,52 @@ class TestChallengeSetFielding:
         assert_raises(IntegrityError, ChallengeSetFielding.create, cs=cs, cbns=[cbn1], team=team,
                       available_round=r0)
 
-    def test_create_or_update(self):
+
+    def test_create_or_update_submission(self):
+        r1 = Round.create(num=0)
+        team = Team.create(name=Team.OUR_NAME)
+        cs = ChallengeSet.create(name="foo")
+        cbn1 = ChallengeBinaryNode.create(name="foo", cs=cs, blob="BLOB")
+        cbn2 = ChallengeBinaryNode.create(name="foo", cs=cs, blob="BLOB2")
+
+        assert_equals(len(cs.fieldings), 0)
+
+        # Submit 2 patches at once
+        ChallengeSetFielding.create_or_update_submission(team=team,
+                                                         cbns=[cbn1, cbn2],
+                                                         round=r1)
+        assert_equals(len(cs.fieldings), 1)
+
+        assert_equals(len(cs.fieldings.get().cbns), 2)
+        assert_items_equal(cs.fieldings.get().cbns, [cbn1, cbn2])
+        assert_equals(cs.fieldings.get().submission_round, Round.current_round())
+        assert_is_none(cs.fieldings.get().available_round)
+
+        # Submit again fails
+        cbn3 = ChallengeBinaryNode.create(name="foo3", cs=cs, blob="BLOB3")
+        ChallengeSetFielding.create_or_update_submission(team=team,
+                                                         cbns=[cbn3], round=r1)
+        assert_equals(len(cs.fieldings), 1)
+        assert_items_equal(cs.fieldings.get().cbns, [cbn3])
+
+    def test_create_or_update_available(self):
         r0 = Round.create(num=0)
         team = Team.create(name=Team.OUR_NAME)
         cs = ChallengeSet.create(name="foo")
         cbn1 = ChallengeBinaryNode.create(name="foo_1", cs=cs, blob="aaa1")
         cbn2 = ChallengeBinaryNode.create(name="foo_2", cs=cs, blob="aaa2")
 
-        csf1 = ChallengeSetFielding.create_or_update(team=team, round=r0, cbn=cbn1)
+        csf1 = ChallengeSetFielding.create_or_update_available(team=team,
+                                                               round=r0,
+                                                               cbn=cbn1)
         assert_in(cbn1, csf1.cbns)
         assert_equals(len(csf1.cbns), 1)
 
-        csf2 = ChallengeSetFielding.create_or_update(team=team, round=r0, cbn=cbn2)
+        csf2 = ChallengeSetFielding.create_or_update_available(team=team,
+                                                               round=r0,
+                                                               cbn=cbn2)
         assert_equals(csf1, csf2)
-        assert_in(cbn2, csf1.cbns)
-        assert_equals(len(csf1.cbns), 2)
+        assert_items_equal(csf1.cbns, [cbn1, cbn2])
 
     def test_add_cbns_if_missing(self):
         r0 = Round.create(num=0)
@@ -105,30 +136,3 @@ class TestChallengeSetFielding:
         csf32 = ChallengeSetFielding.create(cs=cs, cbns=[cbn1], team=team2, available_round=r3)
         assert_equals(csf31, ChallengeSetFielding.latest(cs, team1))
         assert_equals(csf32, ChallengeSetFielding.latest(cs, team2))
-
-    def test_create_or_update_submission(self):
-        r1 = Round.create(num=0)
-        team = Team.create(name=Team.OUR_NAME)
-        cs = ChallengeSet.create(name="foo")
-        cbn1 = ChallengeBinaryNode.create(name="foo", cs=cs, blob="BLOB")
-        cbn2 = ChallengeBinaryNode.create(name="foo", cs=cs, blob="BLOB2")
-
-        assert_equals(len(cs.fieldings), 0)
-
-        # Submit 2 patches at once
-        ChallengeSetFielding.create_or_update_submission(team=team,
-                                                         cbns=[cbn1, cbn2],
-                                                         round=r1)
-        assert_equals(len(cs.fieldings), 1)
-
-        assert_equals(len(cs.fieldings.get().cbns), 2)
-        assert_items_equal(cs.fieldings.get().cbns, [cbn1, cbn2])
-        assert_equals(cs.fieldings.get().submission_round, Round.current_round())
-        assert_is_none(cs.fieldings.get().available_round)
-
-        # Submit again fails
-        cbn3 = ChallengeBinaryNode.create(name="foo3", cs=cs, blob="BLOB3")
-        ChallengeSetFielding.create_or_update_submission(team=team,
-                                                         cbns=[cbn3], round=r1)
-        assert_equals(len(cs.fieldings), 1)
-        assert_items_equal(cs.fieldings.get().cbns, [cbn3])
