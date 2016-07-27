@@ -19,6 +19,7 @@ from farnsworth.models import (AFLJob,
                                Exploit,
                                FunctionIdentity,
                                IDSRule,
+                               IDSRuleFielding,
                                PatchType,
                                RexJob,
                                Round,
@@ -97,12 +98,12 @@ class TestChallengeSet:
         assert_in(ids1, cs.unsubmitted_ids_rules)
         assert_in(ids2, cs.unsubmitted_ids_rules)
 
-        ids1.submit()
+        IDSRuleFielding.create(ids_rule=ids1, team=team, submission_round=r1)
         assert_equals(len(cs.unsubmitted_ids_rules), 1)
         assert_not_in(ids1, cs.unsubmitted_ids_rules)
         assert_in(ids2, cs.unsubmitted_ids_rules)
 
-        ids2.submit()
+        IDSRuleFielding.create(ids_rule=ids2, team=team, submission_round=r1)
         assert_equals(len(cs.unsubmitted_ids_rules), 0)
         assert_not_in(ids1, cs.unsubmitted_ids_rules)
         assert_not_in(ids2, cs.unsubmitted_ids_rules)
