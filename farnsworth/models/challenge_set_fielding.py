@@ -51,7 +51,18 @@ class ChallengeSetFielding(BaseModel):
         return obj
 
     @classmethod
-    def create_or_update(cls, team, round, cbn):
+    def create_or_update_submission(cls, team, cbns, round=None):
+        try:
+            csf = cls.get((cls.cs == cbns[0].cs) & \
+                          (cls.team == team) & \
+                          (cls.submission_round == round))
+            csf.add_cbns_if_missing(cbn)
+        except cls.DoesNotExist:
+            csf = cls.create(cs=cbns[0].cs, team=team, cbns=cbns, submission_round=round)
+        return csf
+
+    @classmethod
+    def create_or_update_available(cls, team, cbn, round=None):
         try:
             csf = cls.get((cls.cs == cbn.cs) & \
                           (cls.team == team) & \
@@ -71,16 +82,31 @@ class ChallengeSetFielding(BaseModel):
             self.save()
 
     @classmethod
-    def latest(cls, cs, team):
+    def latest(cls, cs, team, round=None):
         """
             Get latest cs fielding for provided team and CS
         :param cs: CS for which fielding need to be fetched.
         :param team: Team for which cs fielding need to be fetched.
         :return: list containing latest cs fielding.
         """
-        predicate = (cls.team == team) \
-                    & (cls.cs == cs) \
-                    & (cls.available_round == Round.current_round())
-        result = cls.select().where(predicate).limit(1)
-        if result:
-            return result[0]
+        if round is None:
+            round = Round.current_round()
+
+        try:
+            return cls.get((cls.cs == cs)
+                           & (cls.team == team)
+                           & (cls.available_round == round))
+        except cls.DoesNotExist:
+            return
+
+    @classmethod
+    def submissions(cls, cs, team, round=None):
+        if round is None:
+            round = Round.current_round()
+
+        try:
+            return cls.get((cls.cs == cs)
+                           & (cls.team == team)
+                           & (cls.submission_round == round))
+        except cls.DoesNotExist:
+            return

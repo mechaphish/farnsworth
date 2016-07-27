@@ -86,27 +86,6 @@ class TestChallengeSet:
         assert_in(cbn2, cs.cbns_by_patch_type()[patch0])
         assert_in(cbn3, cs.cbns_by_patch_type()[patch1])
 
-    def test_submit(self):
-        r1 = Round.create(num=0)
-        team = Team.create(name=Team.OUR_NAME)
-        cs = ChallengeSet.create(name="foo")
-        cbn1 = ChallengeBinaryNode.create(name="foo", cs=cs, blob=BLOB)
-        cbn2 = ChallengeBinaryNode.create(name="foo", cs=cs, blob=BLOB2)
-
-        assert_equals(len(cs.fieldings), 0)
-
-        # Submit 2 patches at once
-        cs.submit(cbns=[cbn1, cbn2], round=r1)
-        assert_equals(len(cs.fieldings), 1)
-
-        assert_equals(len(cs.fieldings.get().cbns), 2)
-        assert_equals(cs.fieldings.get().team, Team.get_our())
-        assert_equals(cs.fieldings.get().submission_round, Round.current_round())
-        assert_is_none(cs.fieldings.get().available_round)
-
-        # Submit again fails
-        assert_raises(IntegrityError, cs.submit, cbns=[cbn1, cbn2], round=r1)
-
     def test_unsubmitted_ids_rules(self):
         r1 = Round.create(num=0)
         team = Team.create(name=Team.OUR_NAME)

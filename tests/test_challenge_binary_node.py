@@ -11,7 +11,7 @@ from nose.tools import *
 from peewee import IntegrityError
 
 from . import setup_each, teardown_each
-from farnsworth.models import (ChallengeBinaryNode, ChallengeSet,
+from farnsworth.models import (ChallengeBinaryNode, ChallengeSet, ChallengeSetFielding,
                                Round, Team, PatchType)
 import farnsworth.models    # to avoid collisions between Test and nosetests
 
@@ -107,6 +107,8 @@ class TestChallengeBinaryNode:
         assert_in(patch2, cbn.unsubmitted_patches)
         assert_equals(len(cbn.submitted_patches), 0)
 
-        cs.submit(cbns=[patch1, patch2], round=r0)
+        ChallengeSetFielding.create_or_update_submission(team=team,
+                                                         cbns=[patch1, patch2],
+                                                         round=r0)
         assert_equals(len(cbn.submitted_patches), 2)
         assert_equals(len(cbn.unsubmitted_patches), 0)
