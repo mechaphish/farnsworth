@@ -1,14 +1,14 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
+"""Round model"""
+
 from __future__ import absolute_import, unicode_literals
 
 from datetime import datetime
 from peewee import DateTimeField, IntegerField
 
 from .base import BaseModel
-
-"""Round model"""
 
 
 class Round(BaseModel):

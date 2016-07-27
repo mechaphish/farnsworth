@@ -103,7 +103,6 @@ class ChallengeBinaryNode(BaseModel):
     def submitted_patches(self):
         """All submitted patches."""
         from .challenge_set_fielding import ChallengeSetFielding
-        from .team import Team
         tm = ChallengeSetFielding.cbns.get_through_model()
         return self.descendants \
                    .join(tm, on=(tm.challengebinarynode == ChallengeBinaryNode.id)) \

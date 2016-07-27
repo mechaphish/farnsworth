@@ -1,17 +1,17 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
+"""cb_poll_performances model"""
+
 from __future__ import absolute_import, unicode_literals
 
-from peewee import BooleanField, CharField, ForeignKeyField
+from peewee import BooleanField, ForeignKeyField
 from playhouse.postgres_ext import BinaryJSONField
 
 from .base import BaseModel
 from .valid_polls import ValidPoll
 from .patch_type import PatchType
 from .challenge_set import ChallengeSet
-
-"""cb_poll_performances model"""
 
 
 class CBPollPerformance(BaseModel):

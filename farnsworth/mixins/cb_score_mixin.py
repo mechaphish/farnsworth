@@ -45,7 +45,7 @@ class CBScoreMixin(object):
         elif 0 < func_factor < 0.40:
             func_score = 0.381 * func_factor
         else:
-            func_score = 0
+            func_score = 0.0
         return float(func_score)
 
     @property

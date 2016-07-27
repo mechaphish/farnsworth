@@ -1,11 +1,11 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
+"""Various utility functions"""
+
 from __future__ import absolute_import, unicode_literals
 
 import re
-
-"""Various utility functions"""
 
 
 def camel_case_to_underscore(string):

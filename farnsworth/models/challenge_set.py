@@ -1,20 +1,17 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
+"""ChallengeSet model"""
+
 from __future__ import absolute_import, unicode_literals
 
-from datetime import datetime
-import os
+import cPickle as pickle
 
-from peewee import CharField, IntegerField
+from peewee import CharField
 from playhouse.fields import ManyToManyField
 
 from .base import BaseModel
 from .round import Round
-
-import cPickle as pickle
-
-"""ChallengeSet model"""
 
 
 class ChallengeSet(BaseModel):
@@ -98,7 +95,6 @@ class ChallengeSet(BaseModel):
         """
         from .challenge_binary_node import ChallengeBinaryNode
         from .challenge_set_fielding import ChallengeSetFielding
-        from .round import Round
         from .team import Team
         # original CBs are CBs by our team available in the first round of this CS
         # FIXME: multiple games?

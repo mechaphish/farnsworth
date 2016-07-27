@@ -1,6 +1,8 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
+"""CSSubmissionCable model"""
+
 from __future__ import absolute_import, unicode_literals
 
 from datetime import datetime
@@ -13,8 +15,6 @@ from .challenge_binary_node import ChallengeBinaryNode
 from .challenge_set import ChallengeSet
 from .ids_rule import IDSRule
 from .round import Round
-
-"""CSSubmissionCable model"""
 
 
 class CSSubmissionCable(BaseModel):

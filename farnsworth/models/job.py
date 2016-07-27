@@ -349,7 +349,6 @@ class CBTesterJob(TesterJob):
         Get the target CS to which this tester job belongs to.
         :return: ChallengeSet object
         """
-        from .challenge_set import ChallengeSet
         if not hasattr(self, '_target_cs'):
             self._target_cs = None
         self._target_cs = self._target_cs or ChallengeSet.get(id=self.payload['cs_id'])
@@ -502,7 +501,6 @@ class IDSJob(Job):
     @property
     def cs(self):
         """Return input ChallengeSet"""
-        from .challenge_set import ChallengeSet
         # pylint:disable=attribute-defined-outside-init
         if not hasattr(self, '_cs'):
             self._cs = None

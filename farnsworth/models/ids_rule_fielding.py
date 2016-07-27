@@ -1,10 +1,9 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
-from __future__ import absolute_import, unicode_literals
+"""IDSRuleFielding model"""
 
-from datetime import datetime
-import os
+from __future__ import absolute_import, unicode_literals
 
 from peewee import FixedCharField, ForeignKeyField
 
@@ -12,8 +11,6 @@ from .base import BaseModel
 from .ids_rule import IDSRule
 from .round import Round
 from .team import Team
-
-"""IDSRuleFielding model"""
 
 
 class IDSRuleFielding(BaseModel):

@@ -1,18 +1,17 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
+"""Feedback model"""
+
 from __future__ import absolute_import, unicode_literals
 
-from peewee import ForeignKeyField, IntegerField, FloatField, BooleanField
+from peewee import ForeignKeyField, FloatField
 
 from .base import BaseModel
 from .round import Round
-from .team import Team
 from .challenge_set import ChallengeSet
 from .concerns.round_related_model import RoundRelatedModel
 from ..mixins.cb_score_mixin import CBScoreMixin
-
-"""Feedback model"""
 
 
 class PollFeedback(BaseModel, RoundRelatedModel, CBScoreMixin):

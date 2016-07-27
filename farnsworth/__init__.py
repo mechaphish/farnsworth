@@ -1,12 +1,12 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
+"""Farnsworth database setup."""
+
 from __future__ import absolute_import, unicode_literals
 
 from .config import master_db
 from .log import LOG
-
-"""Farnsworth database setup."""
 
 
 def tables():
@@ -95,7 +95,7 @@ def create_tables():
 
     LOG.debug("Creating patch types...")
     from farnsworth.models import PatcherexJob, PatchType
-    for name,(func_risk,exploitability) in PatcherexJob.PATCH_TYPES.items():
+    for name, (func_risk, exploitability) in PatcherexJob.PATCH_TYPES.items():
         PatchType.create(name=name, functionality_risk=func_risk, exploitability=exploitability)
 
 def drop_tables():

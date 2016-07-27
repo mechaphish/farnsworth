@@ -1,10 +1,10 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
+"""ChallengeSetFielding model"""
+
 from __future__ import absolute_import, unicode_literals
 
-from datetime import datetime
-import os
 import hashlib
 
 from peewee import FixedCharField, ForeignKeyField, FloatField
@@ -16,8 +16,6 @@ from .challenge_set import ChallengeSet
 from .round import Round
 from .team import Team
 from .poll_feedback import PollFeedback
-
-"""ChallengeSetFielding model"""
 
 
 def _sha256sum(*strings):

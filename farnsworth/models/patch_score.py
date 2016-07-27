@@ -1,9 +1,11 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
+"""patch_scores model"""
+
 from __future__ import absolute_import, unicode_literals
 
-from peewee import BooleanField, ForeignKeyField, CharField, BigIntegerField
+from peewee import BooleanField, ForeignKeyField, BigIntegerField
 from playhouse.postgres_ext import BinaryJSONField
 
 from .base import BaseModel
@@ -11,8 +13,6 @@ from .round import Round
 from .challenge_set import ChallengeSet
 from ..mixins.cb_score_mixin import CBScoreMixin
 from .patch_type import PatchType
-
-"""patch_scores model"""
 
 
 class PatchScore(BaseModel, CBScoreMixin):
