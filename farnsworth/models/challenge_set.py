@@ -176,9 +176,22 @@ class ChallengeSet(BaseModel):
 
     def _has_type(self, typename):
         from .exploit import Exploit
-        return self.exploits.where((Exploit.pov_type == typename)
+        from .pov_test_result import PovTestResult
+        from .challenge_set_fielding import ChallengeSetFielding
+        reliable_exploit = self.exploits.where((Exploit.pov_type == typename)
                                    & (Exploit.reliability > 0)) \
                             .exists()
+
+        if not reliable_exploit:
+            return PovTestResult.select().join(ChallengeSetFielding)\
+                                         .join(Exploit,
+                                                 on=(PovTestResult.exploit_id == Exploit.id)
+                                          ).where(
+                                            (ChallengeSetFielding.cs == self) &\
+                                            (PovTestResult.num_success > 0) &\
+                                            (Exploit.pov_type == typename)).exists()
+
+        return reliable_exploit
 
     @property
     def has_type1(self):
