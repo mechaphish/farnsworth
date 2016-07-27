@@ -43,4 +43,4 @@ class Round(BaseModel):
         self.save()
 
     def is_ready(self):
-        return (self.ready_at is not None)
+        return self.ready_at is not None
