@@ -263,3 +263,32 @@ class TestChallengeSet:
         pov4 = Exploit.create(cs=cs, job=job4, pov_type='type2', exploitation_method='rop',
                               blob="exploit4", c_code="exploit it", reliability=1.0)
         assert_equals(pov4, cs.most_reliable_exploit)
+
+    def test_has_type1(self):
+        from farnsworth.models.pov_test_result import PovTestResult
+        pov_type = 'type1'
+        cs = ChallengeSet.create(name="foo")
+        job = AFLJob.create(cs=cs)
+        Exploit.create(cs=cs, job=job, pov_type=pov_type, blob=BLOB,
+                       c_code="code", reliability=0)
+        assert_false(cs.has_type1)
+
+        Exploit.create(cs=cs, job=job, pov_type=pov_type, blob=BLOB,
+                       c_code="code", reliability=1)
+        assert_true(cs.has_type1)
+
+        # if not first condition is not met
+        r2 = Round.create(num=2)
+        cs2 = ChallengeSet.create(name="bar")
+        job2 = AFLJob.create(cs=cs2)
+        cbn2 = ChallengeBinaryNode.create(name="bar", cs=cs2, blob="aaa")
+        team2 = Team.create(name=Team.OUR_NAME)
+        exploit2 = Exploit.create(cs=cs2, job=job2, pov_type=pov_type, blob=BLOB,
+                                  c_code="code", reliability=0)
+        csf2 = ChallengeSetFielding.create_or_update_available(team=team2, cbn=cbn2, round=r2)
+        pov_result2 = PovTestResult.create(exploit=exploit2, cs_fielding=csf2, num_success=0)
+        assert_false(cs2.has_type1)
+
+        pov_result2.num_success = 10
+        pov_result2.save()
+        assert_true(cs2.has_type1)
