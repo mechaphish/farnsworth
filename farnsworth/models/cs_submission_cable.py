@@ -37,7 +37,7 @@ class CSSubmissionCable(BaseModel):
 
     @classmethod
     def get_or_create(cls, cs, ids, round, cbns=[]):
-        results = cls.select()\
+        results = cls.select() \
                      .where((cls.cs == cs)
                             & (cls.ids == ids)
                             & (cls.round == round))

@@ -18,18 +18,7 @@ class IDSRule(BaseModel):
     """IDSRule model"""
     cs = ForeignKeyField(ChallengeSet, related_name='ids_rules')
     rules = TextField()
-    sha256 = FixedCharField(max_length=64) # this index shit doesn't work, we create it manually
-
-    def submit(self, round=None):
-        """Save submission at specified round. If None use current round."""
-        from .ids_rule_fielding import IDSRuleFielding
-        from .round import Round
-        from .team import Team
-        if round is None:
-            round = Round.current_round()
-        return IDSRuleFielding.create(ids_rule=self,
-                                      submission_round=round,
-                                      team=Team.get_our())
+    sha256 = FixedCharField(max_length=64)
 
     def save(self, **kwargs):
         if self.sha256 is None:
