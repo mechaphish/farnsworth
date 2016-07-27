@@ -101,12 +101,13 @@ class ChallengeSet(BaseModel):
         from .round import Round
         from .team import Team
         # original CBs are CBs by our team available in the first round of this CS
+        # FIXME: multiple games?
         CSF = ChallengeSetFielding
         first_fielding = self.fieldings\
                              .where(CSF.team == Team.get_our())\
                              .join(Round,
                                    on=(Round.id == ChallengeSetFielding.available_round))\
-                             .order_by(Round.num).get()
+                             .order_by(Round.created_at).get()
         return first_fielding.cbns
 
     @property
