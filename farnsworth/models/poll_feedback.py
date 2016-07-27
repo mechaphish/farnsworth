@@ -48,10 +48,6 @@ class PollFeedback(BaseModel, RoundRelatedModel, CBScoreMixin):
             return 2 - self.patch_type.exploitability
 
     @property
-    def cbns(self):
-        return self.cs_fielding.get().cbns
-
-    @property
     def size_overhead(self):
         current_size = sum(cbn.size for cbn in self.cbns)
         orig_size = sum(cbn.size for cbn in self.cs.cbns_original)
