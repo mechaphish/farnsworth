@@ -36,7 +36,9 @@ class CSSubmissionCable(BaseModel):
         return obj
 
     @classmethod
-    def get_or_create(cls, cs, ids, round, cbns=[]):
+    def get_or_create(cls, cs, ids, round, cbns=None):  # pylint: disable=arguments-differ
+        if cbns is None:
+            cbns = []
         results = cls.select() \
                      .where((cls.cs == cs)
                             & (cls.ids == ids)
