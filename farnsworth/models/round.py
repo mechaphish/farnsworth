@@ -16,6 +16,11 @@ class Round(BaseModel):
     num = IntegerField()
     ready_at = DateTimeField(null=True)
 
+    SAME_ROUND = 0
+    NEW_ROUND = 1
+    NEW_GAME = 2
+    FIRST_GAME = 3
+
     @classmethod
     def prev_round(cls):
         rounds = cls.select().order_by(cls.created_at.desc()).limit(1).offset(1)
@@ -44,3 +49,18 @@ class Round(BaseModel):
 
     def is_ready(self):
         return self.ready_at is not None
+
+    @classmethod
+    def get_or_create_latest(cls, num):
+        round_ = cls.current_round()
+
+        if round_ is None:
+            return cls.create(num=num), cls.FIRST_GAME
+        elif round_.num == num:
+            return round_, cls.SAME_ROUND
+        else:
+            new_round = cls.create(num=num)
+            if round_.num > num:
+                return new_round, cls.NEW_GAME
+            else:
+                return new_round, cls.NEW_ROUND
