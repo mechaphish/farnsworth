@@ -220,9 +220,9 @@ class PatcherexJob(Job):
 
     # the risks and exploitability associated with every patch type
     PATCH_TYPES = {
-        "medium_reassembler_optimized": (0.0, 0.30),
         "medium_reassembler": (0.0, 0.31),
         "medium_detour": (0.0, 0.32),
+        "medium_reassembler_optimized": (0.0, 0.33),
     }
 
     worker = CharField(default='patcherex')
