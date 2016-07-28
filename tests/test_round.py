@@ -58,3 +58,32 @@ class TestRound:
         assert_false(round0.is_ready())
         round0.ready()
         assert_true(round0.is_ready())
+
+    def test_get_or_create_latest(self):
+        # First game
+        r0, status = Round.get_or_create_latest(num=0)
+        assert_equals(status, Round.FIRST_GAME)
+        assert_equals(r0.num, 0)
+        assert_equals(r0, Round.current_round())
+
+        # New round
+        r1, status = Round.get_or_create_latest(num=1)
+        assert_equals(status, Round.NEW_ROUND)
+        assert_equals(r1.num, 1)
+        assert_equals(r1, Round.current_round())
+        assert_equals(r0, Round.prev_round())
+
+        # Same round
+        r1b, status = Round.get_or_create_latest(num=1)
+        assert_equals(status, Round.SAME_ROUND)
+        assert_equals(r1b.num, 1)
+        assert_equals(r1b, Round.current_round())
+        assert_equals(r0, Round.prev_round())
+        assert_equals(r1, r1b)
+
+        # New game
+        r0b, status = Round.get_or_create_latest(num=0)
+        assert_equals(status, Round.NEW_GAME)
+        assert_equals(r0b.num, 0)
+        assert_equals(r0b, Round.current_round())
+        assert_is_none(Round.prev_round())
