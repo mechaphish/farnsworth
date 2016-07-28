@@ -19,7 +19,7 @@ from .team import Team
 def _sha256sum(*strings):
     array = list(strings)
     array.sort()
-    return hashlib.sha256("".join(array)).hexdigest()
+    return hashlib.sha256(b"".join(array)).hexdigest()
 
 
 def _avg(xs):
