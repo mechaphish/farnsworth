@@ -137,17 +137,21 @@ class ColorGuardJob(Job):
     restart = False
 
     @property
-    def input_test(self):
+    def input_blob(self):
         """Return input test case"""
         from .test import Test
+        from .crash import Crash
         # pylint:disable=attribute-defined-outside-init
-        if not hasattr(self, '_input_test'):
-            self._input_test = None
+        if not hasattr(self, '_input_blob'):
+            self._input_blob = None
 
-        if self._input_test is None:
-            self._input_test = Test.get(id=self.payload['test_id'])
+        if self._input_blob is None:
+            if self.payload['crash']:
+                self._input_blob = Crash.get(id=self.payload['id'])
+            else:
+                self._input_blob = Test.get(id=self.payload['id'])
 
-        return self._input_test
+        return self._input_blob
 
 
 class AFLJob(Job):
