@@ -7,11 +7,33 @@ import os
 
 from playhouse.pool import PooledPostgresqlExtDatabase  # For JSONB type
 from playhouse.shortcuts import RetryOperationalError
+from retrying import retry
 
 """Database connection configurations."""
 
+class RetryHarderOperationalError(object):
+    def execute_sql(self, sql, params=None, require_commit=True):
+        @retry(wait_exponential_mulitplier=500,
+               wait_exponential_max=10000,
+               stop_max_attempt_number=10)
+        def execute():
+            try:
+                cursor = super(RetryOperationalError, self).execute_sql(
+                    sql, params, require_commit)
+            except OperationalError:
+                if not self.is_closed():
+                    self.close()
+                with self.exception_wrapper():
+                    cursor = self.get_cursor()
+                    cursor.execute(sql, params or ())
+                    if require_commit and self.get_autocommit():
+                        self.commit()
+            return cursor
+        return execute()
 
-class RetryPooledPostgresqlExtDatabase(PooledPostgresqlExtDatabase, RetryOperationalError):
+
+class RetryPooledPostgresqlExtDatabase(PooledPostgresqlExtDatabase,
+                                       RetryHarderOperationalError):
     pass
 
 
