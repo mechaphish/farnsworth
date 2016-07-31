@@ -147,9 +147,9 @@ class ColorGuardJob(Job):
 
         if self._input_blob is None:
             if self.payload['crash']:
-                self._input_blob = Crash.get(id=self.payload['id'])
+                self._input_blob = Crash.get(id=self.payload['id']).blob
             else:
-                self._input_blob = Test.get(id=self.payload['id'])
+                self._input_blob = Test.get(id=self.payload['id']).blob
 
         return self._input_blob
 
