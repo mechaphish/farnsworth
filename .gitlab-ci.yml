@@ -54,6 +54,7 @@ update_vm_image:
   only: ["master"]
   script:
   - update-vm-image
+  allow_failure: true
   tags: ["docker-builder"]
 
 production:
