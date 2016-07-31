@@ -205,7 +205,7 @@ class ChallengeSet(BaseModel):
     @property
     def most_reliable_exploit(self):
         from .exploit import Exploit
-        return self.exploits.select() \
+        return self.exploits.select().where(Exploit.method != 'backdoor') \
                             .order_by(Exploit.reliability.desc(), Exploit.id) \
                             .first()
 
