@@ -21,13 +21,31 @@ docs:
   script: "generate_docs"
   tags: ["cgc-linter"]
 
-build_images:
+build_worker:
   stage: build
   only: ["master"]
   script:
   - cgc-build worker
+  tags: ["docker-builder"]
+
+build_meister:
+  stage: build
+  only: ["master"]
+  script:
   - cgc-build meister
+  tags: ["docker-builder"]
+
+build_scriba:
+  stage: build
+  only: ["master"]
+  script:
   - cgc-build scriba
+  tags: ["docker-builder"]
+
+build_ambassador:
+  stage: build
+  only: ["master"]
+  script:
   - cgc-build ambassador
   tags: ["docker-builder"]
 
