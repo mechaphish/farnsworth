@@ -69,5 +69,7 @@ production:
   - docker push 172.16.7.72/scriba:stable
   - docker tag ambassador 172.16.7.72/ambassador:stable
   - docker push 172.16.7.72/ambassador:stable
+  - docker tag network-dude 172.16.7.72/network-dude:stable
+  - docker push 172.16.7.72/network-dude:stable
   environment: production
   tags: ["docker-builder"]
