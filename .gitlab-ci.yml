@@ -49,6 +49,13 @@ build_ambassador:
   - cgc-build ambassador
   tags: ["docker-builder"]
 
+build_network_dude:
+  stage: build
+  only: ["master"]
+  script:
+  - cgc-build network-dude
+  tags: ["docker-builder"]
+
 update_vm_image:
   stage: build
   only: ["master"]
