@@ -549,17 +549,17 @@ class ShowmapSyncJob(Job):
     restart = False
 
     @property
-    def input_round(self):
+    def input_rrt(self):
         """Return input crash"""
-        from .round import Round
+        from .raw_round_traffic import RawRoundTraffic
         # pylint: disable=attribute-defined-outside-init
-        if not hasattr(self, '_input_round'):
-            self._input_round = None
+        if not hasattr(self, '_input_rrt'):
+            self._input_rrt = None
 
-        if self._input_round is None:
-            self._input_round = Round.get(id=self.payload['round_id'])
+        if self._input_rrt is None:
+            self._input_rrt = RawRoundTraffic.get(id=self.payload['rrt_id'])
 
-        return self._input_round
+        return self._input_rrt
 
 
 class BackdoorSubmitterJob(Job):
