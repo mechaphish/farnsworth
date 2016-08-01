@@ -1,18 +1,18 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
+"""RawRoundPoll model"""
+
 from __future__ import absolute_import, unicode_literals
 
 from peewee import BooleanField, BlobField, ForeignKeyField
 from playhouse.postgres_ext import BlobField
 
 from ..actions import cfe_poll_from_xml, Write
-from .round import Round
 from .base import BaseModel
-from .raw_round_traffic import RawRoundTraffic
 from .challenge_set import ChallengeSet
-
-"""RawRoundPoll model"""
+from .raw_round_traffic import RawRoundTraffic
+from .round import Round
 
 
 class RawRoundPoll(BaseModel):
