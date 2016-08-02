@@ -5,13 +5,42 @@ from __future__ import absolute_import, unicode_literals
 
 import os
 
+import peewee
 from playhouse.pool import PooledPostgresqlExtDatabase  # For JSONB type
 from playhouse.shortcuts import RetryOperationalError
+from retrying import retry
 
 """Database connection configurations."""
 
+class RetryHarderOperationalError(object):
+    @classmethod
+    def retry_if_peewee_error(cls, error):
+        return isinstance(error, (peewee.OperationalError,
+                                  peewee.InterfaceError))
 
-class RetryPooledPostgresqlExtDatabase(PooledPostgresqlExtDatabase, RetryOperationalError):
+    def execute_sql(self, sql, params=None, require_commit=True):
+        @retry(wait_exponential_multiplier=500,
+               wait_exponential_max=10000,
+               stop_max_attempt_number=10,
+               retry_on_exception=self.retry_if_peewee_error)
+        def execute():
+            try:
+                cursor = super(RetryHarderOperationalError, self) \
+                    .execute_sql(sql, params, require_commit)
+            except (peewee.OperationalError, peewee.InterfaceError):
+                if not self.is_closed():
+                    self.close()
+                with self.exception_wrapper():
+                    cursor = self.get_cursor()
+                    cursor.execute(sql, params or ())
+                    if require_commit and self.get_autocommit():
+                        self.commit()
+            return cursor
+        return execute()
+
+
+class RetryPooledPostgresqlExtDatabase(RetryHarderOperationalError,
+                                       PooledPostgresqlExtDatabase):
     pass
 
 
