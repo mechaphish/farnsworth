@@ -86,6 +86,7 @@ def create_tables():
     from farnsworth.models import (ChallengeBinaryNode,
                                    ChallengeSetFielding,
                                    Crash,
+                                   ExploitSubmissionCable,
                                    IDSRule,
                                    IDSRuleFielding,
                                    Test)
@@ -100,6 +101,7 @@ def create_tables():
     master_db.create_index(IDSRule, ['sha256'])
     master_db.create_index(IDSRuleFielding, ['sha256'])
     master_db.create_index(Test, ['sha256'])
+    master_db.create_index(ExploitSubmissionCable, ['cs', 'team'], unique=True)
 
     LOG.debug("Creating patch types...")
     from farnsworth.models import PatcherexJob, PatchType
