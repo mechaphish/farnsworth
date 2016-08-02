@@ -25,8 +25,8 @@ class RetryHarderOperationalError(object):
                retry_on_exception=self.retry_if_peewee_error)
         def execute():
             try:
-                cursor = super(RetryHarderOperationalError, self)\
-                         .execute_sql(sql, params, require_commit)
+                cursor = super(RetryHarderOperationalError, self) \
+                    .execute_sql(sql, params, require_commit)
             except (peewee.OperationalError, peewee.InterfaceError):
                 if not self.is_closed():
                     self.close()
