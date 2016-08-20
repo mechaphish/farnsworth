@@ -6,7 +6,7 @@
 from distutils.core import setup
 import platform
 
-dependencies = ["git+ssh://git@git.seclab.cs.ucsb.edu/cgc/peewee.git#egg=peewee-99.9.9"]
+dependencies = ["git+https://github.com/mechaphish/peewee.git#egg=peewee-99.9.9"]
 
 requires = ["peewee>=2.8.1",
             "retrying>=1.3.0",
@@ -29,4 +29,4 @@ setup(name='farnsworth',
       install_requires=requires,
       dependency_links=dependencies,
       description="Knowledge base of the Shellphish CRS",
-      url="https://git.seclab.cs.ucsb.edu/cgc/farnsworth")
+      url="https://github.com/mechaphish/farnsworth")
